@@ -54,7 +54,7 @@ public class Marker: UIView {
     ///   - dimmingFrame: 可选配置
     ///   - maxWidth: 引导提示的最大宽度，一般情况下不用调整
     ///   - completion: 单个引导完成后的回执，全部引导完成后的回执走 show(completion:) 设置
-    required init(mark: UIView, tips: String, on: UIView, dimmingFrame: CGRect = UIScreen.main.bounds, maxWidth: CGFloat = 240, completion: CompletionBlock? = nil) {
+    required public init(mark: UIView, tips: String, on: UIView, dimmingFrame: CGRect = UIScreen.main.bounds, maxWidth: CGFloat = 240, completion: CompletionBlock? = nil) {
         self.current = Info(mark: mark, tips: tips, maxWidth: maxWidth, dimmingFrame: dimmingFrame, completion: completion)
         super.init(frame: on.bounds)
         
