@@ -27,53 +27,60 @@ public class Marker: UIView {
     
     public var animateDuration: TimeInterval = 0.34
     
-    
     // MARK:- Internal properties
-    struct Info {
-        weak var mark: UIView?
-        var tips: String
-        var maxWidth: CGFloat = 240
-        var dimmingFrame: CGRect
-        var completion: CompletionBlock?
+    public struct Info {
+        public enum Style {
+            /// default
+            case square
+            case round
+            case radius(_ radius: CGFloat)
+        }
+        
+        public weak var marker: UIView?
+        public var intro: String
+        public var maxWidth: CGFloat
+        public var dimFrame: CGRect = UIScreen.main.bounds
+        public var style: Style = .square
+        public var timeout: TimeInterval = 0
+        public var completion: CompletionBlock?
+        
+        var identifier: String {
+            "\(marker?.description ?? "")-\(intro)-\(dimFrame)-\(timeout)-\(style)"
+        }
+        
+        public init(marker: UIView?, intro: String, maxWidth: CGFloat = 240, dimFrame: CGRect = UIScreen.main.bounds, style: Info.Style = .square, timeout: TimeInterval = 0, completion: CompletionBlock? = nil) {
+            self.marker = marker
+            self.intro = intro
+            self.maxWidth = maxWidth
+            self.dimFrame = dimFrame
+            self.style = style
+            self.timeout = timeout
+            self.completion = completion
+        }
     }
-    var nexts: [Info] = []
     
-    var current: Info
     weak var onView: UIView?
+    var current: Info
+    var nexts: [Info] = []
+    var animateMaps: [String: Bool] = [:]
     
     /// completion，所有任务完成后的 completion
     var completion: CompletionBlock?
     
-    
-    // MARK:- init
-    /// 初始化
-    /// - Parameters:
-    ///   - mark: 被标记的 view，确保是完全显示（至少是有完整的 frame）后使用
-    ///   - tips: 引导提示
-    ///   - on: 显示在某个 View 上
-    ///   - dimmingFrame: 可选配置
-    ///   - maxWidth: 引导提示的最大宽度，一般情况下不用调整
-    ///   - completion: 单个引导完成后的回执，全部引导完成后的回执走 show(completion:) 设置
-    required public init(mark: UIView, tips: String, on: UIView, dimmingFrame: CGRect = UIScreen.main.bounds, maxWidth: CGFloat = 240, completion: CompletionBlock? = nil) {
-        self.current = Info(mark: mark, tips: tips, maxWidth: maxWidth, dimmingFrame: dimmingFrame, completion: completion)
-        super.init(frame: on.bounds)
-        
-        self.onView = on
+    required public init(_ info: Info, on onView: UIView) {
+        self.current = info
+        super.init(frame: onView.bounds)
+        self.animateMaps[info.identifier] = false
+        self.onView = onView
     }
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
     /// 下一个
-    /// - Parameters:
-    ///   - mark: 被标记的 view，确保是完全显示（至少是有完整的 frame）后使用
-    ///   - tips: 引导提示
-    ///   - dimmingFrame: 可选需求，灰色背景的大小
-    ///   - maxWidth: 引导提示的最大宽度，一般情况下不用调整
-    ///   - completion: 引导完成时的 completion
-    /// - Returns: Marker
-    public func next(mark: UIView, tips: String, dimmingFrame: CGRect = UIScreen.main.bounds, maxWidth: CGFloat = 240, completion: CompletionBlock? = nil) -> Marker {
-        nexts.append(.init(mark: mark, tips: tips, maxWidth: maxWidth, dimmingFrame: dimmingFrame, completion: completion))
+    public func next(_ info: Info) -> Marker {
+        nexts.append(info)
+        animateMaps[info.identifier] = false
         return self
     }
     
@@ -85,11 +92,18 @@ public class Marker: UIView {
     let maskLayer = CAShapeLayer()
     
     func installViews() {
+        
         contentLabel.font = UIFont.systemFont(ofSize: 12, weight: .medium)
         contentLabel.textColor = .white
         contentLabel.numberOfLines = 0
         
+        dimmingView.alpha = 0
         dimmingView.backgroundColor = UIColor.black.withAlphaComponent(0.4)
+        
+        gradientLayer.anchorPoint = .zero
+        gradientLayer.colors = Self.default.colors
+        gradientLayer.startPoint = Self.default.colorStartPoint
+        gradientLayer.endPoint = Self.default.colorEndPoint
         
         addSubview(dimmingView)
         addSubview(contentView)
@@ -103,27 +117,54 @@ public class Marker: UIView {
     }
     
     func layout() {
-        guard let markView = current.mark, let markSuperView = current.mark?.superview else {
+        guard let markView = current.marker, let markSuperView = current.marker?.superview else {
+            // 没有找到 marker 或者 marker 没有添加到视图上，直接进入下一个
             showNext()
             return
         }
+        
+        if current.timeout > 0 { // 如果有超时时间，则开启超时
+            let identifier = current.identifier
+            DispatchQueue.main.asyncAfter(deadline: .now() + (Double(current.timeout) + animateDuration)) { [weak self] in
+                // 超时后判断
+                guard self?.animateMaps[identifier] == false else { return }
+                self?.showNext()
+            }
+        }
+        
         dimmingView.frame = bounds
         
+        let spacing = Self.default.spacing
         let innerFrame = markSuperView.convert(markView.frame, to: self)
         
-        let dimmingPath = UIBezierPath(roundedRect: current.dimmingFrame, cornerRadius: 0)
-        let markPath = UIBezierPath(roundedRect: innerFrame, cornerRadius: markView.layer.cornerRadius).reversing()
+        // set cornerRadiu
+        let cornerRadius: CGFloat
+        switch current.style {
+        case .square:
+            cornerRadius = 0
+        case .round:
+            cornerRadius = markView.frame.height / 2
+        case .radius(let radius):
+            cornerRadius = radius
+        }
+        let markPath = UIBezierPath(roundedRect: innerFrame, cornerRadius: cornerRadius).reversing()
+        
+        // set dimming path
+        let dimmingPath = UIBezierPath(roundedRect: current.dimFrame, cornerRadius: 0)
         dimmingPath.append(markPath)
         
         if maskLayer.superlayer == nil {
             maskLayer.path = dimmingPath.cgPath
             maskLayer.backgroundColor = UIColor.black.cgColor
             dimmingView.layer.mask = maskLayer
+            UIView.animate(withDuration: animateDuration) {
+                self.dimmingView.alpha = 1
+            }
         } else {
             pathAnimate(from: maskLayer, to: dimmingPath)
         }
         
-        contentLabel.text = current.tips
+        contentLabel.text = current.intro
         let contentSize = contentLabel.sizeThatFits(.init(width: current.maxWidth, height: .greatestFiniteMagnitude))
         contentLabel.frame.size = contentSize
         
@@ -157,18 +198,24 @@ public class Marker: UIView {
         let isBottom = centerY >= frame.height / 2
         if isBottom {
             // bottom
-            gradientFrame.origin.y = innerFrame.minY - gradientFrame.height - 10
+            gradientFrame.origin.y = innerFrame.minY - gradientFrame.height - spacing
         } else {
             // top
-            gradientFrame.origin.y = innerFrame.maxY + 10
+            gradientFrame.origin.y = innerFrame.maxY + spacing
         }
-        
-        contentView.frame = gradientFrame
         gradientLayer.bounds = .init(x: 0, y: 0, width: gradientFrame.width, height: gradientFrame.height)
-        gradientLayer.colors = Self.default.colors
-        gradientLayer.startPoint = Self.default.colorStartPoint
-        gradientLayer.endPoint = Self.default.colorEndPoint
-        gradientLayer.anchorPoint = .zero
+        
+        if contentView.frame == .zero {
+            contentView.alpha = 0
+            contentView.frame = gradientFrame
+            contentView.transform = .init(translationX: 0, y: isBottom ? -30 : 30)
+            UIView.animate(withDuration: animateDuration) {
+                self.contentView.alpha = 1
+                self.contentView.transform = .identity
+            }
+        } else {
+            contentView.frame = gradientFrame
+        }
         
         // make mask
         var rectY: CGFloat = bumpHeight
@@ -237,6 +284,8 @@ public class Marker: UIView {
     
     @objc func showNext() {
         // show next or dimiss
+        animateMaps[current.identifier] = true
+        
         current.completion?()
         guard let next = nexts.first else {
             // dimiss

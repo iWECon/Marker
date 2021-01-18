@@ -50,13 +50,10 @@ class ViewController: UIViewController {
     }
     
     @objc func tapAction(sender: UIButton) {
-//        let marker = Marker(tips: "你妹的你妹的你妹的你妹的你妹的你妹的你妹的你妹的", mark: sender, frame: view.bounds)
-//        marker.show(on: view)
-        
-        Marker(mark: topLeftButton, tips: "你妹的你妹的你妹的你妹的你妹的你妹的", on: view)
-            .next(mark: topRightButton, tips: "你爹的你爹的你爹的你爹的你爹的你爹的你爹的你爹", dimmingFrame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 400))
-            .next(mark: bottomLeftButton, tips: "niniangdeniniangdeniniangdeniniangdeniniangdeniniangdeniniangdeniniangde")
-            .next(mark: bottomRightButton, tips: "奥isjdfoijasodijfoqiogioasvoijoijqwoetemo😈")
+        Marker(.init(marker: topLeftButton, intro: "你的"), on: view)
+            .next(.init(marker: bottomLeftButton, intro: "我的", style: .round, timeout: 1))
+            .next(.init(marker: topRightButton, intro: "她的", style: .radius(5)))
+            .next(.init(marker: bottomRightButton, intro: "它的", style: .round))
             .show()
     }
     
@@ -65,8 +62,8 @@ class ViewController: UIViewController {
         
         topLeftButton.frame = .init(x: 0, y: 88, width: 64, height: 24)
         topRightButton.frame = .init(x: 300, y: 88, width: 64, height: 24)
-        bottomLeftButton.frame = .init(x: 30, y: 488, width: 64, height: 24)
-        bottomRightButton.frame = .init(x: 300, y: 488, width: 64, height: 24)
+        bottomLeftButton.frame = .init(x: 30, y: 488, width: 120, height: 24)
+        bottomRightButton.frame = .init(x: 200, y: 488, width: 120, height: 120)
     }
 }
 
