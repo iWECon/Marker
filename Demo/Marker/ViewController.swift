@@ -13,6 +13,8 @@ class ViewController: UIViewController {
     let topRightButton = UIButton(type: .custom)
     let bottomLeftButton = UIButton(type: .custom)
     let bottomRightButton = UIButton(type: .custom)
+    
+    var buttons: [UIButton] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,14 +49,32 @@ class ViewController: UIViewController {
         topRightButton.addTarget(self, action: #selector(tapAction(sender:)), for: .touchUpInside)
         bottomLeftButton.addTarget(self, action: #selector(tapAction(sender:)), for: .touchUpInside)
         bottomRightButton.addTarget(self, action: #selector(tapAction(sender:)), for: .touchUpInside)
+        
+        for index in 0 ..< 4 {
+            let button = UIButton()
+            button.setTitle("this is \(index)", for: .normal)
+            button.backgroundColor = UIColor.red.withAlphaComponent(0.6)
+            button.titleLabel?.font = .systemFont(ofSize: 14, weight: .medium)
+            button.setTitleColor(.white, for: .normal)
+            button.sizeToFit()
+            button.frame.origin = .init(x: (button.frame.width * CGFloat(index)) + 20, y: 200)
+            button.addTarget(self, action: #selector(tapAction(sender:)), for: .touchUpInside)
+            view.addSubview(button)
+            buttons.append(button)
+        }
     }
     
     @objc func tapAction(sender: UIButton) {
-        Marker(.init(marker: topLeftButton, intro: "你的", enlarge: 10))
-            .next(.init(marker: bottomLeftButton, intro: "我的", style: .round, timeout: 1))
-            .next(.init(marker: topRightButton, intro: "她的", style: .radius(5)))
-            .next(.init(marker: bottomRightButton, intro: "它的", style: .round, enlarge: 10))
-            .show(on: view)
+        let marker = Marker(.init(marker: bottomLeftButton, intro: "你的", dimFrame: .zero, showArrow: false))
+            .next(.init(marker: topLeftButton, intro: "我的", style: .round))
+            .next(.init(marker: topRightButton, intro: "她的", dimFrame: .zero))
+            .next(.init(marker: bottomRightButton, intro: "它的", style: .round))
+            .next(.init(marker: buttons.first, intro: "第一个"))
+            .next(.init(marker: buttons[1], intro: "第二个"))
+            .next(.init(marker: buttons[2], intro: "第三个"))
+            .next(.init(marker: buttons[3], intro: "第四个"))
+        //marker.frame = .init(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 400)
+        marker.show(on: view)
     }
     
     override func viewDidLayoutSubviews() {
