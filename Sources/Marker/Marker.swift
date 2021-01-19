@@ -207,10 +207,8 @@ public class Marker: UIView {
         // calculator gradient frame
         let padding = Self.default.padding
         let bumpHeight: CGFloat = current.isShowArrow ? 6 : 0
-        // innerFrame centerX
-        let centerX = (innerFrame.minX + innerFrame.maxX) / 2
-        // 是否在中心线右边, 如果视图在中心线右边，则三角形也在右边, 否则在左边
-        let isRight = centerX >= (frame.width / 2)
+        // 如果视图在中心线右边，则三角形也在右边, 否则在左边
+        let isRight = innerFrame.minX >= (frame.width / 2)
         
         var gradientFrame: CGRect = .zero
         gradientFrame.size = .init(width: contentSize.width + padding.left + padding.right,
@@ -230,8 +228,7 @@ public class Marker: UIView {
             }
         }
         
-        let centerY = (innerFrame.minY + innerFrame.maxY) / 2
-        let isBottom = centerY >= frame.height / 2
+        let isBottom = innerFrame.maxY >= frame.height / 2
         if isBottom {
             // bottom
             gradientFrame.origin.y = innerFrame.minY - gradientFrame.height - spacing - current.enlarge
