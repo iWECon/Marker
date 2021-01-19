@@ -61,7 +61,7 @@ public class Marker: UIView {
             "\(marker?.description ?? "")-\(intro)-\(dimFrame)-\(timeout)-\(style)"
         }
         
-        public init(marker: UIView?, intro: String, maxWidth: CGFloat = 240, style: Info.Style = .square, timeout: TimeInterval = 0, dimFrame: CGRect = UIScreen.main.bounds, enlarge: CGFloat = 0, showArrow: Bool = true, completion: CompletionBlock? = nil) {
+        public init(marker: UIView?, intro: String, maxWidth: CGFloat = 240, style: Info.Style = .marker, timeout: TimeInterval = 0, dimFrame: CGRect = UIScreen.main.bounds, enlarge: CGFloat = 0, showArrow: Bool = true, completion: CompletionBlock? = nil) {
             self.marker = marker
             self.intro = intro
             self.maxWidth = maxWidth
