@@ -48,7 +48,7 @@ public class Marker: UIView {
             "\(marker?.description ?? "")-\(intro)-\(dimFrame)-\(timeout)-\(style)"
         }
         
-        public init(marker: UIView?, intro: String, maxWidth: CGFloat = 240, dimFrame: CGRect = UIScreen.main.bounds, style: Info.Style = .square, timeout: TimeInterval = 0, completion: CompletionBlock? = nil) {
+        public init(marker: UIView?, intro: String, maxWidth: CGFloat = 240, style: Info.Style = .square, timeout: TimeInterval = 0, dimFrame: CGRect = UIScreen.main.bounds, completion: CompletionBlock? = nil) {
             self.marker = marker
             self.intro = intro
             self.maxWidth = maxWidth
@@ -67,11 +67,10 @@ public class Marker: UIView {
     /// completion，所有任务完成后的 completion
     var completion: CompletionBlock?
     
-    required public init(_ info: Info, on onView: UIView) {
+    required public init(_ info: Info) {
         self.current = info
-        super.init(frame: onView.bounds)
+        super.init(frame: .zero)
         self.animateMaps[info.identifier] = false
-        self.onView = onView
     }
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -301,7 +300,7 @@ public class Marker: UIView {
         }
     }
     
-    func dismiss() {
+    public func dismiss() {
         UIView.animate(withDuration: 0.34) {
             self.dimmingView.alpha = 0
             
@@ -313,7 +312,9 @@ public class Marker: UIView {
         }
     }
     
-    public func show(completion: CompletionBlock? = nil) {
+    public func show(on onView: UIView, completion: CompletionBlock? = nil) {
+        self.frame = onView.frame
+        self.onView = onView
         self.completion = completion
         installViews()
         layout()
