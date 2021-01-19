@@ -30,31 +30,43 @@ public class Marker: UIView {
     // MARK:- Internal properties
     public struct Info {
         public enum Style {
-            /// default
+            /// follow marker.layer.cornerRadius, default
+            case marker
+            
             case square
             case round
             case radius(_ radius: CGFloat)
         }
         
+        /// 需要高亮的视图
         public weak var marker: UIView?
+        /// 表述文本
         public var intro: String
+        /// 文本的最大宽度，默认为 240，一般情况下无需调整
         public var maxWidth: CGFloat
+        /// 灰色背景的范围，默认为全屏，有非全屏需求时设置
         public var dimFrame: CGRect = UIScreen.main.bounds
-        public var style: Style = .square
+        /// 高亮部分的圆角度数，默认跟随 marker.layer.cornerRadius
+        public var style: Style = .marker
+        /// 出现后不操作自动下一个/结束的时间
         public var timeout: TimeInterval = 0
+        /// 高亮范围扩展，默认为 0
+        public var enlarge: CGFloat = 0
+        /// 本次完成的回执，全部完成的回执在 Marker 中的 show(on:completion:)
         public var completion: CompletionBlock?
         
         var identifier: String {
             "\(marker?.description ?? "")-\(intro)-\(dimFrame)-\(timeout)-\(style)"
         }
         
-        public init(marker: UIView?, intro: String, maxWidth: CGFloat = 240, style: Info.Style = .square, timeout: TimeInterval = 0, dimFrame: CGRect = UIScreen.main.bounds, completion: CompletionBlock? = nil) {
+        public init(marker: UIView?, intro: String, maxWidth: CGFloat = 240, style: Info.Style = .square, timeout: TimeInterval = 0, dimFrame: CGRect = UIScreen.main.bounds, enlarge: CGFloat = 0, completion: CompletionBlock? = nil) {
             self.marker = marker
             self.intro = intro
             self.maxWidth = maxWidth
             self.dimFrame = dimFrame
             self.style = style
             self.timeout = timeout
+            self.enlarge = enlarge
             self.completion = completion
         }
     }
@@ -139,6 +151,8 @@ public class Marker: UIView {
         // set cornerRadiu
         let cornerRadius: CGFloat
         switch current.style {
+        case .marker:
+            cornerRadius = markView.layer.cornerRadius
         case .square:
             cornerRadius = 0
         case .round:
@@ -146,7 +160,7 @@ public class Marker: UIView {
         case .radius(let radius):
             cornerRadius = radius
         }
-        let markPath = UIBezierPath(roundedRect: innerFrame, cornerRadius: cornerRadius).reversing()
+        let markPath = UIBezierPath(roundedRect: innerFrame.insetBy(dx: -current.enlarge, dy: -current.enlarge), cornerRadius: cornerRadius).reversing()
         
         // set dimming path
         let dimmingPath = UIBezierPath(roundedRect: current.dimFrame, cornerRadius: 0)
@@ -197,10 +211,10 @@ public class Marker: UIView {
         let isBottom = centerY >= frame.height / 2
         if isBottom {
             // bottom
-            gradientFrame.origin.y = innerFrame.minY - gradientFrame.height - spacing
+            gradientFrame.origin.y = innerFrame.minY - gradientFrame.height - spacing - current.enlarge
         } else {
             // top
-            gradientFrame.origin.y = innerFrame.maxY + spacing
+            gradientFrame.origin.y = innerFrame.maxY + spacing + current.enlarge
         }
         gradientLayer.bounds = .init(x: 0, y: 0, width: gradientFrame.width, height: gradientFrame.height)
         
