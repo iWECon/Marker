@@ -50,11 +50,11 @@ class ViewController: UIViewController {
     }
     
     @objc func tapAction(sender: UIButton) {
-        Marker(.init(marker: topLeftButton, intro: "你的"), on: view)
+        Marker(.init(marker: topLeftButton, intro: "你的"))
             .next(.init(marker: bottomLeftButton, intro: "我的", style: .round, timeout: 1))
             .next(.init(marker: topRightButton, intro: "她的", style: .radius(5)))
             .next(.init(marker: bottomRightButton, intro: "它的", style: .round))
-            .show()
+            .show(on: view)
     }
     
     override func viewDidLayoutSubviews() {

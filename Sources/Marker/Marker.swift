@@ -10,7 +10,7 @@ import UIKit
 public class Marker: UIView {
     
     // MARK:- Public properties
-    public typealias CompletionBlock = () -> Void
+    public typealias CompletionBlock = (_: Marker) -> Void
     
     public struct Appearence {
         public var colors: [CGColor] = [
@@ -285,7 +285,7 @@ public class Marker: UIView {
         // show next or dimiss
         animateMaps[current.identifier] = true
         
-        current.completion?()
+        current.completion?(self)
         guard let next = nexts.first else {
             // dimiss
             dismiss()
@@ -307,8 +307,9 @@ public class Marker: UIView {
             self.contentView.alpha = 0
             self.contentView.transform = CGAffineTransform(translationX: 0, y: 50).concatenating(CGAffineTransform(scaleX: 1.2, y: 1.2))
         } completion: { [weak self] (_) in
-            self?.completion?()
-            self?.removeFromSuperview()
+            guard let self = self else { return }
+            self.completion?(self)
+            self.removeFromSuperview()
         }
     }
     
