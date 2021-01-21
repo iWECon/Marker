@@ -201,11 +201,15 @@ public class Marker: UIView {
         }
         
         contentLabel.text = current.intro
-        let contentSize = contentLabel.sizeThatFits(.init(width: current.maxWidth, height: .greatestFiniteMagnitude))
+        
+        // reload contentLabel size
+        let padding = Self.default.padding
+        let maxWidth = min(UIScreen.main.bounds.width - 20,
+                           current.maxWidth)
+        let contentSize = contentLabel.sizeThatFits(.init(width: maxWidth - padding.left - padding.right, height: .greatestFiniteMagnitude))
         contentLabel.frame.size = contentSize
         
         // calculator gradient frame
-        let padding = Self.default.padding
         let bumpHeight: CGFloat = current.isShowArrow ? 6 : 0
         // 如果视图在中心线右边，则三角形也在右边, 否则在左边
         let isRight = innerFrame.minX >= (frame.width / 2)
@@ -214,16 +218,23 @@ public class Marker: UIView {
         gradientFrame.size = .init(width: contentSize.width + padding.left + padding.right,
                                    height: contentSize.height + padding.top + padding.bottom + bumpHeight)
         
+        // 三角形起点偏移量
+        var bumpOffsetX: CGFloat = 0
+        
         if isRight {
             // right
             gradientFrame.origin.x = innerFrame.maxX - gradientFrame.width
-            if gradientFrame.origin.x >= gradientFrame.maxX - 10 {
-                gradientFrame.origin.x = gradientFrame.maxX - 10
+            if gradientFrame.origin.x < 10 {
+                bumpOffsetX = -gradientFrame.origin.x + 10
+                gradientFrame.origin.x = 10
             }
         } else {
             // left
             gradientFrame.origin.x = innerFrame.minX
-            if gradientFrame.minX <= 10 {
+            if gradientFrame.maxX > UIScreen.main.bounds.width - 10 { // 右边超出右边
+                bumpOffsetX = gradientFrame.minX - (UIScreen.main.bounds.width - gradientFrame.width - 10)
+                gradientFrame.origin.x = UIScreen.main.bounds.width - gradientFrame.width - 10
+            } else if gradientFrame.minX < 10 {
                 gradientFrame.origin.x = 10
             }
         }
@@ -254,12 +265,11 @@ public class Marker: UIView {
         var rectY: CGFloat = bumpHeight
         
         var labelOriginY: CGFloat = bumpHeight + padding.top
-        
         let bezierPath = UIBezierPath()
         if current.isShowArrow {
             if isRight, !isBottom { // top, right
                 //labelOriginY
-                let startPoint = CGPoint(x: gradientFrame.width - 15, y: bumpHeight)
+                let startPoint = CGPoint(x: gradientFrame.width - 15 - bumpOffsetX, y: bumpHeight)
                 bezierPath.move(to: startPoint)
                 bezierPath.addLine(to: .init(x: startPoint.x - 6, y: 0))
                 bezierPath.addLine(to: .init(x: startPoint.x - 12, y: startPoint.y))
@@ -267,7 +277,7 @@ public class Marker: UIView {
                 rectY = 0
                 labelOriginY = gradientFrame.height - bumpHeight - padding.bottom - contentLabel.frame.height
                 
-                let startPoint = CGPoint(x: gradientFrame.width - 15, y: gradientFrame.height - bumpHeight)
+                let startPoint = CGPoint(x: gradientFrame.width - 15 - bumpOffsetX, y: gradientFrame.height - bumpHeight)
                 bezierPath.move(to: startPoint)
                 bezierPath.addLine(to: .init(x: startPoint.x - 6, y: gradientFrame.height))
                 bezierPath.addLine(to: .init(x: startPoint.x - 12, y: startPoint.y))
@@ -275,13 +285,13 @@ public class Marker: UIView {
                 rectY = 0
                 labelOriginY = gradientFrame.height - bumpHeight - padding.bottom - contentLabel.frame.height
                 
-                let startPoint = CGPoint(x: 15, y: gradientFrame.height - bumpHeight)
+                let startPoint = CGPoint(x: 15 + bumpOffsetX, y: gradientFrame.height - bumpHeight)
                 bezierPath.move(to: startPoint)
                 bezierPath.addLine(to: .init(x: startPoint.x + 6, y: gradientFrame.height))
                 bezierPath.addLine(to: .init(x: startPoint.x + 12, y: startPoint.y))
                 
             } else if !isRight, !isBottom { // top, left
-                let startPoint = CGPoint(x: 15, y: bumpHeight)
+                let startPoint = CGPoint(x: 15 + bumpOffsetX, y: bumpHeight)
                 bezierPath.move(to: startPoint)
                 bezierPath.addLine(to: .init(x: startPoint.x + 6, y: 0))
                 bezierPath.addLine(to: .init(x: startPoint.x + 12, y: startPoint.y))
@@ -333,7 +343,7 @@ public class Marker: UIView {
         self.current = next
         nexts.removeFirst()
         
-        UIView.animate(withDuration: animateDuration) {
+        UIView.animate(withDuration: animateDuration, delay: 0, options: [.allowUserInteraction]) {
             self.layout()
         }
     }

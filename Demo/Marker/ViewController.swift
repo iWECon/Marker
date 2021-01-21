@@ -57,7 +57,7 @@ class ViewController: UIViewController {
             button.titleLabel?.font = .systemFont(ofSize: 14, weight: .medium)
             button.setTitleColor(.white, for: .normal)
             button.sizeToFit()
-            button.frame.origin = .init(x: (button.frame.width * CGFloat(index)) + 20, y: 200)
+            button.frame.origin = .init(x: (button.frame.width * CGFloat(index)) + 20 * CGFloat(index), y: 400)
             button.addTarget(self, action: #selector(tapAction(sender:)), for: .touchUpInside)
             view.addSubview(button)
             buttons.append(button)
@@ -65,10 +65,10 @@ class ViewController: UIViewController {
     }
     
     @objc func tapAction(sender: UIButton) {
-        let marker = Marker(.init(marker: bottomLeftButton, intro: "你的", dimFrame: .zero, showArrow: false))
-            .next(.init(marker: topLeftButton, intro: "我的", style: .round))
-            .next(.init(marker: topRightButton, intro: "她的", dimFrame: .zero))
-            .next(.init(marker: bottomRightButton, intro: "它的", style: .round))
+        let marker = Marker(.init(marker: bottomLeftButton, intro: "你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的", maxWidth: 400))
+            .next(.init(marker: topLeftButton, intro: "我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的", maxWidth: 320, style: .round))
+            .next(.init(marker: topRightButton, intro: "她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的", maxWidth: 320, dimFrame: .zero))
+            .next(.init(marker: bottomRightButton, intro: "它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的", maxWidth: 320, style: .round))
             .next(.init(marker: buttons.first, intro: "第一个"))
             .next(.init(marker: buttons[1], intro: "第二个"))
             .next(.init(marker: buttons[2], intro: "第三个"))
@@ -80,8 +80,8 @@ class ViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        topLeftButton.frame = .init(x: 0, y: 88, width: 64, height: 24)
-        topRightButton.frame = .init(x: 300, y: 88, width: 64, height: 24)
+        topLeftButton.frame = .init(x: 150, y: 88, width: 64, height: 24)
+        topRightButton.frame = .init(x: 200, y: 88, width: 120, height: 24)
         bottomLeftButton.frame = .init(x: 30, y: 488, width: 120, height: 24)
         bottomRightButton.frame = .init(x: 200, y: 488, width: 120, height: 120)
     }
