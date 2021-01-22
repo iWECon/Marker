@@ -9,6 +9,11 @@ import UIKit
 
 public class Marker: UIView {
     
+    private static var markerInstances: Set<Marker> = []
+    public static func dismiss() {
+        markerInstances.forEach({ $0.dismiss() })
+    }
+    
     // MARK:- Public properties
     public typealias CompletionBlock = (_: Marker) -> Void
     
@@ -349,6 +354,7 @@ public class Marker: UIView {
     }
     
     public func dismiss() {
+        Self.markerInstances.remove(self)
         UIView.animate(withDuration: 0.34) {
             self.dimmingView.alpha = 0
             
@@ -362,6 +368,7 @@ public class Marker: UIView {
     }
     
     public func show(on onView: UIView, completion: CompletionBlock? = nil) {
+        Self.markerInstances.insert(self)
         if self.frame == .zero {
             self.frame = onView.frame
         }
