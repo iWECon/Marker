@@ -11,11 +11,11 @@ public class Marker: UIView {
     
     private static var markerInstances: Set<Marker> = []
     public static func dismiss() {
-        markerInstances.forEach({ $0.dismiss() })
+        markerInstances.forEach({ $0.dismiss(triggerByUser: true) })
     }
     
     // MARK:- Public properties
-    public typealias CompletionBlock = (_: Marker) -> Void
+    public typealias CompletionBlock = (_: Marker, _ isTriggerByUser: Bool) -> Void
     
     public struct Appearence {
         public var colors: [CGColor] = [
@@ -147,8 +147,14 @@ public class Marker: UIView {
         
         onView?.addSubview(self)
         
-        let tap = UITapGestureRecognizer(target: self, action: #selector(showNext))
+        let tap = UITapGestureRecognizer(target: self, action: #selector(showNextTriggerByUser))
+        tap.numberOfTouchesRequired = 1
+        tap.numberOfTapsRequired = 1
         addGestureRecognizer(tap)
+    }
+    
+    @objc func showNextTriggerByUser() {
+        showNext(triggerByUser: true)
     }
     
     var dimmingViewShouldTransition: Bool {
@@ -159,10 +165,10 @@ public class Marker: UIView {
         return shouldAnimate
     }
     
-    func layout() {
+    func layout(triggerByUser: Bool) {
         guard let markView = current.marker, let markSuperView = current.marker?.superview else {
             // 没有找到 marker 或者 marker 没有添加到视图上，直接进入下一个
-            showNext()
+            showNext(triggerByUser: triggerByUser)
             return
         }
         
@@ -172,7 +178,7 @@ public class Marker: UIView {
             DispatchQueue.main.asyncAfter(deadline: .now() + timeout) { [weak self] in
                 // 超时后判断
                 guard self?.animateMaps[identifier] == false else { return }
-                self?.showNext()
+                self?.showNext(triggerByUser: false)
             }
         }
         
@@ -351,28 +357,28 @@ public class Marker: UIView {
         CATransaction.commit()
     }
     
-    @objc func showNext() {
+    @objc func showNext(triggerByUser: Bool) {
         // show next or dimiss
         animateMaps[current.identifier] = true
         if current.dimFrame == .zero {
             dimmingView.alpha = 0
         }
         
-        current.completion?(self)
+        current.completion?(self, triggerByUser)
         guard let next = nexts.first else {
             // dimiss
-            dismiss()
+            dismiss(triggerByUser: triggerByUser)
             return
         }
         self.current = next
         nexts.removeFirst()
         
         UIView.animate(withDuration: animateDuration, delay: 0, options: [.allowUserInteraction]) {
-            self.layout()
+            self.layout(triggerByUser: triggerByUser)
         }
     }
     
-    public func dismiss() {
+    public func dismiss(triggerByUser: Bool) {
         Self.markerInstances.remove(self)
         UIView.animate(withDuration: 0.34) {
             self.dimmingView.alpha = 0
@@ -381,7 +387,7 @@ public class Marker: UIView {
             self.contentView.transform = CGAffineTransform(translationX: 0, y: 50).concatenating(CGAffineTransform(scaleX: 1.1, y: 1.1))
         } completion: { [weak self] (_) in
             guard let self = self else { return }
-            self.completion?(self)
+            self.completion?(self, triggerByUser)
             self.removeFromSuperview()
         }
     }
@@ -394,6 +400,6 @@ public class Marker: UIView {
         self.onView = onView
         self.completion = completion
         installViews()
-        layout()
+        layout(triggerByUser: true)
     }
 }
