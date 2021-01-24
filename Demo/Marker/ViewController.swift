@@ -65,15 +65,18 @@ class ViewController: UIViewController {
     }
     
     @objc func tapAction(sender: UIButton) {
+        Marker.default.timeoutAfterAnimateDidCompletion = true
+        Marker.default.timeout = 0.1
+        
         let marker = Marker(.init(marker: bottomLeftButton, intro: "你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的", maxWidth: 400))
             .next(.init(marker: topLeftButton, intro: "我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的", maxWidth: 320, style: .round))
             .next(.init(marker: topRightButton, intro: "她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的", maxWidth: 320, dimFrame: .zero))
-            .next(.init(marker: bottomRightButton, intro: "它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的", maxWidth: 320, style: .round))
             .next(.init(marker: buttons.first, intro: "第一个"))
             .next(.init(marker: buttons[1], intro: "第二个"))
             .next(.init(marker: buttons[2], intro: "第三个"))
             .next(.init(marker: buttons[3], intro: "第四个"))
-        //marker.frame = .init(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 400)
+            .next(.init(marker: bottomRightButton, intro: "它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的", maxWidth: 320, enlarge: 20))
+        
         marker.show(on: view)
     }
     
@@ -84,6 +87,8 @@ class ViewController: UIViewController {
         topRightButton.frame = .init(x: 200, y: 88, width: 120, height: 24)
         bottomLeftButton.frame = .init(x: 30, y: 488, width: 120, height: 24)
         bottomRightButton.frame = .init(x: 200, y: 488, width: 120, height: 120)
+        
+        bottomRightButton.layer.cornerRadius = 60
     }
 }
 

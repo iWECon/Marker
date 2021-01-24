@@ -27,6 +27,14 @@ public class Marker: UIView {
         public var colorEndPoint: CGPoint = .init(x: 1, y: 0.5)
         public var padding: UIEdgeInsets = .init(top: 5, left: 10, bottom: 5, right: 10)
         public var spacing: CGFloat = 10
+        /// 超时时间是否从动画完成后开始, 默认为 true
+        public var timeoutAfterAnimateDidCompletion = true
+        /// 高亮区域圆角配置，默认为跟随高亮视图 .marker
+        public var style: Info.Style = .marker
+        /// 超时时间，0 为永不超时
+        public var timeout: TimeInterval = 0
+        /// 是否显示三角箭头, 默认为 true
+        public var isShowArrow = true
     }
     public static var `default` = Appearence()
     
@@ -52,11 +60,11 @@ public class Marker: UIView {
         /// 灰色背景的范围，默认为全屏，有非全屏需求时设置
         public var dimFrame: CGRect = UIScreen.main.bounds
         /// 高亮部分的圆角度数，默认跟随 marker.layer.cornerRadius
-        public var style: Style = .marker
+        public var style: Style
         /// 出现后不操作自动下一个/结束的时间
-        public var timeout: TimeInterval = 0
-        /// 高亮范围扩展，默认为 0
-        public var enlarge: CGFloat = 0
+        public var timeout: TimeInterval
+        /// 高亮范围扩展
+        public var enlarge: CGFloat
         /// 显示三角箭头
         public var isShowArrow = true
         /// 本次完成的回执，全部完成的回执在 Marker 中的 show(on:completion:)
@@ -66,7 +74,15 @@ public class Marker: UIView {
             "\(marker?.description ?? "")-\(intro)-\(dimFrame)-\(timeout)-\(style)"
         }
         
-        public init(marker: UIView?, intro: String, maxWidth: CGFloat = 240, style: Info.Style = .marker, timeout: TimeInterval = 0, dimFrame: CGRect = UIScreen.main.bounds, enlarge: CGFloat = 0, showArrow: Bool = true, completion: CompletionBlock? = nil) {
+        public init(marker: UIView?,
+                    intro: String,
+                    maxWidth: CGFloat = 240,
+                    style: Info.Style = Marker.default.style,
+                    timeout: TimeInterval = Marker.default.timeout,
+                    dimFrame: CGRect = UIScreen.main.bounds,
+                    enlarge: CGFloat = 0,
+                    showArrow: Bool = Marker.default.isShowArrow,
+                    completion: CompletionBlock? = nil) {
             self.marker = marker
             self.intro = intro
             self.maxWidth = maxWidth
@@ -152,7 +168,8 @@ public class Marker: UIView {
         
         if current.timeout > 0 { // 如果有超时时间，则开启超时
             let identifier = current.identifier
-            DispatchQueue.main.asyncAfter(deadline: .now() + (Double(current.timeout) + animateDuration)) { [weak self] in
+            let timeout = Marker.default.timeoutAfterAnimateDidCompletion ? (Double(current.timeout) + animateDuration) : Double(current.timeout)
+            DispatchQueue.main.asyncAfter(deadline: .now() + timeout) { [weak self] in
                 // 超时后判断
                 guard self?.animateMaps[identifier] == false else { return }
                 self?.showNext()
@@ -163,20 +180,22 @@ public class Marker: UIView {
         
         let spacing = Self.default.spacing
         let innerFrame = markSuperView.convert(markView.frame, to: self)
+        let isRound = markView.layer.cornerRadius == innerFrame.height / 2
+        let markerFrame = current.dimFrame == .zero ? .zero : innerFrame.insetBy(dx: -current.enlarge, dy: -current.enlarge)
         
         // set cornerRadiu
         let cornerRadius: CGFloat
         switch current.style {
         case .marker:
-            cornerRadius = markView.layer.cornerRadius
+            cornerRadius = isRound ? markerFrame.height / 2 : markView.layer.cornerRadius
         case .square:
             cornerRadius = 0
         case .round:
-            cornerRadius = markView.frame.height / 2
+            cornerRadius = markerFrame.height / 2
         case .radius(let radius):
             cornerRadius = radius
         }
-        let markerFrame = current.dimFrame == .zero ? .zero : innerFrame.insetBy(dx: -current.enlarge, dy: -current.enlarge)
+        
         let markerPath = UIBezierPath(roundedRect: markerFrame, cornerRadius: cornerRadius).reversing()
         
         // set dimming path
@@ -359,7 +378,7 @@ public class Marker: UIView {
             self.dimmingView.alpha = 0
             
             self.contentView.alpha = 0
-            self.contentView.transform = CGAffineTransform(translationX: 0, y: 50).concatenating(CGAffineTransform(scaleX: 1.2, y: 1.2))
+            self.contentView.transform = CGAffineTransform(translationX: 0, y: 50).concatenating(CGAffineTransform(scaleX: 1.1, y: 1.1))
         } completion: { [weak self] (_) in
             guard let self = self else { return }
             self.completion?(self)
