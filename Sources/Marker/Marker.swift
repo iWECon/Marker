@@ -9,6 +9,7 @@ import UIKit
 
 public class Marker: UIView {
     
+    // MARK:- Static properties
     private static var markerInstances: Set<Marker> = []
     public static func dismiss() {
         markerInstances.forEach({ $0.dismiss(triggerByUser: true) })
@@ -17,123 +18,16 @@ public class Marker: UIView {
     // MARK:- Public properties
     public typealias CompletionBlock = (_: Marker, _ isTriggerByUser: Bool) -> Void
     
-    public struct Appearence {
-        public var colors: [CGColor] = [
-            UIColor(red: 255 / 255, green: 200 / 255, blue: 0, alpha: 1).cgColor,
-            UIColor(red: 255 / 255, green: 51 / 255, blue: 131 / 255, alpha: 1).cgColor
-        ]
-        
-        public var colorStartPoint: CGPoint = .init(x: 0, y: 0.5)
-        public var colorEndPoint: CGPoint = .init(x: 1, y: 0.5)
-        
-        public var spacing: CGFloat = 10
-        public var padding: UIEdgeInsets = .init(top: 5, left: 10, bottom: 5, right: 10)
-        
-        public var textFont: UIFont = .systemFont(ofSize: 12, weight: .medium)
-        public var textColor: UIColor = .white
-        
-        /// 超时时间是否从动画完成后开始, 默认为 true
-        public var timeoutAfterAnimateDidCompletion = true
-        /// 高亮区域圆角配置，默认为跟随高亮视图 .marker
-        public var style: Info.Style = .marker
-        /// 超时时间，0 为永不超时
-        public var timeout: TimeInterval = 0
-        /// 是否显示三角箭头, 默认为 true
-        public var isShowArrow = true
-    }
-    public static var `default` = Appearence()
-    
+    public static var `default` = Marker.Appearence()
     public var animateDuration: TimeInterval = 0.34
     
     // MARK:- Internal properties
-    public struct Info {
-        public enum Style {
-            /// follow marker.layer.cornerRadius, default
-            case marker
-            
-            case square
-            case round
-            case radius(_ radius: CGFloat)
-        }
-        
-        public enum Image {
-            case image(_ image: UIImage?, offsetY: CGFloat? = nil, size: CGSize? = nil)
-            
-            var image: UIImage? {
-                switch self {
-                case .image(let image, _, _):
-                    return image
-                }
-            }
-            var size: CGSize? {
-                switch self {
-                case .image(_, _, let size):
-                    return size
-                }
-            }
-            var offsetY: CGFloat? {
-                switch self {
-                case .image(_, let offsetY, _):
-                    return offsetY
-                }
-            }
-        }
-        
-        /// 需要高亮的视图
-        public weak var marker: UIView?
-        /// 表述文本
-        public var intro: String
-        /// 前缀图片
-        public var prefixImage: Image?
-        /// 后缀图片
-        public var suffixImage: Image?
-        /// 文本的最大宽度，默认为 240，一般情况下无需调整
-        public var maxWidth: CGFloat
-        /// 灰色背景的范围，默认为全屏，有非全屏需求时设置
-        public var dimFrame: CGRect = UIScreen.main.bounds
-        /// 高亮部分的圆角度数，默认跟随 marker.layer.cornerRadius
-        public var style: Style
-        /// 出现后不操作自动下一个/结束的时间
-        public var timeout: TimeInterval
-        /// 高亮范围扩展
-        public var enlarge: CGFloat
-        /// 显示三角箭头
-        public var isShowArrow = true
-        /// 本次完成的回执，全部完成的回执在 Marker 中的 show(on:completion:)
-        public var completion: CompletionBlock?
-        
-        var identifier: String {
-            "\(marker?.description ?? "")-\(intro)-\(dimFrame)-\(timeout)-\(style)"
-        }
-        
-        public init(marker: UIView?,
-                    intro: String,
-                    prefixImage: Image? = nil,
-                    suffixImage: Image? = nil,
-                    maxWidth: CGFloat = 240,
-                    style: Info.Style = Marker.default.style,
-                    timeout: TimeInterval = Marker.default.timeout,
-                    dimFrame: CGRect = UIScreen.main.bounds,
-                    enlarge: CGFloat = 0,
-                    showArrow: Bool = Marker.default.isShowArrow,
-                    completion: CompletionBlock? = nil) {
-            self.marker = marker
-            self.intro = intro
-            self.prefixImage = prefixImage
-            self.suffixImage = suffixImage
-            self.maxWidth = maxWidth
-            self.dimFrame = dimFrame
-            self.style = style
-            self.timeout = timeout
-            self.enlarge = enlarge
-            self.isShowArrow = showArrow
-            self.completion = completion
-        }
-    }
-    
     weak var onView: UIView?
+    
     var current: Info
+    
     var nexts: [Info] = []
+    
     var animateMaps: [String: Bool] = [:]
     
     /// completion，所有任务完成后的 completion
@@ -175,6 +69,9 @@ public class Marker: UIView {
         gradientLayer.colors = Self.default.colors
         gradientLayer.startPoint = Self.default.colorStartPoint
         gradientLayer.endPoint = Self.default.colorEndPoint
+        if let locations = Self.default.colorLocations {
+            gradientLayer.locations = locations
+        }
         
         addSubview(dimmingView)
         addSubview(contentView)
@@ -270,29 +167,35 @@ public class Marker: UIView {
             contentLabel.text = current.intro
         } else {
             // 有图片
-            func makeString(_ string: String, prefixImage: Info.Image?, suffixImage: Info.Image?) -> NSAttributedString {
-                func makeAttachString(_ image: UIImage?, size: CGSize?, offsetY: CGFloat?) -> NSAttributedString? {
+            func makeString(_ string: String, prefixImageInfo: Info.Image?, suffixImageInfo: Info.Image?) -> NSAttributedString {
+                
+                // make attachment view
+                func makeAttachString(_ image: Info.Image?) -> NSAttributedString? {
                     guard let image = image else { return nil }
-                    let attach = NSTextAttachment()
-                    attach.image = image
-                    attach.bounds = .init(x: 0, y: -(offsetY ?? 0),
-                                          width: size?.width ?? image.size.width, height: size?.height ?? image.size.height)
                     
+                    let offsetY = image.offsetY
+                    let imageSize = image.size ?? image.size ?? .zero
+                    
+                    let attach = NSTextAttachment()
+                    attach.image = image.image
+                    attach.bounds = .init(x: 0, y: -offsetY,
+                                          width: imageSize.width, height: imageSize.height)
                     return NSAttributedString(attachment: attach)
                 }
+                
                 let mutableAttr = NSMutableAttributedString(string: string)
                 
-                let prefixString: NSAttributedString? = makeAttachString(prefixImage?.image, size: prefixImage?.size, offsetY: prefixImage?.offsetY)
+                let prefixString: NSAttributedString? = makeAttachString(prefixImageInfo)
                 if let ps = prefixString {
                     mutableAttr.insert(ps, at: 0)
                 }
-                let suffixString: NSAttributedString? = makeAttachString(suffixImage?.image, size: suffixImage?.size, offsetY: suffixImage?.offsetY)
+                let suffixString: NSAttributedString? = makeAttachString(suffixImageInfo)
                 if let ss = suffixString {
                     mutableAttr.append(ss)
                 }
                 return mutableAttr
             }
-            contentLabel.attributedText = makeString(current.intro, prefixImage: current.prefixImage, suffixImage: current.suffixImage)
+            contentLabel.attributedText = makeString(current.intro, prefixImageInfo: current.prefixImage, suffixImageInfo: current.suffixImage)
         }
         
         // reload contentLabel size
@@ -464,5 +367,15 @@ public class Marker: UIView {
         self.completion = completion
         installViews()
         layout(triggerByUser: true)
+    }
+    
+    public override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
+        guard current.isOnlyAcceptHighlightRange else {
+            return true
+        }
+        guard let markerView = current.marker, let markerViewFrameInner = markerView.superview?.convert(markerView.frame, to: self) else {
+            return false
+        }
+        return markerViewFrameInner.contains(point)
     }
 }
