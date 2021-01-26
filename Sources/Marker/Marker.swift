@@ -25,8 +25,13 @@ public class Marker: UIView {
         
         public var colorStartPoint: CGPoint = .init(x: 0, y: 0.5)
         public var colorEndPoint: CGPoint = .init(x: 1, y: 0.5)
-        public var padding: UIEdgeInsets = .init(top: 5, left: 10, bottom: 5, right: 10)
+        
         public var spacing: CGFloat = 10
+        public var padding: UIEdgeInsets = .init(top: 5, left: 10, bottom: 5, right: 10)
+        
+        public var textFont: UIFont = .systemFont(ofSize: 12, weight: .medium)
+        public var textColor: UIColor = .white
+        
         /// 超时时间是否从动画完成后开始, 默认为 true
         public var timeoutAfterAnimateDidCompletion = true
         /// 高亮区域圆角配置，默认为跟随高亮视图 .marker
@@ -51,10 +56,37 @@ public class Marker: UIView {
             case radius(_ radius: CGFloat)
         }
         
+        public enum Image {
+            case image(_ image: UIImage?, offsetY: CGFloat? = nil, size: CGSize? = nil)
+            
+            var image: UIImage? {
+                switch self {
+                case .image(let image, _, _):
+                    return image
+                }
+            }
+            var size: CGSize? {
+                switch self {
+                case .image(_, _, let size):
+                    return size
+                }
+            }
+            var offsetY: CGFloat? {
+                switch self {
+                case .image(_, let offsetY, _):
+                    return offsetY
+                }
+            }
+        }
+        
         /// 需要高亮的视图
         public weak var marker: UIView?
         /// 表述文本
         public var intro: String
+        /// 前缀图片
+        public var prefixImage: Image?
+        /// 后缀图片
+        public var suffixImage: Image?
         /// 文本的最大宽度，默认为 240，一般情况下无需调整
         public var maxWidth: CGFloat
         /// 灰色背景的范围，默认为全屏，有非全屏需求时设置
@@ -76,6 +108,8 @@ public class Marker: UIView {
         
         public init(marker: UIView?,
                     intro: String,
+                    prefixImage: Image? = nil,
+                    suffixImage: Image? = nil,
                     maxWidth: CGFloat = 240,
                     style: Info.Style = Marker.default.style,
                     timeout: TimeInterval = Marker.default.timeout,
@@ -85,6 +119,8 @@ public class Marker: UIView {
                     completion: CompletionBlock? = nil) {
             self.marker = marker
             self.intro = intro
+            self.prefixImage = prefixImage
+            self.suffixImage = suffixImage
             self.maxWidth = maxWidth
             self.dimFrame = dimFrame
             self.style = style
@@ -128,8 +164,8 @@ public class Marker: UIView {
     
     func installViews() {
         
-        contentLabel.font = UIFont.systemFont(ofSize: 12, weight: .medium)
-        contentLabel.textColor = .white
+        contentLabel.font = Self.default.textFont
+        contentLabel.textColor = Self.default.textColor
         contentLabel.numberOfLines = 0
         
         dimmingView.alpha = 0
@@ -230,7 +266,34 @@ public class Marker: UIView {
             }
         }
         
-        contentLabel.text = current.intro
+        if current.prefixImage == nil && current.suffixImage == nil {
+            contentLabel.text = current.intro
+        } else {
+            // 有图片
+            func makeString(_ string: String, prefixImage: Info.Image?, suffixImage: Info.Image?) -> NSAttributedString {
+                func makeAttachString(_ image: UIImage?, size: CGSize?, offsetY: CGFloat?) -> NSAttributedString? {
+                    guard let image = image else { return nil }
+                    let attach = NSTextAttachment()
+                    attach.image = image
+                    attach.bounds = .init(x: 0, y: -(offsetY ?? 0),
+                                          width: size?.width ?? image.size.width, height: size?.height ?? image.size.height)
+                    
+                    return NSAttributedString(attachment: attach)
+                }
+                let mutableAttr = NSMutableAttributedString(string: string)
+                
+                let prefixString: NSAttributedString? = makeAttachString(prefixImage?.image, size: prefixImage?.size, offsetY: prefixImage?.offsetY)
+                if let ps = prefixString {
+                    mutableAttr.insert(ps, at: 0)
+                }
+                let suffixString: NSAttributedString? = makeAttachString(suffixImage?.image, size: suffixImage?.size, offsetY: suffixImage?.offsetY)
+                if let ss = suffixString {
+                    mutableAttr.append(ss)
+                }
+                return mutableAttr
+            }
+            contentLabel.attributedText = makeString(current.intro, prefixImage: current.prefixImage, suffixImage: current.suffixImage)
+        }
         
         // reload contentLabel size
         let padding = Self.default.padding

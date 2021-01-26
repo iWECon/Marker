@@ -65,10 +65,10 @@ class ViewController: UIViewController {
     }
     
     @objc func tapAction(sender: UIButton) {
-        Marker.default.timeoutAfterAnimateDidCompletion = true
-        Marker.default.timeout = 1
+//        Marker.default.timeoutAfterAnimateDidCompletion = true
+//        Marker.default.timeout = 1
         
-        let marker = Marker(.init(marker: bottomLeftButton, intro: "你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的", maxWidth: 400))
+        let marker = Marker(.init(marker: bottomLeftButton, intro: "你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的", prefixImage: .image(UIImage(named: "panci"), offsetY: 5), suffixImage: .image(UIImage(named: "panci"), offsetY: 5), maxWidth: 400))
             .next(.init(marker: topLeftButton, intro: "我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的", maxWidth: 320, style: .round))
             .next(.init(marker: topRightButton, intro: "她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的", maxWidth: 320, dimFrame: .zero))
             .next(.init(marker: buttons.first, intro: "第一个", completion: { (_, isTriggerByUser) in
