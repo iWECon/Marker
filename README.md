@@ -8,6 +8,25 @@
 ![Demo](Demo/preview.gif)
 
 
+## Code Preview
+
+```swift
+Marker(.init(marker: bottomLeftButton, intro: "你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的", prefixImage:          .init(UIImage(named: "panci")), suffixImage: .init(UIImage(named: "panci")), maxWidth: 400))
+    .next(.init(marker: topLeftButton, intro: "我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的", maxWidth: 320, style: .round))
+    .next(.init(marker: topRightButton, intro: "她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的", maxWidth: 320, dimFrame: .zero))
+    .next(.init(marker: buttons.first, intro: "第一个", highlightOnly: true, completion: { (_, isTriggerByUser) in
+        print("is trigger by user: ", isTriggerByUser)
+    }))
+    .next(.init(marker: buttons[1], intro: "第二个", completion: { (_, isTriggerByUser) in
+        print("is trigger by user: ", isTriggerByUser)
+    }))
+    .next(.init(buttons[2], intro: "第三个"))
+    .next(.init(buttons[3], intro: "第四个"))
+    .next(.init(marker: bottomRightButton, intro: "它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的", maxWidth: 320, enlarge: 20))
+    .show(on: view)
+```
+
+
 ## Features
 
 ```
