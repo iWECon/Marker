@@ -43,9 +43,18 @@ public class Marker: UIView {
     }
     
     /// 下一个
+    @discardableResult
     public func next(_ info: Info) -> Marker {
         nexts.append(info)
         animateMaps[info.identifier] = false
+        return self
+    }
+    
+    /// 下一组
+    @discardableResult
+    public func nexts(_ infos: [Info]) -> Marker {
+        nexts.append(contentsOf: infos)
+        infos.forEach({ animateMaps[$0.identifier] = false })
         return self
     }
     
