@@ -88,7 +88,13 @@ public class Marker: UIView {
         addGestureRecognizer(tap)
     }
     
-    @objc func showNextTriggerByUser() {
+    @objc func showNextTriggerByUser(tap: UITapGestureRecognizer) {
+        if current.isOnlyAcceptHighlightRange { // bugfix: 将 point(inside:with) 替换为这里的逻辑, 处理点击底部视图可响应事件的 view 时依然会响应的问题
+            let tapPoint = tap.location(in: self)
+            if !markerInnerFrame.contains(tapPoint) {
+                return
+            }
+        }
         showNext(triggerByUser: true)
     }
     
@@ -268,16 +274,6 @@ public class Marker: UIView {
         UIView.animate(withDuration: animateDuration, delay: 0, options: [.allowUserInteraction]) {
             self.layout(triggerByUser: triggerByUser)
         }
-    }
-    
-    public override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
-        guard current.isOnlyAcceptHighlightRange else {
-            return true
-        }
-        guard current.isMarkerValidate else {
-            return false
-        }
-        return markerInnerFrame.contains(point)
     }
     
 }
