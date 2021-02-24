@@ -69,15 +69,14 @@ class ViewController: UIViewController {
         Marker.default.timeout = 0
         
         let attributedString = NSMutableAttributedString(string: "2⃣️ 生成的第二个按钮")
-        attributedString.addAttributes([.font: UIFont.systemFont(ofSize: 24, weight: .heavy)], range: NSMakeRange(0, attributedString.string.utf16.count))
+        attributedString.addAttributes([.font: UIFont.systemFont(ofSize: 18, weight: .heavy)], range: NSMakeRange(0, attributedString.string.utf16.count))
         
-        //, prefixImage: .init(UIImage(named: "panci")), suffixImage: .init(UIImage(named: "panci")), maxWidth: 400
-        let marker = Marker(.init(bottomLeftButton, intro: "左下角的按钮"))
-            .next(.init(topLeftButton, intro: "右上角左边的按钮"))
+        let marker = Marker(.init(bottomLeftButton, intro: "左下角的按钮, 只能点击高亮范围才能触发下一个").highlightOnly())
+            .next(.init(nil, intro: UIImage(named: "panci"), size: .init(width: 100, height: 100)))
             .next(.init(topRightButton, intro: "右上角右边的按钮"))
-            .next(Marker.Info.init(buttons.first, intro: "生成的第一个按钮, 该按钮的高亮只能点击高亮范围才能触发下一个").highlight(only: true))
-            .next(Marker.Info.init(buttons[1], intro: attributedString))
-            .next(.init(buttons[2], intro: "生成的第三个按钮"))
+            .next(.init(buttons.first, intro: "生成的第一个按钮"))
+            .next(.init(buttons[1], intro: attributedString))
+            .next(.init(buttons[2], intro: "生成的第三个按钮").backgroundHidden())
             .next(.init(buttons[3], intro: "生成的第四个按钮"))
             .next(.init(bottomRightButton, intro: "右下角一个非常大的按钮"))
         

@@ -19,7 +19,7 @@ public extension Marker.Info {
         
         public init(_ intro: UIImage?, size: CGSize? = nil) {
             self.image = intro
-            self.size = size
+            self.size = size ?? intro?.size
         }
     }
 }

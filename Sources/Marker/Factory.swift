@@ -132,8 +132,86 @@ extension Marker {
     }
 }
 
+// MARK:- Set gradient background
+extension Marker {
+    
+    enum Edge {
+        case center
+        
+        case topLeft
+        case topRight
+        
+        case bottomLeft
+        case bottomRight
+    }
+    
+    func setGradientBackground(contentSize: CGSize) -> (CGRect, Edge) {
+        var gradientFrame: CGRect = .zero
+        let padding = Self.default.padding
+        
+        guard let markView = current.markerView, let markSuperView = markView.superview else {
+            gradientFrame = .init(x: (UIScreen.main.bounds.width - contentSize.width) / 2, y: (UIScreen.main.bounds.height - contentSize.height) / 2, width: contentSize.width, height: contentSize.height)
+            gradientLayer.bounds = current.isBackgroundHidden ? .zero : .init(x: 0, y: 0, width: contentSize.width + padding.left + padding.right, height: contentSize.height + padding.top + padding.bottom + 6)
+            return (gradientFrame, .center)
+        }
+        
+        let innerFrame = markSuperView.convert(markView.frame, to: self)
+        
+        
+        let spacing = Self.default.spacing
+        // calculator gradient frame
+        let bumpHeight: CGFloat = current.isShowArrow ? 6 : 0
+        
+        // 如果视图在中心线右边，则三角形也在右边, 否则在左边
+        let isRight = innerFrame.minX >= (frame.width / 2)
+        gradientFrame.size = .init(width: contentSize.width + padding.left + padding.right,
+                                   height: contentSize.height + padding.top + padding.bottom + bumpHeight)
+        
+        if isRight {
+            // right
+            gradientFrame.origin.x = innerFrame.maxX - gradientFrame.width
+            if gradientFrame.origin.x < 10 {
+                gradientFrame.origin.x = 10
+            }
+        } else {
+            // left
+            gradientFrame.origin.x = innerFrame.minX
+            if gradientFrame.maxX > UIScreen.main.bounds.width - 10 { // 右边超出右边
+                gradientFrame.origin.x = UIScreen.main.bounds.width - gradientFrame.width - 10
+            } else if gradientFrame.minX < 10 {
+                gradientFrame.origin.x = 10
+            }
+        }
+        
+        let isBottom = innerFrame.maxY >= frame.height / 2
+        if isBottom {
+            // bottom
+            gradientFrame.origin.y = innerFrame.minY - gradientFrame.height - spacing - current.enlarge
+        } else {
+            // top
+            gradientFrame.origin.y = innerFrame.maxY + spacing + current.enlarge
+        }
+        
+        gradientLayer.bounds = current.isBackgroundHidden ? .zero : .init(x: 0, y: 0, width: gradientFrame.width, height: gradientFrame.height)
+        
+        let edge: Edge
+        if isRight, !isBottom {
+            edge = .topRight
+        } else if isRight, isBottom {
+            edge = .bottomRight
+        } else if !isRight, isBottom {
+            edge = .bottomLeft
+        } else if !isRight, !isBottom {
+            edge = .topLeft
+        } else {
+            edge = .center
+        }
+        return (gradientFrame, edge)
+    }
+    
+}
 
-// MARK:- Set Content and calculator content size
+// MARK:- Set Content text or image or view and calculator content size
 extension Marker {
     
     @discardableResult
@@ -163,7 +241,35 @@ extension Marker {
     }
     
     func makeImageContentIfNeeded() -> CGSize? {
-        guard let intro = current.intro as? Info.Image, intro.isValidate, let view = intro.image else { return nil }
-        return intro.size ?? view.size
+        guard let intro = current.intro as? Info.Image, intro.isValidate, let image = intro.image else { return nil }
+        current.isBackgroundHidden = true
+        contentLabel.frame.size = .zero
+        
+        let imageView = UIImageView(image: image)
+        contentView.addSubview(imageView)
+        
+        let size = intro.size ?? .zero
+        imageView.frame = .init(x: Self.default.padding.left, y: Self.default.padding.top, width: size.width, height: size.height)
+        
+        return intro.size ?? image.size
     }
+}
+
+// MARK:- Set Content View
+extension Marker {
+    
+    func setContentView(gradientFrame: CGRect, edge: Edge) {
+        if contentView.frame == .zero {
+            contentView.alpha = 0
+            contentView.frame = gradientFrame
+            contentView.transform = .init(translationX: 0, y: (edge == .bottomLeft || edge == .bottomRight) ? -30 : 30)
+            UIView.animate(withDuration: animateDuration) {
+                self.contentView.alpha = 1
+                self.contentView.transform = .identity
+            }
+        } else {
+            contentView.frame = gradientFrame
+        }
+    }
+    
 }

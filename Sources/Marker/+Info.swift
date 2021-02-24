@@ -16,11 +16,11 @@ public extension Marker {
         
         /// max width of the content, default is `240`
         /// 提示内容的最大宽度, 默认为 `240`
-        var maxWidth: CGFloat = 240
+        var maxWidth: CGFloat = Marker.default.maxWidth
         
         /// the dimming view's frame
         /// 灰色遮罩的 frame
-        var dimFrame: CGRect = UIScreen.main.bounds
+        var dimFrame: CGRect = Marker.default.dimFrame
         
         /// corner style of the marker
         /// 圆角类型
@@ -31,7 +31,7 @@ public extension Marker {
         
         /// enlarge of the highlight range
         /// 高亮范围的扩展
-        var enlarge: CGFloat = 0
+        var enlarge: CGFloat = Marker.default.enlarge
         
         /// is show arrow
         /// 是否显示三角箭头
@@ -40,11 +40,11 @@ public extension Marker {
         /// is only accept highlight range, default is `false`
         /// only accept tap highlight range to next, if true
         /// 是否只允许高亮范围的点击事件, 默认为 `false`
-        var isOnlyAcceptHighlightRange: Bool = false
+        var isOnlyAcceptHighlightRange: Bool = Marker.default.isOnlyAcceptHighlightRange
         
         var completion: Marker.CompletionBlock? = nil
         
-        var isMarkerNilToNext: Bool = false
+        var isBackgroundHidden: Bool = Marker.default.isBackgroundHidden
         
         var identifier: String {
             "\(marker?.description ?? "")-\(String(describing: intro))-\(dimFrame)-\(timeout)-\(style)"
@@ -63,31 +63,37 @@ public extension Marker.Info {
         self.style = style
         return self
     }
+    
     @discardableResult
     func timeout(_ timeout: TimeInterval) -> Marker.Info {
         self.timeout = timeout
         return self
     }
+    
     @discardableResult
     func dim(frame: CGRect) -> Marker.Info {
         self.dimFrame = frame
         return self
     }
+    
     @discardableResult
     func enlarge(_ tapEnlarge: CGFloat) -> Marker.Info {
         self.enlarge = tapEnlarge
         return self
     }
+    
     @discardableResult
-    func arrow(show isShow: Bool) -> Marker.Info {
-        self.isShowArrow = isShow
+    func arrowHide() -> Marker.Info {
+        self.isShowArrow = false
         return self
     }
+    
     @discardableResult
-    func highlight(only isOnlyAcceptHighlightRange: Bool) -> Marker.Info {
-        self.isOnlyAcceptHighlightRange = isOnlyAcceptHighlightRange
+    func highlightOnly() -> Marker.Info {
+        self.isOnlyAcceptHighlightRange = true
         return self
     }
+    
     @discardableResult
     func completion(_ completion: @escaping Marker.CompletionBlock) -> Marker.Info {
         self.completion = completion
@@ -97,6 +103,12 @@ public extension Marker.Info {
     @discardableResult
     func maxWidth(_ textMaxWidth: CGFloat) -> Marker.Info {
         self.maxWidth = textMaxWidth
+        return self
+    }
+    
+    @discardableResult
+    func backgroundHidden() -> Marker.Info {
+        self.isBackgroundHidden = true
         return self
     }
 }

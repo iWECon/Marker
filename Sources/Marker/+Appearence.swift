@@ -39,6 +39,16 @@ public extension Marker {
         
         /// 是否显示三角箭头, 默认为 true
         public var isShowArrow = true
+        
+        public var enlarge: CGFloat = 0
+        
+        public var dimFrame = UIScreen.main.bounds
+        
+        public var maxWidth: CGFloat = 240
+        
+        public var isOnlyAcceptHighlightRange = false
+        
+        public var isBackgroundHidden = false
     }
     
 }
