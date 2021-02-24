@@ -25,6 +25,7 @@ public class Marker: UIView {
     weak var onView: UIView?
     
     var current: Info
+    var previous: Info?
     
     var nexts: [Info] = []
     
@@ -50,17 +51,9 @@ public class Marker: UIView {
         return self
     }
     
-    /// 下一组
-    @discardableResult
-    public func nexts(_ infos: [Info]) -> Marker {
-        nexts.append(contentsOf: infos)
-        infos.forEach({ animateMaps[$0.identifier] = false })
-        return self
-    }
-    
     let dimmingView = UIView()
     let contentView = UIView()
-    public let contentLabel = UILabel()
+    let contentLabel = UILabel()
     let gradientLayer = CAGradientLayer()
     let bumpLayer = CAShapeLayer()
     let maskLayer = CAShapeLayer()
@@ -99,145 +92,48 @@ public class Marker: UIView {
         showNext(triggerByUser: true)
     }
     
-    var dimmingViewShouldTransition: Bool {
-        var shouldAnimate = false
-        if let path = maskLayer.path, UIBezierPath(cgPath: path).bounds == .zero {
-            shouldAnimate = true
-        }
-        return shouldAnimate
+    enum Edge {
+        case center
+        
+        case topLeft
+        case topRight
+        
+        case bottomLeft
+        case bottomRight
     }
     
-    func layout(triggerByUser: Bool) {
-        guard let markView = current.marker, let markSuperView = current.marker?.superview else {
-            // 没有找到 marker 或者 marker 没有添加到视图上，直接进入下一个
-            showNext(triggerByUser: triggerByUser)
-            return
+    func setGradientBackground(contentSize: CGSize) -> (CGRect, Edge) {
+        var gradientFrame: CGRect = .zero
+        let padding = Self.default.padding
+        
+        guard let markView = current.marker, let markSuperView = markView.superview else {
+            gradientFrame = .init(x: (UIScreen.main.bounds.width - contentSize.width) / 2, y: (UIScreen.main.bounds.height - contentSize.height) / 2, width: contentSize.width, height: contentSize.height)
+            gradientLayer.bounds = .init(x: 0, y: 0, width: contentSize.width + padding.left + padding.right, height: contentSize.height + padding.top + padding.bottom + 6)
+            return (gradientFrame, .center)
         }
         
-        if current.timeout > 0 { // 如果有超时时间，则开启超时
-            let identifier = current.identifier
-            let timeout = Marker.default.timeoutAfterAnimateDidCompletion ? (Double(current.timeout) + animateDuration) : Double(current.timeout)
-            DispatchQueue.main.asyncAfter(deadline: .now() + timeout) { [weak self] in
-                // 超时后判断
-                guard self?.animateMaps[identifier] == false else { return }
-                self?.showNext(triggerByUser: false)
-            }
-        }
+        let innerFrame = markSuperView.convert(markView.frame, to: self)
         
-        dimmingView.frame = bounds
         
         let spacing = Self.default.spacing
-        let innerFrame = markSuperView.convert(markView.frame, to: self)
-        let isRound = markView.layer.cornerRadius == innerFrame.height / 2
-        let markerFrame = current.dimFrame == .zero ? .zero : innerFrame.insetBy(dx: -current.enlarge, dy: -current.enlarge)
-        
-        // set cornerRadiu
-        let cornerRadius: CGFloat
-        switch current.style {
-        case .marker:
-            cornerRadius = isRound ? markerFrame.height / 2 : markView.layer.cornerRadius
-        case .square:
-            cornerRadius = 0
-        case .round:
-            cornerRadius = markerFrame.height / 2
-        case .radius(let radius):
-            cornerRadius = radius
-        }
-        
-        let markerPath = UIBezierPath(roundedRect: markerFrame, cornerRadius: cornerRadius).reversing()
-        
-        // set dimming path
-        let dimmingPath = UIBezierPath(roundedRect: current.dimFrame, cornerRadius: 0)
-        dimmingPath.append(markerPath)
-        
-        if maskLayer.superlayer == nil || dimmingViewShouldTransition {
-            maskLayer.path = dimmingPath.cgPath
-            maskLayer.backgroundColor = UIColor.black.cgColor
-            dimmingView.layer.mask = maskLayer
-            UIView.animate(withDuration: animateDuration) {
-                self.dimmingView.alpha = 1
-            }
-        } else {
-            if current.dimFrame == .zero {
-                UIView.animate(withDuration: animateDuration) {
-                    self.dimmingView.alpha = 0
-                }
-            } else if dimmingView.alpha != 1 {
-                maskLayer.path = dimmingPath.cgPath
-                UIView.animate(withDuration: animateDuration) {
-                    self.dimmingView.alpha = 1
-                }
-            } else {
-                pathAnimate(from: maskLayer, to: dimmingPath)
-            }
-        }
-        
-        if current.prefixImage == nil && current.suffixImage == nil {
-            contentLabel.text = current.intro
-        } else {
-            // 有图片
-            func makeString(_ string: String, prefixImageInfo: Info.Image?, suffixImageInfo: Info.Image?) -> NSAttributedString {
-                
-                // make attachment view
-                func makeAttachString(_ image: Info.Image?) -> NSAttributedString? {
-                    guard let image = image else { return nil }
-                    
-                    let offsetY = image.offsetY
-                    let imageSize = image.size ?? image.size ?? .zero
-                    
-                    let attach = NSTextAttachment()
-                    attach.image = image.image
-                    attach.bounds = .init(x: 0, y: -offsetY,
-                                          width: imageSize.width, height: imageSize.height)
-                    return NSAttributedString(attachment: attach)
-                }
-                
-                let mutableAttr = NSMutableAttributedString(string: string)
-                
-                let prefixString: NSAttributedString? = makeAttachString(prefixImageInfo)
-                if let ps = prefixString {
-                    mutableAttr.insert(ps, at: 0)
-                }
-                let suffixString: NSAttributedString? = makeAttachString(suffixImageInfo)
-                if let ss = suffixString {
-                    mutableAttr.append(ss)
-                }
-                return mutableAttr
-            }
-            contentLabel.attributedText = makeString(current.intro, prefixImageInfo: current.prefixImage, suffixImageInfo: current.suffixImage)
-        }
-        
-        // reload contentLabel size
-        let padding = Self.default.padding
-        let maxWidth = min(UIScreen.main.bounds.width - 20,
-                           current.maxWidth)
-        let contentSize = contentLabel.sizeThatFits(.init(width: maxWidth - padding.left - padding.right, height: .greatestFiniteMagnitude))
-        contentLabel.frame.size = contentSize
-        
         // calculator gradient frame
         let bumpHeight: CGFloat = current.isShowArrow ? 6 : 0
+        
         // 如果视图在中心线右边，则三角形也在右边, 否则在左边
         let isRight = innerFrame.minX >= (frame.width / 2)
-        
-        var gradientFrame: CGRect = .zero
         gradientFrame.size = .init(width: contentSize.width + padding.left + padding.right,
                                    height: contentSize.height + padding.top + padding.bottom + bumpHeight)
-        
-        // 三角形起点偏移量
-        var bumpOffsetX: CGFloat = 0
         
         if isRight {
             // right
             gradientFrame.origin.x = innerFrame.maxX - gradientFrame.width
             if gradientFrame.origin.x < 10 {
-                bumpOffsetX = -gradientFrame.origin.x + 10
                 gradientFrame.origin.x = 10
             }
         } else {
             // left
             gradientFrame.origin.x = innerFrame.minX
             if gradientFrame.maxX > UIScreen.main.bounds.width - 10 { // 右边超出右边
-                bumpOffsetX = gradientFrame.minX - (UIScreen.main.bounds.width - gradientFrame.width - 10)
                 gradientFrame.origin.x = UIScreen.main.bounds.width - gradientFrame.width - 10
             } else if gradientFrame.minX < 10 {
                 gradientFrame.origin.x = 10
@@ -254,10 +150,26 @@ public class Marker: UIView {
         }
         gradientLayer.bounds = .init(x: 0, y: 0, width: gradientFrame.width, height: gradientFrame.height)
         
+        let edge: Edge
+        if isRight, !isBottom {
+            edge = .topRight
+        } else if isRight, isBottom {
+            edge = .bottomRight
+        } else if !isRight, isBottom {
+            edge = .bottomLeft
+        } else if !isRight, !isBottom {
+            edge = .topLeft
+        } else {
+            edge = .center
+        }
+        return (gradientFrame, edge)
+    }
+    
+    func setContentView(gradientFrame: CGRect, edge: Edge) {
         if contentView.frame == .zero {
             contentView.alpha = 0
             contentView.frame = gradientFrame
-            contentView.transform = .init(translationX: 0, y: isBottom ? -30 : 30)
+            contentView.transform = .init(translationX: 0, y: (edge == .bottomLeft || edge == .bottomRight) ? -30 : 30)
             UIView.animate(withDuration: animateDuration) {
                 self.contentView.alpha = 1
                 self.contentView.transform = .identity
@@ -265,20 +177,37 @@ public class Marker: UIView {
         } else {
             contentView.frame = gradientFrame
         }
+    }
+    
+    func layout(triggerByUser: Bool) {
+        setTimeout()
+        setMaskLayer()
+        
+        // make content
+        let contentSize = makeContent()
+        
+        let (gradientFrame, edge) = setGradientBackground(contentSize: contentSize)
+        setContentView(gradientFrame: gradientFrame, edge: edge)
+        
+        let padding = Self.default.padding
+        
+        // calculator gradient frame
+        let bumpHeight: CGFloat = current.isShowArrow ? 6 : 0
         
         // make mask
         var rectY: CGFloat = bumpHeight
+        let bumpOffsetX: CGFloat = 10
         
         var labelOriginY: CGFloat = bumpHeight + padding.top
         let bezierPath = UIBezierPath()
         if current.isShowArrow {
-            if isRight, !isBottom { // top, right
-                //labelOriginY
+            switch edge {
+            case .topRight:
                 let startPoint = CGPoint(x: gradientFrame.width - 15 - bumpOffsetX, y: bumpHeight)
                 bezierPath.move(to: startPoint)
                 bezierPath.addLine(to: .init(x: startPoint.x - 6, y: 0))
                 bezierPath.addLine(to: .init(x: startPoint.x - 12, y: startPoint.y))
-            } else if isRight, isBottom { // bottom, right
+            case .bottomRight:
                 rectY = 0
                 labelOriginY = gradientFrame.height - bumpHeight - padding.bottom - contentLabel.frame.height
                 
@@ -286,7 +215,8 @@ public class Marker: UIView {
                 bezierPath.move(to: startPoint)
                 bezierPath.addLine(to: .init(x: startPoint.x - 6, y: gradientFrame.height))
                 bezierPath.addLine(to: .init(x: startPoint.x - 12, y: startPoint.y))
-            } else if !isRight, isBottom { // bottom, left
+                
+            case .bottomLeft:
                 rectY = 0
                 labelOriginY = gradientFrame.height - bumpHeight - padding.bottom - contentLabel.frame.height
                 
@@ -295,11 +225,13 @@ public class Marker: UIView {
                 bezierPath.addLine(to: .init(x: startPoint.x + 6, y: gradientFrame.height))
                 bezierPath.addLine(to: .init(x: startPoint.x + 12, y: startPoint.y))
                 
-            } else if !isRight, !isBottom { // top, left
+            case .topLeft:
                 let startPoint = CGPoint(x: 15 + bumpOffsetX, y: bumpHeight)
                 bezierPath.move(to: startPoint)
                 bezierPath.addLine(to: .init(x: startPoint.x + 6, y: 0))
                 bezierPath.addLine(to: .init(x: startPoint.x + 12, y: startPoint.y))
+            case .center:
+                break
             }
         }
         bezierPath.append(.init(roundedRect: .init(x: 0, y: rectY, width: gradientLayer.frame.width, height: gradientLayer.frame.height - bumpHeight), cornerRadius: 6))
@@ -316,22 +248,6 @@ public class Marker: UIView {
         }
     }
     
-    func pathAnimate(from: CAShapeLayer, to: UIBezierPath) {
-        from.removeAnimation(forKey: "_pathAnimate")
-        
-        let animate = CABasicAnimation(keyPath: "path")
-        animate.fromValue = from.path
-        animate.toValue = to.cgPath
-        animate.duration = animateDuration
-        animate.timingFunction = CAMediaTimingFunction(name: .easeOut)
-        from.add(animate, forKey: "_pathAnimate")
-        
-        CATransaction.begin()
-        CATransaction.setDisableActions(true)
-        from.path = to.cgPath
-        CATransaction.commit()
-    }
-    
     @objc func showNext(triggerByUser: Bool) {
         // show next or dimiss
         animateMaps[current.identifier] = true
@@ -345,6 +261,7 @@ public class Marker: UIView {
             dismiss(triggerByUser: triggerByUser)
             return
         }
+        self.previous = current
         self.current = next
         nexts.removeFirst()
         
@@ -353,7 +270,21 @@ public class Marker: UIView {
         }
     }
     
-    public func dismiss(triggerByUser: Bool) {
+    public override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
+        guard current.isOnlyAcceptHighlightRange else {
+            return true
+        }
+        guard current.isMarkerValidate else {
+            return false
+        }
+        return markerInnerFrame.contains(point)
+    }
+    
+}
+
+public extension Marker {
+    
+    func dismiss(triggerByUser: Bool) {
         Self.markerInstances.remove(self)
         UIView.animate(withDuration: 0.34) {
             self.dimmingView.alpha = 0
@@ -367,7 +298,7 @@ public class Marker: UIView {
         }
     }
     
-    public func show(on onView: UIView, completion: CompletionBlock? = nil) {
+    func show(on onView: UIView, completion: CompletionBlock? = nil) {
         Self.markerInstances.insert(self)
         if self.frame == .zero {
             self.frame = onView.frame
@@ -378,13 +309,4 @@ public class Marker: UIView {
         layout(triggerByUser: true)
     }
     
-    public override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
-        guard current.isOnlyAcceptHighlightRange else {
-            return true
-        }
-        guard let markerView = current.marker, let markerViewFrameInner = markerView.superview?.convert(markerView.frame, to: self) else {
-            return false
-        }
-        return markerViewFrameInner.contains(point)
-    }
 }
