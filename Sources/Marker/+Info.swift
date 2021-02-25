@@ -49,7 +49,8 @@ public extension Marker {
             "\(marker?.description ?? "")-\(intro)-\(dimFrame)-\(timeout)-\(style)"
         }
         
-        @available(*, deprecated, message: "Please use `init(_:intro:)` to initialize.")
+        //@available(*, deprecated, message: "Please use `init(_:intro:)` to initialize.")
+        // open in swift5.4
         public init(marker: UIView?,
                     intro: String,
                     prefixImage: Image? = nil,
@@ -76,10 +77,10 @@ public extension Marker {
             self.completion = completion
         }
         
-        public init(_ marker: UIView?, intro: String) {
-            self.marker = marker
-            self.intro = intro
-        }
+//        public init(_ marker: UIView?, intro: String) {
+//            self.marker = marker
+//            self.intro = intro
+//        }
         
     }
 }

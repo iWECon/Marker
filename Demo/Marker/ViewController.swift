@@ -77,8 +77,8 @@ class ViewController: UIViewController {
             .next(.init(marker: buttons[1], intro: "第二个", completion: { (_, isTriggerByUser) in
                 print("is trigger by user: ", isTriggerByUser)
             }))
-            .next(.init(buttons[2], intro: "第三个"))
-            .next(.init(buttons[3], intro: "第四个"))
+            .next(.init(marker: buttons[2], intro: "第三个"))
+            .next(.init(marker: buttons[3], intro: "第四个"))
             .next(.init(marker: bottomRightButton, intro: "它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的", maxWidth: 320, enlarge: 20))
         
         marker.show(on: view)
