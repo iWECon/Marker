@@ -7,6 +7,9 @@
 
 import UIKit
 
+/// is Marker.Info
+public typealias MKInfo = Marker.Info
+
 public class Marker: UIView {
     
     // MARK:- Static properties
