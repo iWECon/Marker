@@ -224,12 +224,15 @@ extension Marker {
         guard let textIntro = current.intro as? Info.Text, textIntro.isValidate else { return nil }
         
         // set text intro
-        if let stringIntro = textIntro.intro {
-            contentLabel.attributedText = nil // clear attributed text
-            contentLabel.text = stringIntro
-        } else if let attributedStringIntro = textIntro.attributedIntro {
-            contentLabel.text = nil // clear text
-            contentLabel.attributedText = attributedStringIntro
+        switch textIntro.finallyIntro {
+        case is String:
+            contentLabel.attributedText = nil
+            contentLabel.text = textIntro.finallyIntro as? String
+        case is NSAttributedString:
+            contentLabel.text = nil
+            contentLabel.attributedText = textIntro.finallyIntro as? NSAttributedString
+        default:
+            break
         }
         
         let maxWidth = min(UIScreen.main.bounds.width - 20,

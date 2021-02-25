@@ -74,7 +74,7 @@ class ViewController: UIViewController {
         let marker = Marker(.init(bottomLeftButton, intro: "左下角的按钮, 只能点击高亮范围才能触发下一个").highlightOnly())
             .next(.init(nil, intro: UIImage(named: "panci"), size: .init(width: 100, height: 100)))
             .next(.init(topRightButton, intro: "右上角右边的按钮"))
-            .next(.init(buttons.first, intro: "生成的第一个按钮"))
+            .next(.init(buttons.first, intro: "生成的第一个按钮", suffixImage: .init(.init(named: "panci"), offsetY: 4)))
             .next(.init(buttons[1], intro: attributedString))
             .next(.init(buttons[2], intro: "生成的第三个按钮").backgroundHidden())
             .next(.init(buttons[3], intro: "生成的第四个按钮"))
