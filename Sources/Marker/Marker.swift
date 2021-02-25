@@ -86,7 +86,13 @@ public class Marker: UIView {
         addGestureRecognizer(tap)
     }
     
-    @objc func showNextTriggerByUser() {
+    @objc func showNextTriggerByUser(tap: UITapGestureRecognizer) {
+        if current.isOnlyAcceptHighlightRange, let markView = current.marker, let markSuperview = markView.superview {
+            let tapPoint = tap.location(in: self)
+            if !markSuperview.convert(markView.frame, to: self).contains(tapPoint) {
+                return
+            }
+        }
         showNext(triggerByUser: true)
     }
     
@@ -369,13 +375,4 @@ public class Marker: UIView {
         layout(triggerByUser: true)
     }
     
-    public override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
-        guard current.isOnlyAcceptHighlightRange else {
-            return true
-        }
-        guard let markerView = current.marker, let markerViewFrameInner = markerView.superview?.convert(markerView.frame, to: self) else {
-            return false
-        }
-        return markerViewFrameInner.contains(point)
-    }
 }
