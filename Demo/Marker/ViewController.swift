@@ -45,7 +45,7 @@ class ViewController: UIViewController {
         bottomRightButton.titleLabel?.font = .systemFont(ofSize: 14, weight: .medium)
         view.addSubview(bottomRightButton)
         
-        topLeftButton.addTarget(self, action: #selector(tapAction(sender:)), for: .touchUpInside)
+        topLeftButton.addTarget(self, action: #selector(topLeftAlert(sender:)), for: .touchUpInside)
         topRightButton.addTarget(self, action: #selector(tapAction(sender:)), for: .touchUpInside)
         bottomLeftButton.addTarget(self, action: #selector(tapAction(sender:)), for: .touchUpInside)
         bottomRightButton.addTarget(self, action: #selector(tapAction(sender:)), for: .touchUpInside)
@@ -64,22 +64,28 @@ class ViewController: UIViewController {
         }
     }
     
+    @objc func topLeftAlert(sender: UIButton) {
+        let alert = UIAlertController(title: "提示", message: "透传事件", preferredStyle: .alert)
+        alert.addAction(.init(title: "确认", style: .default, handler: nil))
+        present(alert, animated: true, completion: nil)
+    }
+    
     @objc func tapAction(sender: UIButton) {
         Marker.default.timeoutAfterAnimateDidCompletion = true
         Marker.default.timeout = 0
         
-        let marker = Marker(.init(marker: bottomLeftButton, intro: "你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的", prefixImage: .init(UIImage(named: "panci")), suffixImage: .init(UIImage(named: "panci")), maxWidth: 400))
-            .next(.init(marker: topLeftButton, intro: "我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的", maxWidth: 320, style: .round))
-            .next(.init(marker: topRightButton, intro: "她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的", maxWidth: 320, dimFrame: .zero))
-            .next(.init(marker: buttons.first, intro: "第一个", highlightOnly: true, completion: { (_, isTriggerByUser) in
+        let marker = Marker(.init(marker: bottomLeftButton, intro: "这是左下角的按钮 BottomLeft", prefixImage: .init(UIImage(named: "panci")), suffixImage: .init(UIImage(named: "panci"))))
+            .next(.init(marker: topLeftButton, intro: "右上角左边的按钮 TopLeft of Right, 该按钮仅点击高亮范围有效, 且点击事件会穿透下来. 该操作需要 highlightOnly 和 eventPenetration 同时为 true", maxWidth: 320, highlightOnly: true, eventPenetration: true))
+            .next(.init(marker: topRightButton, intro: "这里的文本最大宽度可能超出320，但是设置了最大宽度为200，所以自动收缩了! \n这里的文本最大宽度可能超出200，但是设置了最大宽度为200，所以自动收缩了!\nTopRight of Right", maxWidth: 200))
+            .next(.init(marker: buttons.first, intro: "遍历生成的第一个按钮，仅点击高亮范围才会触发下一步, 没有事件穿透.", highlightOnly: true, completion: { (_, isTriggerByUser) in
                 print("is trigger by user: ", isTriggerByUser)
             }))
-            .next(.init(marker: buttons[1], intro: "第二个", completion: { (_, isTriggerByUser) in
+            .next(.init(marker: buttons[1], intro: "遍历生成的第二个按钮", completion: { (_, isTriggerByUser) in
                 print("is trigger by user: ", isTriggerByUser)
             }))
-            .next(.init(marker: buttons[2], intro: "第三个"))
-            .next(.init(marker: buttons[3], intro: "第四个"))
-            .next(.init(marker: bottomRightButton, intro: "它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的", maxWidth: 320, enlarge: 20))
+            .next(.init(marker: buttons[2], intro: "遍历生成的第二个按钮"))
+            .next(.init(marker: buttons[3], intro: "遍历生成的第二个按钮"))
+            .next(.init(marker: bottomRightButton, intro: "右下角的按钮，使用 Enlarge 参数扩展了高亮范围.", maxWidth: 320, enlarge: 20))
         
         marker.show(on: view)
     }

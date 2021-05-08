@@ -11,23 +11,29 @@
 ## Code Preview
 
 ```swift
-Marker(.init(marker: bottomLeftButton, intro: "你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的你的", prefixImage:          .init(UIImage(named: "panci")), suffixImage: .init(UIImage(named: "panci")), maxWidth: 400))
-    .next(.init(marker: topLeftButton, intro: "我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的我的", maxWidth: 320, style: .round))
-    .next(.init(marker: topRightButton, intro: "她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的她的", maxWidth: 320, dimFrame: .zero))
-    .next(.init(marker: buttons.first, intro: "第一个", highlightOnly: true, completion: { (_, isTriggerByUser) in
-        print("is trigger by user: ", isTriggerByUser)
+Marker(.init(marker: bottomLeftButton, intro: "这是左下角的按钮 BottomLeft", prefixImage: .init(UIImage(named: "panci")), suffixImage: .init(UIImage(named: "panci"))))
+    .next(.init(marker: topLeftButton, intro: "右上角左边的按钮 TopLeft of Right, 该按钮仅点击高亮范围有效, 且点击事件会穿透下来. 该操作需要 highlightOnly 和 eventPenetration 同时为 true", maxWidth: 320, highlightOnly: true, eventPenetration: true))
+    .next(.init(marker: topRightButton, intro: "这里的文本最大宽度可能超出320，但是设置了最大宽度为200，所以自动收缩了! \n这里的文本最大宽度可能超出200，但是设置了最大宽度为200，所以自动收缩了!\nTopRight of Right", maxWidth: 200))
+    .next(.init(marker: buttons.first, intro: "遍历生成的第一个按钮，仅点击高亮范围才会触发下一步, 没有事件穿透.", highlightOnly: true, completion: { (_, isTriggerByUser) in
+    print("is trigger by user: ", isTriggerByUser)
     }))
-    .next(.init(marker: buttons[1], intro: "第二个", completion: { (_, isTriggerByUser) in
-        print("is trigger by user: ", isTriggerByUser)
+    .next(.init(marker: buttons[1], intro: "遍历生成的第二个按钮", completion: { (_, isTriggerByUser) in
+    print("is trigger by user: ", isTriggerByUser)
     }))
-    .next(.init(buttons[2], intro: "第三个"))
-    .next(.init(buttons[3], intro: "第四个"))
-    .next(.init(marker: bottomRightButton, intro: "它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的它的", maxWidth: 320, enlarge: 20))
+    .next(.init(marker: buttons[2], intro: "遍历生成的第二个按钮"))
+    .next(.init(marker: buttons[3], intro: "遍历生成的第二个按钮"))
+    .next(.init(marker: bottomRightButton, intro: "右下角的按钮，使用 Enlarge 参数扩展了高亮范围.", maxWidth: 320, enlarge: 20))
     .show(on: view)
 ```
 
 
 ## Features
+
+```
+Support event transparency, can trigger the next Marker at the same time
+
+支持事件透传, 可同时触发下一个 Marker
+```
 
 ```
 Support global definition of background color, you can also set the background color independently
@@ -77,10 +83,6 @@ No calculation required (calculation of relative position, etc.)
 #### Swift Package Manager
 
 ```swift
-
-# for Swift 5.0
-.package(url: "https://github.com/iWECon/Marker", from: "1.0.0")
-
-# for Swift 5.4
+# for Swift 5.4, 最低支持 iOS 9.0
 .package(url: "https://github.com/iWECon/Marker", from: "2.0.0")
 ```

@@ -41,6 +41,9 @@ public extension Marker {
         /// 仅在高亮视图点击才有响应/才会走到下一步, 默认为 false
         var isOnlyAcceptHighlightRange = false
         
+        /// 事件透传, 仅在 `isOnlyAcceptHighlightRange` 为 true 时有效
+        var isEventPenetration = false
+        
         /// completion of this Info(next/init), all of done completion in show(on:completion)
         /// 本次完成的回执，全部完成的回执在 Marker 中的 show(on:completion:)
         var completion: CompletionBlock? = nil
@@ -49,8 +52,6 @@ public extension Marker {
             "\(marker?.description ?? "")-\(intro)-\(dimFrame)-\(timeout)-\(style)"
         }
         
-        //@available(*, deprecated, message: "Please use `init(_:intro:)` to initialize.")
-        // open in swift5.4
         public init(marker: UIView?,
                     intro: String,
                     prefixImage: Image? = nil,
@@ -62,6 +63,7 @@ public extension Marker {
                     enlarge: CGFloat = 0,
                     showArrow: Bool = Marker.default.isShowArrow,
                     highlightOnly: Bool = false,
+                    eventPenetration: Bool = false,
                     completion: CompletionBlock? = nil) {
             self.marker = marker
             self.intro = intro
@@ -73,15 +75,10 @@ public extension Marker {
             self.timeout = timeout
             self.enlarge = enlarge
             self.isOnlyAcceptHighlightRange = highlightOnly
+            self.isEventPenetration = eventPenetration
             self.isShowArrow = showArrow
             self.completion = completion
         }
-        
-//        public init(_ marker: UIView?, intro: String) {
-//            self.marker = marker
-//            self.intro = intro
-//        }
-        
     }
 }
 
@@ -126,6 +123,11 @@ public extension Marker.Info {
     @discardableResult
     mutating func highlight(only isOnlyAcceptHighlightRange: Bool) -> Marker.Info {
         self.isOnlyAcceptHighlightRange = isOnlyAcceptHighlightRange
+        return self
+    }
+    @discardableResult
+    mutating func eventPenetration(_ eventPenetration: Bool) -> Marker.Info {
+        self.isEventPenetration = eventPenetration
         return self
     }
     @discardableResult

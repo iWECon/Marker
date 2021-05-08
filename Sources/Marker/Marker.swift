@@ -24,6 +24,8 @@ public class Marker: UIView {
     // MARK:- Internal properties
     weak var onView: UIView?
     
+    var previousNextTimestamp: TimeInterval = 0
+    
     var current: Info
     
     var nexts: [Info] = []
@@ -96,6 +98,10 @@ public class Marker: UIView {
     }
     
     @objc func showNextTriggerByUser(tap: UITapGestureRecognizer) {
+        if current.isOnlyAcceptHighlightRange, current.isEventPenetration {
+            return
+        }
+        
         if current.isOnlyAcceptHighlightRange, let markView = current.marker, let markSuperview = markView.superview {
             let tapPoint = tap.location(in: self)
             if !markSuperview.convert(markView.frame, to: self).contains(tapPoint) {
@@ -339,6 +345,12 @@ public class Marker: UIView {
     }
     
     @objc func showNext(triggerByUser: Bool) {
+        // add delay to ignore called twice of hittest
+        if previousNextTimestamp != 0, (Date().timeIntervalSince1970 - previousNextTimestamp) <= 0.1 {
+            return
+        }
+        previousNextTimestamp = Date().timeIntervalSince1970
+        
         // show next or dimiss
         animateMaps[current.identifier] = true
         if current.dimFrame == .zero {
@@ -384,4 +396,24 @@ public class Marker: UIView {
         layout(triggerByUser: true)
     }
     
+    // 点击高亮范围, 把点击事件传递下去 (仅在 `isOnlyAcceptHighlightRange` 和 `isEventPenetration` 都开启时才有效)
+    public override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        if current.isOnlyAcceptHighlightRange, current.isEventPenetration,
+           let markView = current.marker, let markSuperview = markView.superview {
+
+            let innertFrame = markSuperview.convert(markView.frame, to: self)
+            let highlightFrame = innertFrame.insetBy(dx: -current.enlarge, dy: -current.enlarge)
+            
+            if highlightFrame.contains(point) {
+                gestureRecognizers?.first(where: { $0 is UITapGestureRecognizer })?.isEnabled = false
+                defer {
+                    // bugfix
+                    performSelector(onMainThread: #selector(showNext(triggerByUser:)), with: true, waitUntilDone: false)
+                    gestureRecognizers?.first(where: { $0 is UITapGestureRecognizer })?.isEnabled = true
+                }
+                return nil
+            }
+        }
+        return super.hitTest(point, with: event)
+    }
 }
