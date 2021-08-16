@@ -149,7 +149,10 @@ public extension Marker.Info {
         case marker
         
         case square
+        
+        /// radius = height/2
         case round
+        
         /// custom the corner radius
         case radius(_ radius: CGFloat)
     }

@@ -120,8 +120,8 @@ public class Marker: UIView {
     }
     
     func layout(triggerByUser: Bool) {
+        
         guard let markView = current.marker, let markSuperView = current.marker?.superview else {
-            // 没有找到 marker 或者 marker 没有添加到视图上，直接进入下一个
             showNext(triggerByUser: triggerByUser)
             return
         }
@@ -130,7 +130,7 @@ public class Marker: UIView {
             let identifier = current.identifier
             let timeout = Marker.default.timeoutAfterAnimateDidCompletion ? (Double(current.timeout) + animateDuration) : Double(current.timeout)
             DispatchQueue.main.asyncAfter(deadline: .now() + timeout) { [weak self] in
-                // 超时后判断
+                // 超时后判断是否已手动跳过
                 guard self?.animateMaps[identifier] == false else { return }
                 self?.showNext(triggerByUser: false)
             }
@@ -139,7 +139,7 @@ public class Marker: UIView {
         dimmingView.frame = bounds
         
         let spacing = Self.default.spacing
-        let innerFrame = markSuperView.convert(markView.frame, to: self)
+        let innerFrame = markSuperView.convert(markView.frame, to: nil)
         let isRound = markView.layer.cornerRadius == innerFrame.height / 2
         let markerFrame = current.dimFrame == .zero ? .zero : innerFrame.insetBy(dx: -current.enlarge, dy: -current.enlarge)
         
