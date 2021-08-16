@@ -7,17 +7,33 @@ import UIKit
 public extension Marker {
     
     struct Info {
+        
+        public enum TrianglePosition {
+            case auto
+            case left(offset: CGFloat = 0)
+            case center(offset: CGFloat = 0)
+            case right(offset: CGFloat = 0)
+        }
+        
+        public struct Color {
+            var colors: [CGColor]?
+            var startPoint: CGPoint = .init(x: 0, y: 0.5)
+            var endPoint: CGPoint = .init(x: 1, y: 0.5)
+            var locations: [NSNumber]?
+            
+            public init(colors: [CGColor], startPoint: CGPoint = .init(x: 0, y: 0.5), endPoint: CGPoint = .init(x: 1, y: 0.5), locations: [NSNumber]? = nil) {
+                self.colors = colors
+                self.startPoint = startPoint
+                self.endPoint = endPoint
+                self.locations = locations
+            }
+        }
+        
         /// 需要高亮的视图
         weak var marker: UIView?
         
-        /// 表述文本
-        var intro: String
-        
-        /// 前缀图片
-        var prefixImage: Image? = nil
-        
-        /// 后缀图片
-        var suffixImage: Image? = nil
+        /// 表述文本 (supports String or NSAttributedString)
+        var intro: Any?
         
         /// 文本的最大宽度，默认为 240，一般情况下无需调整
         var maxWidth: CGFloat = 240
@@ -27,6 +43,13 @@ public extension Marker {
         
         /// 高亮部分的圆角度数，默认跟随 marker.layer.cornerRadius
         var style: Style = Marker.default.style
+        
+        /// 三角形位置, 默认为自动
+        /// 可选择 左/中/右, 并附带偏移量
+        var trianglePosition: TrianglePosition = .auto
+        
+        /// 颜色信息，默认走全局配置
+        var color: Info.Color
         
         /// 出现后不操作自动下一个/结束的时间
         var timeout: TimeInterval = 0
@@ -49,15 +72,15 @@ public extension Marker {
         var completion: CompletionBlock? = nil
         
         var identifier: String {
-            "\(marker?.description ?? "")-\(intro)-\(dimFrame)-\(timeout)-\(style)"
+            "\(marker?.description ?? "")-\(String(describing: intro))-\(dimFrame)-\(timeout)-\(style)"
         }
         
         public init(marker: UIView?,
-                    intro: String,
-                    prefixImage: Image? = nil,
-                    suffixImage: Image? = nil,
+                    intro: Any?,
                     maxWidth: CGFloat = 240,
                     style: Info.Style = Marker.default.style,
+                    trianglePosition: TrianglePosition = Marker.default.trianglePosition,
+                    color: Color = Marker.default.color,
                     timeout: TimeInterval = Marker.default.timeout,
                     dimFrame: CGRect = UIScreen.main.bounds,
                     enlarge: CGFloat = 0,
@@ -67,11 +90,11 @@ public extension Marker {
                     completion: CompletionBlock? = nil) {
             self.marker = marker
             self.intro = intro
-            self.prefixImage = prefixImage
-            self.suffixImage = suffixImage
             self.maxWidth = maxWidth
             self.dimFrame = dimFrame
             self.style = style
+            self.trianglePosition = trianglePosition
+            self.color = color
             self.timeout = timeout
             self.enlarge = enlarge
             self.isOnlyAcceptHighlightRange = highlightOnly
@@ -79,66 +102,6 @@ public extension Marker {
             self.isShowArrow = showArrow
             self.completion = completion
         }
-    }
-}
-
-// MARK:- Chainable
-public extension Marker.Info {
-    
-    @discardableResult
-    mutating func image(prefix prefixImage: Image?) -> Marker.Info {
-        self.prefixImage = prefixImage
-        return self
-    }
-    @discardableResult
-    mutating func image(suffix suffixImage: Image?) -> Marker.Info {
-        self.suffixImage = suffixImage
-        return self
-    }
-    @discardableResult
-    mutating func style(_ style: Marker.Info.Style) -> Marker.Info {
-        self.style = style
-        return self
-    }
-    @discardableResult
-    mutating func timeout(_ timeout: TimeInterval) -> Marker.Info {
-        self.timeout = timeout
-        return self
-    }
-    @discardableResult
-    mutating func dim(frame: CGRect) -> Marker.Info {
-        self.dimFrame = frame
-        return self
-    }
-    @discardableResult
-    mutating func enlarge(_ tapEnlarge: CGFloat) -> Marker.Info {
-        self.enlarge = tapEnlarge
-        return self
-    }
-    @discardableResult
-    mutating func arrow(show isShow: Bool) -> Marker.Info {
-        self.isShowArrow = isShow
-        return self
-    }
-    @discardableResult
-    mutating func highlight(only isOnlyAcceptHighlightRange: Bool) -> Marker.Info {
-        self.isOnlyAcceptHighlightRange = isOnlyAcceptHighlightRange
-        return self
-    }
-    @discardableResult
-    mutating func eventPenetration(_ eventPenetration: Bool) -> Marker.Info {
-        self.isEventPenetration = eventPenetration
-        return self
-    }
-    @discardableResult
-    mutating func completion(_ completion: @escaping Marker.CompletionBlock) -> Marker.Info {
-        self.completion = completion
-        return self
-    }
-    @discardableResult
-    mutating func maxWidth(_ textMaxWidth: CGFloat) -> Marker.Info {
-        self.maxWidth = textMaxWidth
-        return self
     }
 }
 
@@ -155,29 +118,5 @@ public extension Marker.Info {
         
         /// custom the corner radius
         case radius(_ radius: CGFloat)
-    }
-}
-
-public extension Marker.Info {
-    struct Image {
-        public var image: UIImage?
-        public var offsetY: CGFloat
-        /// get value from image if nil.
-        public var size: CGSize?
-        
-        public init(_ image: UIImage?, offsetY: CGFloat = 0, size: CGSize? = nil) {
-            self.image = image
-            self.offsetY = offsetY
-            self.size = size
-        }
-        
-        public init(_ imageName: String, offsetY: CGFloat = 0, size: CGSize? = nil) {
-            self.init(UIImage(named: imageName), offsetY: offsetY, size: size)
-        }
-        
-        @available(*, deprecated, message: "Please use init(_:offsetY:size:) instead.")
-        public static func image(_ image: UIImage?, offsetY: CGFloat = 0, size: CGSize? = nil) -> Image {
-            self.init(image, offsetY: offsetY, size: size)
-        }
     }
 }

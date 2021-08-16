@@ -1,24 +1,206 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13122.16" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19158" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13104.12"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19141"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="Marker" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="390" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" xcode11CocoaTouchSystemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="44" translatesAutoresizingMaskIntoConstraints="NO" id="yT4-ri-cSb">
+                                <rect key="frame" x="24" y="74" width="342" height="181"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="51" translatesAutoresizingMaskIntoConstraints="NO" id="MaI-2t-Ux0">
+                                        <rect key="frame" x="0.0" y="0.0" width="342" height="31"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DXY-mh-lqy">
+                                                <rect key="frame" x="0.0" y="0.0" width="80" height="31"/>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="plain" title="起始"/>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9qx-bB-K5x">
+                                                <rect key="frame" x="131" y="0.0" width="80" height="31"/>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="plain" title="第二个"/>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kll-FK-2mb">
+                                                <rect key="frame" x="262" y="0.0" width="80" height="31"/>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="plain" title="透传"/>
+                                            </button>
+                                        </subviews>
+                                    </stackView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" spacing="51" translatesAutoresizingMaskIntoConstraints="NO" id="5Ex-22-vF4">
+                                        <rect key="frame" x="0.0" y="75" width="342" height="31"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Gdu-Be-pGO">
+                                                <rect key="frame" x="0.0" y="0.0" width="67" height="31"/>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="plain" title="无遮罩"/>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Adm-Mp-WJl">
+                                                <rect key="frame" x="151.5" y="0.0" width="53" height="31"/>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="plain" title="圆角"/>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XIU-Fn-35K">
+                                                <rect key="frame" x="289" y="0.0" width="53" height="31"/>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="plain" title="方形"/>
+                                            </button>
+                                        </subviews>
+                                    </stackView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="1Gt-0b-la0">
+                                        <rect key="frame" x="144.5" y="150" width="53" height="31"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ixu-ZV-qFd">
+                                                <rect key="frame" x="0.0" y="0.0" width="53" height="31"/>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="plain" title="跟随"/>
+                                            </button>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="MaI-2t-Ux0" firstAttribute="leading" secondItem="yT4-ri-cSb" secondAttribute="leading" id="Wgf-gd-UXK"/>
+                                    <constraint firstItem="5Ex-22-vF4" firstAttribute="leading" secondItem="yT4-ri-cSb" secondAttribute="leading" id="dxX-SW-njt"/>
+                                    <constraint firstAttribute="trailing" secondItem="5Ex-22-vF4" secondAttribute="trailing" id="glw-8H-Zig"/>
+                                    <constraint firstAttribute="trailing" secondItem="MaI-2t-Ux0" secondAttribute="trailing" id="vpz-9e-tO6"/>
+                                </constraints>
+                            </stackView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wwZ-Bv-LeM">
+                                <rect key="frame" x="0.0" y="275" width="390" height="180"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1FU-GK-DWg">
+                                        <rect key="frame" x="108.5" y="74.5" width="173" height="31"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" title="显示在子视图的 Marker"/>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemGray5Color"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="180" id="USL-le-rO9"/>
+                                    <constraint firstItem="1FU-GK-DWg" firstAttribute="centerX" secondItem="wwZ-Bv-LeM" secondAttribute="centerX" id="hEO-fI-pwT"/>
+                                    <constraint firstItem="1FU-GK-DWg" firstAttribute="centerY" secondItem="wwZ-Bv-LeM" secondAttribute="centerY" id="oQ0-4z-6dn"/>
+                                </constraints>
+                            </view>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="44" translatesAutoresizingMaskIntoConstraints="NO" id="bmQ-a9-AZ1">
+                                <rect key="frame" x="24" y="475" width="342" height="181"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="51" translatesAutoresizingMaskIntoConstraints="NO" id="3iT-Pb-zF6">
+                                        <rect key="frame" x="0.0" y="0.0" width="342" height="31"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AML-Kd-T0A">
+                                                <rect key="frame" x="0.0" y="0.0" width="80" height="31"/>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="plain" title="以下"/>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="v6K-Bs-M3X">
+                                                <rect key="frame" x="131" y="0.0" width="80" height="31"/>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="plain" title="Marker"/>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CCb-Ch-U0d">
+                                                <rect key="frame" x="262" y="0.0" width="80" height="31"/>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="plain" title="显示"/>
+                                            </button>
+                                        </subviews>
+                                    </stackView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" translatesAutoresizingMaskIntoConstraints="NO" id="X0f-yu-8v8">
+                                        <rect key="frame" x="0.0" y="75" width="342" height="31"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="j0m-zl-39D">
+                                                <rect key="frame" x="0.0" y="0.0" width="184.5" height="31"/>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="plain" title="在控件上方显示"/>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Dqo-II-mLy">
+                                                <rect key="frame" x="184.5" y="0.0" width="78.5" height="31"/>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="plain" title="控件"/>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jR4-kh-y2q">
+                                                <rect key="frame" x="263" y="0.0" width="79" height="31"/>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="plain" title="上方"/>
+                                            </button>
+                                        </subviews>
+                                    </stackView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="bdr-UW-xiv">
+                                        <rect key="frame" x="45" y="150" width="252.5" height="31"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="B8o-fn-YV4">
+                                                <rect key="frame" x="0.0" y="0.0" width="252.5" height="31"/>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="plain" title="显示（自动处理且不支持调整方位）"/>
+                                            </button>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="X0f-yu-8v8" firstAttribute="leading" secondItem="bmQ-a9-AZ1" secondAttribute="leading" id="MJY-B7-ESM"/>
+                                    <constraint firstItem="3iT-Pb-zF6" firstAttribute="leading" secondItem="bmQ-a9-AZ1" secondAttribute="leading" id="ZMD-bD-I9J"/>
+                                    <constraint firstAttribute="trailing" secondItem="X0f-yu-8v8" secondAttribute="trailing" id="hku-EG-es9"/>
+                                    <constraint firstAttribute="trailing" secondItem="3iT-Pb-zF6" secondAttribute="trailing" id="tnj-ru-KTl"/>
+                                </constraints>
+                            </stackView>
+                        </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="yT4-ri-cSb" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="24" id="A4D-E3-ojf"/>
+                            <constraint firstItem="wwZ-Bv-LeM" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="DXI-5e-RX9"/>
+                            <constraint firstItem="wwZ-Bv-LeM" firstAttribute="top" secondItem="yT4-ri-cSb" secondAttribute="bottom" constant="20" id="L3P-dd-gUN"/>
+                            <constraint firstItem="bmQ-a9-AZ1" firstAttribute="top" secondItem="wwZ-Bv-LeM" secondAttribute="bottom" constant="20" id="LwC-Hg-WP8"/>
+                            <constraint firstItem="wwZ-Bv-LeM" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="Ynb-gV-Khy"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="bmQ-a9-AZ1" secondAttribute="trailing" constant="24" id="esu-da-9kj"/>
+                            <constraint firstItem="yT4-ri-cSb" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="30" id="olJ-hg-1rJ"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="yT4-ri-cSb" secondAttribute="trailing" constant="24" id="thF-SO-XXj"/>
+                            <constraint firstItem="bmQ-a9-AZ1" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="24" id="wF6-Fv-FnW"/>
+                        </constraints>
                     </view>
+                    <size key="freeformSize" width="390" height="896"/>
+                    <connections>
+                        <outlet property="bottomButton" destination="AML-Kd-T0A" id="1K4-SB-Rrh"/>
+                        <outlet property="followStyleButton" destination="ixu-ZV-qFd" id="fWg-6A-J1Q"/>
+                        <outlet property="inSubviewButton" destination="1FU-GK-DWg" id="GjZ-xK-aQI"/>
+                        <outlet property="noMaskButton" destination="Gdu-Be-pGO" id="qnv-s6-14T"/>
+                        <outlet property="number2Button" destination="9qx-bB-K5x" id="w3b-l7-Uvr"/>
+                        <outlet property="respondActionButton" destination="kll-FK-2mb" id="gtt-xl-ak8"/>
+                        <outlet property="roundButton" destination="Adm-Mp-WJl" id="t3c-fN-bpK"/>
+                        <outlet property="squareButton" destination="XIU-Fn-35K" id="Fzx-bg-SO1"/>
+                        <outlet property="startButton" destination="DXY-mh-lqy" id="sNC-Lk-mTE"/>
+                        <outlet property="subviewContainer" destination="wwZ-Bv-LeM" id="Yni-Mt-BY1"/>
+                        <outletCollection property="bottomButtons" destination="v6K-Bs-M3X" collectionClass="NSMutableArray" id="YKc-Kv-1vb"/>
+                        <outletCollection property="bottomButtons" destination="CCb-Ch-U0d" collectionClass="NSMutableArray" id="a5Q-Zv-xE9"/>
+                        <outletCollection property="bottomButtons" destination="j0m-zl-39D" collectionClass="NSMutableArray" id="VSr-PX-Fc9"/>
+                        <outletCollection property="bottomButtons" destination="Dqo-II-mLy" collectionClass="NSMutableArray" id="GdV-22-e1I"/>
+                        <outletCollection property="bottomButtons" destination="jR4-kh-y2q" collectionClass="NSMutableArray" id="tdA-k8-p5g"/>
+                        <outletCollection property="bottomButtons" destination="B8o-fn-YV4" collectionClass="NSMutableArray" id="4Wj-E3-o92"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="-39.130434782608695" y="-27.455357142857142"/>
         </scene>
     </scenes>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemGray5Color">
+            <color red="0.89803921568627454" green="0.89803921568627454" blue="0.91764705882352937" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
 </document>

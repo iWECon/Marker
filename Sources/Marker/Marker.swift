@@ -10,9 +10,18 @@ import UIKit
 public class Marker: UIView {
     
     // MARK:- Static properties
-    private static var markerInstances: Set<Marker> = []
+    private static var markerInstances: [String: Marker] = [:]
     public static func dismiss() {
-        markerInstances.forEach({ $0.dismiss(triggerByUser: true) })
+        markerInstances.values.forEach({ $0.dismiss(triggerByUser: true) })
+    }
+    public static func instance(from identifier: String) -> Marker? {
+        markerInstances[identifier]
+    }
+    static func removeInstance(_ marker: Marker) {
+        guard let index = markerInstances.firstIndex(where: { $0.value == marker }) else {
+            return
+        }
+        markerInstances.remove(at: index)
     }
     
     // MARK:- Public properties
@@ -26,7 +35,7 @@ public class Marker: UIView {
     
     var previousNextTimestamp: TimeInterval = 0
     
-    var current: Info
+    var current: Info!
     
     var nexts: [Info] = []
     
@@ -35,11 +44,21 @@ public class Marker: UIView {
     /// completion，所有任务完成后的 completion
     var completion: CompletionBlock?
     
+    public var identifier: String?
+    
     required public init(_ info: Info) {
         self.current = info
         super.init(frame: .zero)
         self.animateMaps[info.identifier] = false
     }
+    
+    required init(identifier: String, start: Info) {
+        self.identifier = identifier
+        self.current = start
+        super.init(frame: .zero)
+        self.animateMaps[start.identifier] = false
+    }
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -77,10 +96,10 @@ public class Marker: UIView {
         dimmingView.backgroundColor = UIColor.black.withAlphaComponent(0.4)
         
         gradientLayer.anchorPoint = .zero
-        gradientLayer.colors = Self.default.colors
-        gradientLayer.startPoint = Self.default.colorStartPoint
-        gradientLayer.endPoint = Self.default.colorEndPoint
-        if let locations = Self.default.colorLocations {
+        gradientLayer.colors = current.color.colors
+        gradientLayer.startPoint = current.color.startPoint
+        gradientLayer.endPoint = current.color.endPoint
+        if let locations = current.color.locations {
             gradientLayer.locations = locations
         }
         
@@ -97,7 +116,7 @@ public class Marker: UIView {
         addGestureRecognizer(tap)
     }
     
-    @objc func showNextTriggerByUser(tap: UITapGestureRecognizer) {
+    @objc private func showNextTriggerByUser(tap: UITapGestureRecognizer) {
         if current.isOnlyAcceptHighlightRange, current.isEventPenetration {
             return
         }
@@ -139,9 +158,10 @@ public class Marker: UIView {
         dimmingView.frame = bounds
         
         let spacing = Self.default.spacing
-        let innerFrame = markSuperView.convert(markView.frame, to: nil)
+        let innerFrame = markSuperView.convert(markView.frame, to: self)
         let isRound = markView.layer.cornerRadius == innerFrame.height / 2
         let markerFrame = current.dimFrame == .zero ? .zero : innerFrame.insetBy(dx: -current.enlarge, dy: -current.enlarge)
+        let withoutDimframe = innerFrame.insetBy(dx: -current.enlarge, dy: -current.enlarge)
         
         // set cornerRadiu
         let cornerRadius: CGFloat
@@ -184,39 +204,12 @@ public class Marker: UIView {
             }
         }
         
-        if current.prefixImage == nil && current.suffixImage == nil {
-            contentLabel.text = current.intro
+        if let introString = current.intro as? String {
+            contentLabel.text = introString
+        } else if let attributedString = current.intro as? NSAttributedString {
+            contentLabel.attributedText = attributedString
         } else {
-            // 有图片
-            func makeString(_ string: String, prefixImageInfo: Info.Image?, suffixImageInfo: Info.Image?) -> NSAttributedString {
-                
-                // make attachment view
-                func makeAttachString(_ image: Info.Image?) -> NSAttributedString? {
-                    guard let image = image else { return nil }
-                    
-                    let offsetY = image.offsetY
-                    let imageSize = image.size ?? image.size ?? .zero
-                    
-                    let attach = NSTextAttachment()
-                    attach.image = image.image
-                    attach.bounds = .init(x: 0, y: -offsetY,
-                                          width: imageSize.width, height: imageSize.height)
-                    return NSAttributedString(attachment: attach)
-                }
-                
-                let mutableAttr = NSMutableAttributedString(string: string)
-                
-                let prefixString: NSAttributedString? = makeAttachString(prefixImageInfo)
-                if let ps = prefixString {
-                    mutableAttr.insert(ps, at: 0)
-                }
-                let suffixString: NSAttributedString? = makeAttachString(suffixImageInfo)
-                if let ss = suffixString {
-                    mutableAttr.append(ss)
-                }
-                return mutableAttr
-            }
-            contentLabel.attributedText = makeString(current.intro, prefixImageInfo: current.prefixImage, suffixImageInfo: current.suffixImage)
+            contentLabel.text = "Can not support this type: \(type(of: current.intro))"
         }
         
         // reload contentLabel size
@@ -284,34 +277,97 @@ public class Marker: UIView {
         var labelOriginY: CGFloat = bumpHeight + padding.top
         let bezierPath = UIBezierPath()
         if current.isShowArrow {
-            if isRight, !isBottom { // top, right
-                //labelOriginY
-                let startPoint = CGPoint(x: gradientFrame.width - 15 - bumpOffsetX, y: bumpHeight)
-                bezierPath.move(to: startPoint)
-                bezierPath.addLine(to: .init(x: startPoint.x - 6, y: 0))
-                bezierPath.addLine(to: .init(x: startPoint.x - 12, y: startPoint.y))
-            } else if isRight, isBottom { // bottom, right
-                rectY = 0
-                labelOriginY = gradientFrame.height - bumpHeight - padding.bottom - contentLabel.frame.height
+            
+            // draw triangle
+            switch current.trianglePosition {
+            case .auto:
+                if isRight, !isBottom { // top, right
+                    //labelOriginY
+                    let startPoint = CGPoint(x: gradientFrame.width - 15 - bumpOffsetX, y: bumpHeight)
+                    bezierPath.move(to: startPoint)
+                    bezierPath.addLine(to: .init(x: startPoint.x - 6, y: 0))
+                    bezierPath.addLine(to: .init(x: startPoint.x - 12, y: startPoint.y))
+                } else if isRight, isBottom { // bottom, right
+                    rectY = 0
+                    labelOriginY = gradientFrame.height - bumpHeight - padding.bottom - contentLabel.frame.height
+                    
+                    let startPoint = CGPoint(x: gradientFrame.width - 15 - bumpOffsetX, y: gradientFrame.height - bumpHeight)
+                    bezierPath.move(to: startPoint)
+                    bezierPath.addLine(to: .init(x: startPoint.x - 6, y: gradientFrame.height))
+                    bezierPath.addLine(to: .init(x: startPoint.x - 12, y: startPoint.y))
+                } else if !isRight, isBottom { // bottom, left
+                    rectY = 0
+                    labelOriginY = gradientFrame.height - bumpHeight - padding.bottom - contentLabel.frame.height
+                    
+                    let startPoint = CGPoint(x: 15 + bumpOffsetX, y: gradientFrame.height - bumpHeight)
+                    bezierPath.move(to: startPoint)
+                    bezierPath.addLine(to: .init(x: startPoint.x + 6, y: gradientFrame.height))
+                    bezierPath.addLine(to: .init(x: startPoint.x + 12, y: startPoint.y))
+                    
+                } else if !isRight, !isBottom { // top, left
+                    let startPoint = CGPoint(x: 15 + bumpOffsetX, y: bumpHeight)
+                    bezierPath.move(to: startPoint)
+                    bezierPath.addLine(to: .init(x: startPoint.x + 6, y: 0))
+                    bezierPath.addLine(to: .init(x: startPoint.x + 12, y: startPoint.y))
+                }
                 
-                let startPoint = CGPoint(x: gradientFrame.width - 15 - bumpOffsetX, y: gradientFrame.height - bumpHeight)
-                bezierPath.move(to: startPoint)
-                bezierPath.addLine(to: .init(x: startPoint.x - 6, y: gradientFrame.height))
-                bezierPath.addLine(to: .init(x: startPoint.x - 12, y: startPoint.y))
-            } else if !isRight, isBottom { // bottom, left
-                rectY = 0
-                labelOriginY = gradientFrame.height - bumpHeight - padding.bottom - contentLabel.frame.height
+            case .left(let offset):
+                let minX = min(gradientFrame.minX, withoutDimframe.minX)
+                if isBottom {
+                    // triangle on bottom-left
+                    rectY = 0
+                    labelOriginY = gradientFrame.height - bumpHeight - padding.bottom - contentLabel.frame.height
+                    
+                    let startPoint = CGPoint(x: minX + 10 + offset, y: gradientFrame.height - bumpHeight)
+                    bezierPath.move(to: startPoint)
+                    bezierPath.addLine(to: .init(x: startPoint.x + 6, y: gradientFrame.height))
+                    bezierPath.addLine(to: .init(x: startPoint.x + 12, y: startPoint.y))
+                } else {
+                    // triangle on top-left
+                    let startPoint = CGPoint(x: minX + 10 + offset, y: bumpHeight)
+                    bezierPath.move(to: startPoint)
+                    bezierPath.addLine(to: .init(x: startPoint.x + 6, y: 0))
+                    bezierPath.addLine(to: .init(x: startPoint.x + 12, y: startPoint.y))
+                }
+                break
+            case .center(let offset):
+                //let width = min(gradientFrame.width, withoutDimframe.width)
+                let width = self.convert(withoutDimframe, to: contentView).midX
+                if isBottom {
+                    // triangle on bottom-center
+                    rectY = 0
+                    labelOriginY = gradientFrame.height - bumpHeight - padding.bottom - contentLabel.frame.height
+                    
+                    let startPoint = CGPoint(x: width + 6 + offset, y: gradientFrame.height - bumpHeight)
+                    bezierPath.move(to: startPoint)
+                    bezierPath.addLine(to: .init(x: startPoint.x - 6, y: gradientFrame.height))
+                    bezierPath.addLine(to: .init(x: startPoint.x - 12, y: startPoint.y))
+                } else {
+                    // triangle on top-center
+                    let startPoint = CGPoint(x: width + 6 + offset, y: bumpHeight)
+                    bezierPath.move(to: startPoint)
+                    bezierPath.addLine(to: .init(x: startPoint.x - 6, y: 0))
+                    bezierPath.addLine(to: .init(x: startPoint.x - 12, y: startPoint.y))
+                }
                 
-                let startPoint = CGPoint(x: 15 + bumpOffsetX, y: gradientFrame.height - bumpHeight)
-                bezierPath.move(to: startPoint)
-                bezierPath.addLine(to: .init(x: startPoint.x + 6, y: gradientFrame.height))
-                bezierPath.addLine(to: .init(x: startPoint.x + 12, y: startPoint.y))
-                
-            } else if !isRight, !isBottom { // top, left
-                let startPoint = CGPoint(x: 15 + bumpOffsetX, y: bumpHeight)
-                bezierPath.move(to: startPoint)
-                bezierPath.addLine(to: .init(x: startPoint.x + 6, y: 0))
-                bezierPath.addLine(to: .init(x: startPoint.x + 12, y: startPoint.y))
+            case .right(let offset):
+                let width = min(gradientFrame.width, withoutDimframe.width)
+                if isBottom {
+                    // triangle on bottom-right
+                    rectY = 0
+                    labelOriginY = gradientFrame.height - bumpHeight - padding.bottom - contentLabel.frame.height
+                    
+                    let startPoint = CGPoint(x: width - 10 + offset, y: gradientFrame.height - bumpHeight)
+                    bezierPath.move(to: startPoint)
+                    bezierPath.addLine(to: .init(x: startPoint.x - 6, y: gradientFrame.height))
+                    bezierPath.addLine(to: .init(x: startPoint.x - 12, y: startPoint.y))
+                } else {
+                    // triangle on top-right
+                    let startPoint = CGPoint(x: width - 10 + offset, y: bumpHeight)
+                    bezierPath.move(to: startPoint)
+                    bezierPath.addLine(to: .init(x: startPoint.x - 6, y: 0))
+                    bezierPath.addLine(to: .init(x: startPoint.x - 12, y: startPoint.y))
+                }
             }
         }
         bezierPath.append(.init(roundedRect: .init(x: 0, y: rectY, width: gradientLayer.frame.width, height: gradientLayer.frame.height - bumpHeight), cornerRadius: 6))
@@ -344,7 +400,7 @@ public class Marker: UIView {
         CATransaction.commit()
     }
     
-    @objc func showNext(triggerByUser: Bool) {
+    @objc public func showNext(triggerByUser: Bool) {
         // add delay to ignore called twice of hittest
         if previousNextTimestamp != 0, (Date().timeIntervalSince1970 - previousNextTimestamp) <= 0.1 {
             return
@@ -372,7 +428,8 @@ public class Marker: UIView {
     }
     
     public func dismiss(triggerByUser: Bool) {
-        Self.markerInstances.remove(self)
+        Self.removeInstance(self)
+        
         UIView.animate(withDuration: 0.34) {
             self.dimmingView.alpha = 0
             
@@ -386,9 +443,10 @@ public class Marker: UIView {
     }
     
     public func show(on onView: UIView, completion: CompletionBlock? = nil) {
-        Self.markerInstances.insert(self)
+        Self.markerInstances[identifier ?? current.identifier] = self
+        
         if self.frame == .zero {
-            self.frame = onView.frame
+            self.frame = onView.bounds
         }
         self.onView = onView
         self.completion = completion
@@ -405,13 +463,7 @@ public class Marker: UIView {
             let highlightFrame = innertFrame.insetBy(dx: -current.enlarge, dy: -current.enlarge)
             
             if highlightFrame.contains(point) {
-                gestureRecognizers?.first(where: { $0 is UITapGestureRecognizer })?.isEnabled = false
-                defer {
-                    // bugfix
-                    performSelector(onMainThread: #selector(showNext(triggerByUser:)), with: true, waitUntilDone: false)
-                    gestureRecognizers?.first(where: { $0 is UITapGestureRecognizer })?.isEnabled = true
-                }
-                return nil
+                return current.marker?.hitTest(point, with: event) ?? current.marker
             }
         }
         return super.hitTest(point, with: event)

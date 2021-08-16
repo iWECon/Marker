@@ -7,14 +7,11 @@ import UIKit
 public extension Marker {
     
     struct Appearence {
-        public var colors: [CGColor] = [
+        /// 背景色及渐变信息
+        public var color: Info.Color = .init(colors: [
             UIColor(red: 255 / 255, green: 200 / 255, blue: 0, alpha: 1).cgColor,
             UIColor(red: 255 / 255, green: 51 / 255, blue: 131 / 255, alpha: 1).cgColor
-        ]
-        
-        public var colorStartPoint: CGPoint = .init(x: 0, y: 0.5)
-        public var colorEndPoint: CGPoint = .init(x: 1, y: 0.5)
-        public var colorLocations: [NSNumber]?
+        ])
         
         /// 三角箭头距离高亮视图的距离
         public var spacing: CGFloat = 10
@@ -39,6 +36,9 @@ public extension Marker {
         
         /// 是否显示三角箭头, 默认为 true
         public var isShowArrow = true
+        
+        /// 默认的三角箭头所在位置（自动处理）
+        public var trianglePosition: Info.TrianglePosition = .auto
     }
     
 }

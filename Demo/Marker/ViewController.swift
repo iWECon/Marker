@@ -9,59 +9,64 @@ import UIKit
 
 class ViewController: UIViewController {
     
-    let topLeftButton = UIButton(type: .custom)
-    let topRightButton = UIButton(type: .custom)
-    let bottomLeftButton = UIButton(type: .custom)
-    let bottomRightButton = UIButton(type: .custom)
+    @IBOutlet weak var startButton: UIButton!
+    @IBOutlet weak var number2Button: UIButton!
+    @IBOutlet weak var respondActionButton: UIButton!
+    @IBOutlet weak var noMaskButton: UIButton!
+    @IBOutlet weak var roundButton: UIButton!
+    @IBOutlet weak var squareButton: UIButton!
+    @IBOutlet weak var followStyleButton: UIButton!
     
-    var buttons: [UIButton] = []
-
+    @IBOutlet weak var subviewContainer: UIView!
+    @IBOutlet weak var inSubviewButton: UIButton!
+    
+    @IBOutlet weak var bottomButton: UIButton!
+    
+    @IBOutlet var bottomButtons: [UIButton]!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         view.backgroundColor = .white
         
-        topLeftButton.setTitle("topLeft", for: .normal)
-        topLeftButton.setTitleColor(.white, for: .normal)
-        topLeftButton.backgroundColor = UIColor.red.withAlphaComponent(0.6)
-        topLeftButton.titleLabel?.font = .systemFont(ofSize: 14, weight: .medium)
-        view.addSubview(topLeftButton)
+        startButton.addTarget(self, action: #selector(tapAction(sender:)), for: .touchUpInside)
         
-        topRightButton.setTitle("topRight", for: .normal)
-        topRightButton.setTitleColor(.white, for: .normal)
-        topRightButton.backgroundColor = UIColor.red.withAlphaComponent(0.6)
-        topRightButton.titleLabel?.font = .systemFont(ofSize: 14, weight: .medium)
-        view.addSubview(topRightButton)
-        
-        bottomLeftButton.setTitle("BottomLeft", for: .normal)
-        bottomLeftButton.setTitleColor(.white, for: .normal)
-        bottomLeftButton.backgroundColor = UIColor.red.withAlphaComponent(0.6)
-        bottomLeftButton.titleLabel?.font = .systemFont(ofSize: 14, weight: .medium)
-        view.addSubview(bottomLeftButton)
-        
-        bottomRightButton.setTitle("BottomRight", for: .normal)
-        bottomRightButton.setTitleColor(.white, for: .normal)
-        bottomRightButton.backgroundColor = UIColor.red.withAlphaComponent(0.6)
-        bottomRightButton.titleLabel?.font = .systemFont(ofSize: 14, weight: .medium)
-        view.addSubview(bottomRightButton)
-        
-        topLeftButton.addTarget(self, action: #selector(topLeftAlert(sender:)), for: .touchUpInside)
-        topRightButton.addTarget(self, action: #selector(tapAction(sender:)), for: .touchUpInside)
-        bottomLeftButton.addTarget(self, action: #selector(tapAction(sender:)), for: .touchUpInside)
-        bottomRightButton.addTarget(self, action: #selector(tapAction(sender:)), for: .touchUpInside)
-        
-        for index in 0 ..< 4 {
-            let button = UIButton()
-            button.setTitle("this is \(index)", for: .normal)
-            button.backgroundColor = UIColor.red.withAlphaComponent(0.6)
-            button.titleLabel?.font = .systemFont(ofSize: 14, weight: .medium)
-            button.setTitleColor(.white, for: .normal)
-            button.sizeToFit()
-            button.frame.origin = .init(x: (button.frame.width * CGFloat(index)) + 20 * CGFloat(index), y: 400)
-            button.addTarget(self, action: #selector(tapAction(sender:)), for: .touchUpInside)
-            view.addSubview(button)
-            buttons.append(button)
+        let buttons = [startButton, number2Button, respondActionButton, noMaskButton, roundButton, squareButton, followStyleButton, bottomButton, bottomButton] + bottomButtons
+        for button in buttons {
+            button?.backgroundColor = UIColor.groupTableViewBackground
+            button?.layer.cornerRadius = 10
         }
+        
+        // 透传事件按钮添加事件
+        respondActionButton.addTarget(self, action: #selector(respondAction(_:)), for: .touchUpInside)
+        // 在子视图的按钮
+        inSubviewButton.addTarget(self, action: #selector(tapInSubviewAction(_:)), for: .touchUpInside)
+        // 底部的按钮
+        bottomButton.addTarget(self, action: #selector(bottomAction(_:)), for: .touchUpInside)
+    }
+    
+    @objc func bottomAction(_ sender: UIButton) {
+        let marker = Marker(identifier: "bottom", start: .init(marker: bottomButton, intro: "Marker 引导，显示在控件上方"))
+        marker.next(.init(marker: bottomButtons[0], intro: "Marker: 支持三角箭头位置调整, 支持调整左/中/右, 且可调整偏移量, 本次显示为自动处理三角箭头位置"))
+        marker.next(.init(marker: bottomButtons[1], intro: "本次三角箭头在左侧，且向右偏移（移动） 10px", trianglePosition: .left(offset: 10)))
+        marker.next(.init(marker: bottomButtons[2], intro: "本次三角箭头在右侧，且向左偏移（移动） 10px", trianglePosition: .right(offset: -10)))
+        marker.next(.init(marker: bottomButtons[3], intro: "本次三角箭头在中间，无偏移", trianglePosition: .center(offset: 0)))
+        marker.next(.init(marker: bottomButtons[4], intro: "无"))
+        marker.next(.init(marker: bottomButtons[5], intro: "无"))
+        marker.show(on: self.view, completion: nil)
+    }
+    
+    @objc func respondAction(_ sender: UIButton) {
+        let alert = UIAlertController(title: "透传事件", message: "你点击了透传按钮, 且按下`知道了`的时候会触发下一步引导", preferredStyle: .alert)
+        alert.addAction(.init(title: "知道了", style: .cancel, handler: { _ in
+            Marker.instance(from: "normal")?.showNext(triggerByUser: true)
+        }))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    @objc func tapInSubviewAction(_ sender: UIButton) {
+        let info = Marker.Info(marker: inSubviewButton, intro: "显示在子视图里的 Marker", style: .radius(10), trianglePosition: .center(), enlarge: 4)
+        Marker(identifier: "inSubview", start: info).show(on: subviewContainer, completion: nil)
     }
     
     @objc func topLeftAlert(sender: UIButton) {
@@ -71,34 +76,22 @@ class ViewController: UIViewController {
     }
     
     @objc func tapAction(sender: UIButton) {
+        // global configure. Use it in AppDelegate.swift(application.didFinishLaunchingWithOptions), if needed
+        // 全局配置, 如果需要, 可以在应用启动时进行配置, 这里仅作为演示
         Marker.default.timeoutAfterAnimateDidCompletion = true
         Marker.default.timeout = 0
         
-        let marker = Marker(.init(marker: bottomLeftButton, intro: "这是左下角的按钮 BottomLeft", prefixImage: .init(UIImage(named: "panci")), suffixImage: .init(UIImage(named: "panci"))))
-            .next(.init(marker: topLeftButton, intro: "右上角左边的按钮 TopLeft of Right, 该按钮仅点击高亮范围有效, 且点击事件会穿透下来. 该操作需要 highlightOnly 和 eventPenetration 同时为 true", maxWidth: 320, highlightOnly: true, eventPenetration: true))
-            .next(.init(marker: topRightButton, intro: "这里的文本最大宽度可能超出320，但是设置了最大宽度为200，所以自动收缩了! \n这里的文本最大宽度可能超出200，但是设置了最大宽度为200，所以自动收缩了!\nTopRight of Right", maxWidth: 200))
-            .next(.init(marker: buttons.first, intro: "遍历生成的第一个按钮，仅点击高亮范围才会触发下一步, 没有事件穿透.", highlightOnly: true, completion: { (_, isTriggerByUser) in
-                print("is trigger by user: ", isTriggerByUser)
-            }))
-            .next(.init(marker: buttons[1], intro: "遍历生成的第二个按钮", completion: { (_, isTriggerByUser) in
-                print("is trigger by user: ", isTriggerByUser)
-            }))
-            .next(.init(marker: buttons[2], intro: "遍历生成的第二个按钮"))
-            .next(.init(marker: buttons[3], intro: "遍历生成的第二个按钮"))
-            .next(.init(marker: bottomRightButton, intro: "右下角的按钮，使用 Enlarge 参数扩展了高亮范围.", maxWidth: 320, enlarge: 20))
+        let startInfo = Marker.Info(marker: startButton, intro: "起始按钮, 默认配置, 最大宽度 320, 点击任意处进入下一个", trianglePosition: .left(offset: 0))
+        let number2Info = Marker.Info(marker: number2Button, intro: "第二个按钮, 默认配置", trianglePosition: .right(offset: 0))
+        let actionInfo = Marker.Info(marker: respondActionButton, intro: "第三个按钮, 可透传事件：仅点击高亮范围有效，且点击事，事件可以传递到按钮上（执行按钮的点击事件）并触发下一步事件", highlightOnly: true, eventPenetration: true)
+        let noMaskInfo = Marker.Info(marker: noMaskButton, intro: "第四个按钮, 没有遮罩", trianglePosition: .center(offset: 0), dimFrame: .zero)
+        let roundStyleInfo = Marker.Info(marker: roundButton, intro: "第五个按钮, 圆角遮罩, 且高亮范围有 10px 的扩张", style: .round, enlarge: 10)
+        let squareStyleInfo = Marker.Info(marker: squareButton, intro: "第六个按钮, 方形遮罩", style: .square)
+        let followStyleInfo = Marker.Info(marker: followStyleButton, intro: "第七个按钮, 跟随视图的风格, 视图是圆角就是圆角，方形就是方形, 高亮范围有 4px 的扩张", style: .marker, enlarge: 4)
         
-        marker.show(on: view)
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        
-        topLeftButton.frame = .init(x: 150, y: 88, width: 64, height: 24)
-        topRightButton.frame = .init(x: 200, y: 88, width: 120, height: 24)
-        bottomLeftButton.frame = .init(x: 30, y: 488, width: 120, height: 24)
-        bottomRightButton.frame = .init(x: 200, y: 488, width: 120, height: 120)
-        
-        bottomRightButton.layer.cornerRadius = 60
+        Marker(identifier: "normal", start: startInfo)
+            .nexts([number2Info, actionInfo, noMaskInfo, roundStyleInfo, squareStyleInfo, followStyleInfo])
+            .show(on: self.view, completion: nil)
     }
 }
 
