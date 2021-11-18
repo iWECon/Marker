@@ -46,7 +46,7 @@ class ViewController: UIViewController {
     }
     
     @objc func bottomAction(_ sender: UIButton) {
-        let marker = Marker(identifier: "bottom", start: .init(marker: bottomButton, intro: "Marker 引导，显示在控件上方"))
+        let marker = Marker(.init(marker: bottomButton, intro: "Marker 引导，显示在控件上方"), identifier: "bottom")
         marker.next(.init(marker: bottomButtons[0], intro: "Marker: 支持三角箭头位置调整, 支持调整左/中/右, 且可调整偏移量, 本次显示为自动处理三角箭头位置"))
         marker.next(.init(marker: bottomButtons[1], intro: "本次三角箭头在左侧，且向右偏移（移动） 10px", trianglePosition: .left(offset: 10)))
         marker.next(.init(marker: bottomButtons[2], intro: "本次三角箭头在右侧，且向左偏移（移动） 10px", trianglePosition: .right(offset: -10)))
@@ -66,7 +66,7 @@ class ViewController: UIViewController {
     
     @objc func tapInSubviewAction(_ sender: UIButton) {
         let info = Marker.Info(marker: inSubviewButton, intro: "显示在子视图里的 Marker", style: .radius(10), trianglePosition: .center(), enlarge: 4)
-        Marker(identifier: "inSubview", start: info).show(on: subviewContainer, completion: nil)
+        Marker(info, identifier: "inSubview").show(on: subviewContainer, completion: nil)
     }
     
     @objc func topLeftAlert(sender: UIButton) {
@@ -89,7 +89,7 @@ class ViewController: UIViewController {
         let squareStyleInfo = Marker.Info(marker: squareButton, intro: "第六个按钮, 方形遮罩", style: .square)
         let followStyleInfo = Marker.Info(marker: followStyleButton, intro: "第七个按钮, 跟随视图的风格, 视图是圆角就是圆角，方形就是方形, 高亮范围有 4px 的扩张", style: .marker, enlarge: 4)
         
-        Marker(identifier: "normal", start: startInfo)
+        Marker(startInfo, identifier: "normal")
             .nexts([number2Info, actionInfo, noMaskInfo, roundStyleInfo, squareStyleInfo, followStyleInfo])
             .show(on: self.view, completion: nil)
     }

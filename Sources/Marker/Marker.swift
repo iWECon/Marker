@@ -46,20 +46,14 @@ public class Marker: UIView {
     
     public var identifier: String?
     
-    required public init(_ info: Info) {
+    public required init(_ info: Info, identifier: String? = nil) {
+        self.identifier = identifier
         self.current = info
         super.init(frame: .zero)
         self.animateMaps[info.identifier] = false
     }
     
-    required init(identifier: String, start: Info) {
-        self.identifier = identifier
-        self.current = start
-        super.init(frame: .zero)
-        self.animateMaps[start.identifier] = false
-    }
-    
-    required init?(coder: NSCoder) {
+    public required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
