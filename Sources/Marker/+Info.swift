@@ -8,10 +8,16 @@ public extension Marker {
     
     struct Info {
         
+        /// 三角箭头所在位置
         public enum TrianglePosition {
+            /// 自动处理
             case auto
+            
+            /// 在左侧
             case left(offset: CGFloat = 0)
+            /// 在中间
             case center(offset: CGFloat = 0)
+            /// 在右侧
             case right(offset: CGFloat = 0)
         }
         
@@ -33,43 +39,47 @@ public extension Marker {
         weak var marker: UIView?
         
         /// 表述文本 (supports String or NSAttributedString)
-        var intro: Any?
+        let intro: Any?
         
         /// 文本的最大宽度，默认为 240，一般情况下无需调整
-        var maxWidth: CGFloat = 240
+        let maxWidth: CGFloat
         
         /// 灰色背景的范围，默认为全屏，有非全屏需求时设置
-        var dimFrame: CGRect = UIScreen.main.bounds
+        let dimFrame: CGRect
         
         /// 高亮部分的圆角度数，默认跟随 marker.layer.cornerRadius
-        var style: Style = Marker.default.style
+        let style: Style
         
         /// 三角形位置, 默认为自动
         /// 可选择 左/中/右, 并附带偏移量
-        var trianglePosition: TrianglePosition = .auto
+        let trianglePosition: TrianglePosition
         
         /// 颜色信息，默认走全局配置
-        var color: Info.Color
+        let color: Info.Color
         
         /// 出现后不操作自动下一个/结束的时间
-        var timeout: TimeInterval = 0
+        let timeout: TimeInterval
         
         /// 高亮范围扩展
-        var enlarge: CGFloat = 0
+        let enlarge: CGFloat
         
         /// 显示三角箭头
-        var isShowArrow = Marker.default.isShowArrow
+        let isShowArrow: Bool
         
         /// Valid only when clicking on the highlighted range
         /// 仅在高亮视图点击才有响应/才会走到下一步, 默认为 false
-        var isOnlyAcceptHighlightRange = false
+        let isOnlyAcceptHighlightRange: Bool
         
         /// 事件透传, 仅在 `isOnlyAcceptHighlightRange` 为 true 时有效
-        var isEventPenetration = false
+        let isEventPenetration: Bool
+        
+        /// 固定，设定为 true 时，无法被点击（仅作为展示 View 存在）
+        /// 如果需要消除，请使用: Marker.instance(from:)?.dismiss()
+        let pin: Bool
         
         /// completion of this Info(next/init), all of done completion in show(on:completion)
         /// 本次完成的回执，全部完成的回执在 Marker 中的 show(on:completion:)
-        var completion: CompletionBlock? = nil
+        let completion: CompletionBlock?
         
         var identifier: String {
             "\(marker?.description ?? "")-\(String(describing: intro))-\(dimFrame)-\(timeout)-\(style)"
@@ -87,6 +97,7 @@ public extension Marker {
                     showArrow: Bool = Marker.default.isShowArrow,
                     highlightOnly: Bool = false,
                     eventPenetration: Bool = false,
+                    pin: Bool = false,
                     completion: CompletionBlock? = nil) {
             self.marker = marker
             self.intro = intro
@@ -100,6 +111,7 @@ public extension Marker {
             self.isOnlyAcceptHighlightRange = highlightOnly
             self.isEventPenetration = eventPenetration
             self.isShowArrow = showArrow
+            self.pin = pin
             self.completion = completion
         }
     }

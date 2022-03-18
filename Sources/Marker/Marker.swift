@@ -10,18 +10,23 @@ import UIKit
 public class Marker: UIView {
     
     // MARK:- Static properties
-    private static var markerInstances: [String: Marker] = [:]
-    public static func dismiss() {
-        markerInstances.values.forEach({ $0.dismiss(triggerByUser: true) })
-    }
-    public static func instance(from identifier: String) -> Marker? {
-        markerInstances[identifier]
-    }
-    static func removeInstance(_ marker: Marker) {
-        guard let index = markerInstances.firstIndex(where: { $0.value == marker }) else {
-            return
+    private static var markerInstances = NSMapTable<NSString, Marker>.strongToWeakObjects()
+    
+    /// Dismiss all marker anywhere
+    public static func dismiss(triggerByUser: Bool = true) {
+        for (_, instance) in markerInstances.dictionaryRepresentation() {
+            instance.dismiss(triggerByUser: triggerByUser)
         }
-        markerInstances.remove(at: index)
+    }
+    
+    /// Instance marker with identifier
+    public static func instance(from identifier: String) -> Marker? {
+        markerInstances.object(forKey: identifier as NSString)
+    }
+    
+    /// Remove instance
+    static func removeInstance(_ marker: Marker) {
+        markerInstances.removeObject(forKey: marker.identifier as? NSString)
     }
     
     // MARK:- Public properties
@@ -110,7 +115,12 @@ public class Marker: UIView {
         addGestureRecognizer(tap)
     }
     
+    // MARK: Show next tap gesture Action
     @objc private func showNextTriggerByUser(tap: UITapGestureRecognizer) {
+        guard !current.pin else {
+            return
+        }
+        
         if current.isOnlyAcceptHighlightRange, current.isEventPenetration {
             return
         }
@@ -132,6 +142,7 @@ public class Marker: UIView {
         return shouldAnimate
     }
     
+    // MARK: Layout
     func layout(triggerByUser: Bool) {
         
         guard let markView = current.marker, let markSuperView = current.marker?.superview else {
@@ -394,6 +405,7 @@ public class Marker: UIView {
         CATransaction.commit()
     }
     
+    // MARK: Show next
     @objc public func showNext(triggerByUser: Bool) {
         // add delay to ignore called twice of hittest
         if previousNextTimestamp != 0, (Date().timeIntervalSince1970 - previousNextTimestamp) <= 0.1 {
@@ -437,7 +449,7 @@ public class Marker: UIView {
     }
     
     public func show(on onView: UIView, completion: CompletionBlock? = nil) {
-        Self.markerInstances[identifier ?? current.identifier] = self
+        Self.markerInstances.setObject(self, forKey: (identifier ?? current.identifier) as NSString)
         
         if self.frame == .zero {
             self.frame = onView.bounds
@@ -450,7 +462,7 @@ public class Marker: UIView {
     
     // 点击高亮范围, 把点击事件传递下去 (仅在 `isOnlyAcceptHighlightRange` 和 `isEventPenetration` 都开启时才有效)
     public override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
-        if current.isOnlyAcceptHighlightRange, current.isEventPenetration,
+        if !current.pin, current.isOnlyAcceptHighlightRange, current.isEventPenetration,
            let markView = current.marker, let markSuperview = markView.superview {
 
             let innertFrame = markSuperview.convert(markView.frame, to: self)
