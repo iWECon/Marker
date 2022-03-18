@@ -436,7 +436,7 @@ public class Marker: UIView {
     public func dismiss(triggerByUser: Bool) {
         Self.removeInstance(self)
         
-        UIView.animate(withDuration: 0.34) {
+        UIView.animate(withDuration: animateDuration) {
             self.dimmingView.alpha = 0
             
             self.contentView.alpha = 0
@@ -462,6 +462,10 @@ public class Marker: UIView {
     
     // 点击高亮范围, 把点击事件传递下去 (仅在 `isOnlyAcceptHighlightRange` 和 `isEventPenetration` 都开启时才有效)
     public override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        // 作为展示视图时，不响应任何点击事件
+        if current.pin {
+            return current.marker?.hitTest(point, with: event) ?? current.marker
+        }
         if !current.pin, current.isOnlyAcceptHighlightRange, current.isEventPenetration,
            let markView = current.marker, let markSuperview = markView.superview {
 
