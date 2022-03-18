@@ -464,7 +464,8 @@ public class Marker: UIView {
     public override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         // 作为展示视图时，不响应任何点击事件
         if current.pin {
-            return current.marker?.superview?.hitTest(point, with: event) ?? current.marker
+            let newPoint: CGPoint = self.convert(point, to: current.marker?.superview)
+            return current.marker?.superview?.hitTest(newPoint, with: event) ?? current.marker
         }
         if current.isOnlyAcceptHighlightRange, current.isEventPenetration,
            let markView = current.marker, let markSuperview = markView.superview {
