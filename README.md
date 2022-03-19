@@ -41,56 +41,95 @@ self.present(alert, animated: true, completion: nil)
 
 ## Features
 
-* Supports global acquisition of instances
+* `无需任何计算（相对位置等计算）`, No calculation required (calculation of relative position, etc.)
 
-`支持全局获取实例（通过 identifier)`
+* `支持全局获取实例（通过 identifier)`, Supports global acquisition of instances
 
-使用 `Marker.instance(from identifier: String) -> Marker?` 即可获取已显示的实例，并触发下一步操作 `marker?.showNext(triggleByUser: Bool)`
+```swift
+static func instance(from identifier: String) -> Marker?
 
+use:
+// 创建和显示 Create and show
+Marker(startInfo, identifier: "demoGuide").show(on: self.view)
 
-* Support event transparency, can trigger the next Marker at the same time
+// 获取实例并操作显示下一个或者使其消失 Get instance and show next or dismiss
+let instance: Marker? = Marker.instance(from: "demoGuide")
+instance?.showNext(triggerByUser: true)
+instance?.dismiss(triggerByUser: true)
+```
 
-`支持事件透传, 可同时触发下一个 Marker`
+* `支持事件透传`, Support event delivery
 
+```swift
+Marker.Info(marker: doneButton, intro: "完成~", highlightOnly: true, eventPenetration: true)
 
-* Support global definition of background color, you can also set the background color independently
+`highlightOnly` 和 `eventPenetration` 同时为 true 时，只能点击高亮范围(doneButton)才有响应，同时会响应 doneButton 的点击事件。
 
-`支持全局定义背景颜色，也可以独立设置背景颜色`
+如需要对 marker 进行操作，可使用上面的获取全局实例。
+```
 
+* `支持全局定义背景颜色，也可以独立设置背景颜色`, Support global definition of background color, you can also set the background color independently
 
-* Support rounded corners to follow the highlighted view
+全局所有可配置的内容在 `+Appearence.swift` 文件中，可自行查阅。
 
-`支持圆角跟随高亮视图`
+CODE: `Marker.default.[property]`
 
+* `支持圆角跟随高亮视图`, Support rounded corners to follow the highlighted view
 
-* Support timeout time setting, can be configured globally, also can be set according to business needs for individual guidance
+默认行为：高亮的圆角跟随高亮视图。也可以自定义圆角度数。
 
-`支持超时时间设定，可全局配置，也可根据业务需求对单独的引导进行设置`
+```swift
+`Marker.Info(... style: Style)`
 
+enum Style {
+    /// follow marker.layer.cornerRadius, default
+    case marker
+    
+    case square
+    
+    /// radius = height/2
+    case round
+    
+    /// custom the corner radius
+    case radius(_ radius: CGFloat)
+}
+```
 
-* Support highlighting range extension
+* `支持超时时间设定，可全局配置，也可根据业务需求对单独的引导进行设置`, Support timeout time setting, can be configured globally, also can be set according to business needs for individual guidance
 
-`支持高亮范围扩展`
+```swift
+全局配置超时时间：
+Marker.default.timeout = newValue
 
+全局所有可配置的内容在 `+Appearence.swift` 文件中，可自行查阅。
+```
 
-* Support show/hide triangle arrows
+* `支持高亮范围扩展`, Support highlighting range extension
 
-`支持显示/隐藏三角箭头`
+`Marker.Info(... enlarge: CGFloat)`
 
+* `支持显示/隐藏三角箭头`, Support show/hide triangle arrows
 
-* Support triggering response only when clicking on the highlighted range
+`Marker.Info(... showArrow: Bool)`
 
-`支持仅点击高亮范围时触发响应, 可配合 isEventPenetration 参数产生强引导（必须点击之后才触发下一个事件）`
+* `可配置三角箭头所在位置（左/中/右）且支持设置偏移量`, Configurable triangle arrow location
 
+```swift
+`Marker.Info(... trianglePosition: TrianglePosition)`
 
-* No calculation required (calculation of relative position, etc.)
-
-`无需任何计算（相对位置等计算）`
-
-* Configurable triangle arrow location
-
-`可配置三角箭头所在位置（左/中/右）且支持设置偏移量`
-
+/// 三角箭头所在位置
+public enum TrianglePosition {
+    /// 自动处理
+    case auto
+    
+    /// 在左侧
+    case left(offset: CGFloat = 0)
+    /// 在中间
+    case center(offset: CGFloat = 0)
+    /// 在右侧
+    case right(offset: CGFloat = 0)
+}
+```
 
 ## Install
 
@@ -98,5 +137,5 @@ self.present(alert, animated: true, completion: nil)
 
 ```swift
 # for Swift 5.4, 最低支持 iOS 9.0
-.package(url: "https://github.com/iWECon/Marker", from: "2.0.0")
+.package(url: "https://github.com/iWECon/Marker", from: "2.0.2")
 ```
