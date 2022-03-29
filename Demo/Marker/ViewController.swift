@@ -24,6 +24,10 @@ class ViewController: UIViewController {
     
     @IBOutlet var bottomButtons: [UIButton]!
     
+    @IBOutlet weak var pinView: UIView!
+    @IBOutlet weak var clickableInButton: UIButton!
+    @IBOutlet weak var clickableOutButton: UIButton!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -33,7 +37,7 @@ class ViewController: UIViewController {
         
         let buttons = [startButton, number2Button, respondActionButton, noMaskButton, roundButton, squareButton, followStyleButton, bottomButton, bottomButton] + bottomButtons
         for button in buttons {
-            button?.backgroundColor = UIColor.groupTableViewBackground
+            button?.backgroundColor = UIColor.secondarySystemGroupedBackground
             button?.layer.cornerRadius = 10
         }
         
@@ -43,6 +47,10 @@ class ViewController: UIViewController {
         inSubviewButton.addTarget(self, action: #selector(tapInSubviewAction(_:)), for: .touchUpInside)
         // 底部的按钮
         bottomButton.addTarget(self, action: #selector(bottomAction(_:)), for: .touchUpInside)
+        
+        
+        Marker(Marker.Info(marker: clickableInButton, intro: "这里是展示视图，需要手动 dismiss 才会消失。", pin: true))
+            .show(on: pinView)
     }
     
     @objc func bottomAction(_ sender: UIButton) {
@@ -92,6 +100,14 @@ class ViewController: UIViewController {
         Marker(startInfo, identifier: "normal")
             .nexts([number2Info, actionInfo, noMaskInfo, roundStyleInfo, squareStyleInfo, followStyleInfo])
             .show(on: self.view, completion: nil)
+    }
+    
+    @IBAction func outAction(_ sender: UIButton!) {
+        print("被点击到了: \(sender.currentTitle ?? "NOT FOUND")")
+    }
+    
+    @IBAction func inAction(_ sender: Any) {
+        print("In action tapped.")
     }
 }
 
