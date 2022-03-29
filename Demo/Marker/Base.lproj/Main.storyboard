@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19158" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19141"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -17,8 +17,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="390" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="44" translatesAutoresizingMaskIntoConstraints="NO" id="yT4-ri-cSb">
-                                <rect key="frame" x="24" y="74" width="342" height="181"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="24" translatesAutoresizingMaskIntoConstraints="NO" id="yT4-ri-cSb">
+                                <rect key="frame" x="24" y="74" width="342" height="141"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="51" translatesAutoresizingMaskIntoConstraints="NO" id="MaI-2t-Ux0">
                                         <rect key="frame" x="0.0" y="0.0" width="342" height="31"/>
@@ -41,7 +41,7 @@
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" spacing="51" translatesAutoresizingMaskIntoConstraints="NO" id="5Ex-22-vF4">
-                                        <rect key="frame" x="0.0" y="75" width="342" height="31"/>
+                                        <rect key="frame" x="0.0" y="55" width="342" height="31"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Gdu-Be-pGO">
                                                 <rect key="frame" x="0.0" y="0.0" width="67" height="31"/>
@@ -61,7 +61,7 @@
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="1Gt-0b-la0">
-                                        <rect key="frame" x="144.5" y="150" width="53" height="31"/>
+                                        <rect key="frame" x="144.5" y="110" width="53" height="31"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ixu-ZV-qFd">
                                                 <rect key="frame" x="0.0" y="0.0" width="53" height="31"/>
@@ -79,23 +79,23 @@
                                 </constraints>
                             </stackView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wwZ-Bv-LeM">
-                                <rect key="frame" x="0.0" y="275" width="390" height="180"/>
+                                <rect key="frame" x="0.0" y="235" width="390" height="120"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1FU-GK-DWg">
-                                        <rect key="frame" x="108.5" y="74.5" width="173" height="31"/>
+                                        <rect key="frame" x="108.5" y="56.5" width="173" height="31"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" title="显示在子视图的 Marker"/>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemGray5Color"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="180" id="USL-le-rO9"/>
+                                    <constraint firstAttribute="height" constant="120" id="USL-le-rO9"/>
                                     <constraint firstItem="1FU-GK-DWg" firstAttribute="centerX" secondItem="wwZ-Bv-LeM" secondAttribute="centerX" id="hEO-fI-pwT"/>
-                                    <constraint firstItem="1FU-GK-DWg" firstAttribute="centerY" secondItem="wwZ-Bv-LeM" secondAttribute="centerY" id="oQ0-4z-6dn"/>
+                                    <constraint firstItem="1FU-GK-DWg" firstAttribute="centerY" secondItem="wwZ-Bv-LeM" secondAttribute="centerY" multiplier="1.2" id="oQ0-4z-6dn"/>
                                 </constraints>
                             </view>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="44" translatesAutoresizingMaskIntoConstraints="NO" id="bmQ-a9-AZ1">
-                                <rect key="frame" x="24" y="475" width="342" height="181"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="24" translatesAutoresizingMaskIntoConstraints="NO" id="bmQ-a9-AZ1">
+                                <rect key="frame" x="24" y="375" width="342" height="141"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="51" translatesAutoresizingMaskIntoConstraints="NO" id="3iT-Pb-zF6">
                                         <rect key="frame" x="0.0" y="0.0" width="342" height="31"/>
@@ -118,7 +118,7 @@
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" translatesAutoresizingMaskIntoConstraints="NO" id="X0f-yu-8v8">
-                                        <rect key="frame" x="0.0" y="75" width="342" height="31"/>
+                                        <rect key="frame" x="0.0" y="55" width="342" height="31"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="j0m-zl-39D">
                                                 <rect key="frame" x="0.0" y="0.0" width="184.5" height="31"/>
@@ -138,7 +138,7 @@
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="bdr-UW-xiv">
-                                        <rect key="frame" x="45" y="150" width="252.5" height="31"/>
+                                        <rect key="frame" x="45" y="110" width="252.5" height="31"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="B8o-fn-YV4">
                                                 <rect key="frame" x="0.0" y="0.0" width="252.5" height="31"/>
@@ -155,6 +155,74 @@
                                     <constraint firstAttribute="trailing" secondItem="3iT-Pb-zF6" secondAttribute="trailing" id="tnj-ru-KTl"/>
                                 </constraints>
                             </stackView>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4hE-Kj-fN6">
+                                <rect key="frame" x="0.0" y="566" width="390" height="237"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="MEg-2d-DfE">
+                                        <rect key="frame" x="177" y="8" width="205" height="69"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yh4-rl-ybW">
+                                                <rect key="frame" x="42" y="19" width="120" height="31"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="plain" title="可被点击4"/>
+                                                <connections>
+                                                    <action selector="inAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="WSP-Co-E5J"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                        <color key="backgroundColor" systemColor="systemIndigoColor"/>
+                                    </view>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wRg-2p-Fgc">
+                                        <rect key="frame" x="29" y="27" width="120" height="31"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" title="可被点击1"/>
+                                        <connections>
+                                            <action selector="outAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="uwb-TO-tcd"/>
+                                        </connections>
+                                    </button>
+                                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6fF-sH-GAV">
+                                        <rect key="frame" x="8" y="101" width="207" height="136"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aCI-sb-yMn">
+                                                <rect key="frame" x="42" y="19" width="120" height="31"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="plain" title="可被点击2"/>
+                                                <connections>
+                                                    <action selector="outAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="3LV-jk-Npp"/>
+                                                </connections>
+                                            </button>
+                                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ae3-Ws-9Wu">
+                                                <rect key="frame" x="0.0" y="62" width="207" height="56"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <subviews>
+                                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zRb-r9-LVv">
+                                                        <rect key="frame" x="29" y="13" width="148" height="31"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <state key="normal" title="Button"/>
+                                                        <buttonConfiguration key="configuration" style="plain" title="可被点击3"/>
+                                                        <connections>
+                                                            <action selector="outAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Pmg-7s-kqO"/>
+                                                        </connections>
+                                                    </button>
+                                                </subviews>
+                                                <color key="backgroundColor" systemColor="systemBlueColor"/>
+                                            </view>
+                                        </subviews>
+                                        <color key="backgroundColor" systemColor="systemIndigoColor"/>
+                                    </view>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemTealColor"/>
+                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -173,10 +241,13 @@
                     <size key="freeformSize" width="390" height="896"/>
                     <connections>
                         <outlet property="bottomButton" destination="AML-Kd-T0A" id="1K4-SB-Rrh"/>
+                        <outlet property="clickableInButton" destination="yh4-rl-ybW" id="zFf-Zz-xmk"/>
+                        <outlet property="clickableOutButton" destination="wRg-2p-Fgc" id="yMm-W7-OUY"/>
                         <outlet property="followStyleButton" destination="ixu-ZV-qFd" id="fWg-6A-J1Q"/>
                         <outlet property="inSubviewButton" destination="1FU-GK-DWg" id="GjZ-xK-aQI"/>
                         <outlet property="noMaskButton" destination="Gdu-Be-pGO" id="qnv-s6-14T"/>
                         <outlet property="number2Button" destination="9qx-bB-K5x" id="w3b-l7-Uvr"/>
+                        <outlet property="pinView" destination="4hE-Kj-fN6" id="ofp-Fc-WTx"/>
                         <outlet property="respondActionButton" destination="kll-FK-2mb" id="gtt-xl-ak8"/>
                         <outlet property="roundButton" destination="Adm-Mp-WJl" id="t3c-fN-bpK"/>
                         <outlet property="squareButton" destination="XIU-Fn-35K" id="Fzx-bg-SO1"/>
@@ -199,8 +270,17 @@
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
+        <systemColor name="systemBlueColor">
+            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
         <systemColor name="systemGray5Color">
             <color red="0.89803921568627454" green="0.89803921568627454" blue="0.91764705882352937" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemIndigoColor">
+            <color red="0.34509803921568627" green="0.33725490196078434" blue="0.83921568627450982" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemTealColor">
+            <color red="0.18823529411764706" green="0.69019607843137254" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

@@ -9,48 +9,37 @@ import UIKit
 
 public class Marker: UIView {
     
-    // MARK:- Static properties
+    // MARK: Static properties
     private static var markerInstances = NSMapTable<NSString, Marker>.strongToWeakObjects()
     
-    /// Dismiss all marker anywhere
-    public static func dismiss(triggerByUser: Bool = true) {
-        for (_, instance) in markerInstances.dictionaryRepresentation() {
-            instance.dismiss(triggerByUser: triggerByUser)
-        }
-    }
     
-    /// Instance marker with identifier
-    public static func instance(from identifier: String) -> Marker? {
-        markerInstances.object(forKey: identifier as NSString)
-    }
-    
-    /// Remove instance
-    static func removeInstance(_ marker: Marker) {
-        markerInstances.removeObject(forKey: marker.identifier as? NSString)
-    }
-    
-    // MARK:- Public properties
+    // MARK: Public properties
     public typealias CompletionBlock = (_: Marker, _ isTriggerByUser: Bool) -> Void
     
     public static var `default` = Marker.Appearence()
     public var animateDuration: TimeInterval = 0.34
-    
-    // MARK:- Internal properties
-    weak var onView: UIView?
-    
-    var previousNextTimestamp: TimeInterval = 0
-    
-    var current: Info!
-    
-    var nexts: [Info] = []
-    
-    var animateMaps: [String: Bool] = [:]
-    
-    /// completion，所有任务完成后的 completion
-    var completion: CompletionBlock?
-    
     public var identifier: String?
     
+    // MARK: Internal properties
+    weak var onView: UIView?
+    
+    // Datas
+    var previousNextTimestamp: TimeInterval = 0
+    var current: Info!
+    var nexts: [Info] = []
+    var animateMaps: [String: Bool] = [:]
+    /// 所有任务完成后的 completion.
+    var completion: CompletionBlock?
+    
+    // Views
+    let dimmingView = UIView()
+    let contentView = UIView()
+    let contentLabel = UILabel()
+    let gradientLayer = CAGradientLayer()
+    let bumpLayer = CAShapeLayer()
+    let maskLayer = CAShapeLayer()
+    
+    // MARK: - Initialize
     public required init(_ info: Info, identifier: String? = nil) {
         self.identifier = identifier
         self.current = info
@@ -62,31 +51,7 @@ public class Marker: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    /// 下一个
-    @discardableResult
-    public func next(_ info: Info) -> Marker {
-        nexts.append(info)
-        animateMaps[info.identifier] = false
-        return self
-    }
-    
-    /// 下一组
-    @discardableResult
-    public func nexts(_ infos: [Info]) -> Marker {
-        nexts.append(contentsOf: infos)
-        infos.forEach({ animateMaps[$0.identifier] = false })
-        return self
-    }
-    
-    let dimmingView = UIView()
-    let contentView = UIView()
-    public let contentLabel = UILabel()
-    let gradientLayer = CAGradientLayer()
-    let bumpLayer = CAShapeLayer()
-    let maskLayer = CAShapeLayer()
-    
     func installViews() {
-        
         contentLabel.font = Self.default.textFont
         contentLabel.textColor = Self.default.textColor
         contentLabel.numberOfLines = 0
@@ -433,7 +398,42 @@ public class Marker: UIView {
         }
     }
     
-    public func dismiss(triggerByUser: Bool) {
+    // 点击高亮范围, 把点击事件传递下去 (仅在 `isOnlyAcceptHighlightRange` 和 `isEventPenetration` 都开启时才有效)
+    public override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        // 作为展示视图时，本身不响应任何点击事件
+        if current.pin {
+            return nil
+        }
+        if current.isOnlyAcceptHighlightRange, current.isEventPenetration,
+           let markView = current.marker, let markSuperview = markView.superview {
+
+            let innertFrame = markSuperview.convert(markView.frame, to: self)
+            let highlightFrame = innertFrame.insetBy(dx: -current.enlarge, dy: -current.enlarge)
+            
+            if highlightFrame.contains(point) {
+                return current.marker?.hitTest(point, with: event) ?? current.marker
+            }
+        }
+        return super.hitTest(point, with: event)
+    }
+}
+
+// MARK: Actions
+public extension Marker {
+    
+    @discardableResult func next(_ info: Info) -> Marker {
+        nexts.append(info)
+        animateMaps[info.identifier] = false
+        return self
+    }
+    
+    @discardableResult func nexts(_ infos: [Info]) -> Marker {
+        nexts.append(contentsOf: infos)
+        infos.forEach({ animateMaps[$0.identifier] = false })
+        return self
+    }
+    
+    func dismiss(triggerByUser: Bool) {
         Self.removeInstance(self)
         
         UIView.animate(withDuration: animateDuration) {
@@ -448,7 +448,7 @@ public class Marker: UIView {
         }
     }
     
-    public func show(on onView: UIView, completion: CompletionBlock? = nil) {
+    func show(on onView: UIView, completion: CompletionBlock? = nil) {
         Self.markerInstances.setObject(self, forKey: (identifier ?? current.identifier) as NSString)
         
         if self.frame == .zero {
@@ -460,23 +460,25 @@ public class Marker: UIView {
         layout(triggerByUser: true)
     }
     
-    // 点击高亮范围, 把点击事件传递下去 (仅在 `isOnlyAcceptHighlightRange` 和 `isEventPenetration` 都开启时才有效)
-    public override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
-        // 作为展示视图时，不响应任何点击事件
-        if current.pin {
-            let newPoint: CGPoint = self.convert(point, to: current.marker?.superview)
-            return current.marker?.superview?.hitTest(newPoint, with: event) ?? current.marker
-        }
-        if current.isOnlyAcceptHighlightRange, current.isEventPenetration,
-           let markView = current.marker, let markSuperview = markView.superview {
+}
 
-            let innertFrame = markSuperview.convert(markView.frame, to: self)
-            let highlightFrame = innertFrame.insetBy(dx: -current.enlarge, dy: -current.enlarge)
-            
-            if highlightFrame.contains(point) {
-                return current.marker?.hitTest(point, with: event) ?? current.marker
-            }
+
+// MARK: Static functions
+public extension Marker {
+    /// Dismiss all marker anywhere
+    static func dismiss(triggerByUser: Bool = true) {
+        for (_, instance) in markerInstances.dictionaryRepresentation() {
+            instance.dismiss(triggerByUser: triggerByUser)
         }
-        return super.hitTest(point, with: event)
+    }
+    
+    /// Instance marker with identifier
+    static func instance(from identifier: String) -> Marker? {
+        markerInstances.object(forKey: identifier as NSString)
+    }
+    
+    /// Remove instance
+    static func removeInstance(_ marker: Marker) {
+        markerInstances.removeObject(forKey: marker.identifier as? NSString)
     }
 }
