@@ -8,14 +8,12 @@ extension Marker.Info {
     
     public enum Options {
         
-        case hideArrow
-        
         /// Strong guidance. It means that only tap on the highlighted range will respond.
         /// Default is weak guidance: tap anywhere to continue(next).
         case strongGuidance
         
         /// Will not repond any tap events.
-        /// ⚠️ Need to be used with `strong`.
+        /// ⚠️ Need to be used with `strongGuidance`.
         case eventPenetration
         
         /// It means that only display on view, no event repond.
@@ -30,9 +28,6 @@ extension Marker.Info.Options: Equatable {
     
     public static func == (lhs: Self, rhs: Self) -> Bool {
         switch (lhs, rhs) {
-        case (.hideArrow, .hideArrow):
-            return true
-            
         case (.strongGuidance, .strongGuidance):
             return true
             

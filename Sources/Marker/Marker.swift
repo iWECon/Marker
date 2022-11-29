@@ -82,17 +82,15 @@ public class Marker: UIView {
     
     // MARK: Show next tap gesture Action
     @objc private func showNextTriggerByUser(tap: UITapGestureRecognizer) {
-        guard !current.options.contains(.decoration) else {
+        guard !current.isDecoration else {
             return
         }
         
-        if current.options.contains(.strongGuidance),
-           current.options.contains(.eventPenetration)
-        {
+        if current.isStrongGuidance, current.isEventPenetration {
             return
         }
         
-        if current.options.contains(.strongGuidance),
+        if current.isStrongGuidance,
            let markView = current.marker,
            let markSuperview = markView.superview
         {
@@ -195,7 +193,7 @@ public class Marker: UIView {
         contentLabel.frame.size = contentSize
         
         // calculator gradient frame
-        let bumpHeight: CGFloat = current.options.contains(.hideArrow) ? 0 : 6
+        let bumpHeight: CGFloat = current.hideArrow ? 0 : 6
         // 如果视图在中心线右边，则三角形也在右边, 否则在左边
         let isRight = innerFrame.minX >= (frame.width / 2)
         
@@ -251,7 +249,7 @@ public class Marker: UIView {
         
         var labelOriginY: CGFloat = bumpHeight + padding.top
         let bezierPath = UIBezierPath()
-        if !current.options.contains(.hideArrow) {
+        if !current.hideArrow {
             
             // draw triangle
             switch current.trianglePosition {
@@ -406,16 +404,13 @@ public class Marker: UIView {
     // 点击高亮范围, 把点击事件传递下去 (仅在 `isOnlyAcceptHighlightRange` 和 `isEventPenetration` 都开启时才有效)
     public override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         // 作为展示视图时，本身不响应任何点击事件
-        if current.options.contains(.decoration) {
+        if current.isDecoration {
             return nil
         }
         
-        if current.options.contains(.strongGuidance),
-           current.options.contains(.eventPenetration),
-           let markView = current.marker,
-           let markSuperview = markView.superview
+        if current.isStrongGuidance, current.isEventPenetration,
+           let markView = current.marker, let markSuperview = markView.superview
         {
-            
             let innertFrame = markSuperview.convert(markView.frame, to: self)
             let highlightFrame = innertFrame.insetBy(dx: -current.enlarge, dy: -current.enlarge)
             
@@ -442,7 +437,7 @@ public extension Marker {
         return self
     }
     
-    func dismiss(triggerByUser: Bool) {
+    func dismiss(triggerByUser: Bool = true) {
         Self.removeInstance(self)
         
         UIView.animate(withDuration: animateDuration) {

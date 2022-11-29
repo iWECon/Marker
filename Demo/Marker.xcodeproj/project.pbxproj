@@ -7,21 +7,35 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		08B71FC825C04DED00D1FF60 /* +Info.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08B71FC625C04DED00D1FF60 /* +Info.swift */; };
-		08B71FC925C04DED00D1FF60 /* +Appearence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08B71FC725C04DED00D1FF60 /* +Appearence.swift */; };
+		08A877ED29363F140047F6AC /* Marker+Info+Text.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A877E629363F140047F6AC /* Marker+Info+Text.swift */; };
+		08A877EE29363F140047F6AC /* Marker+Info+Options.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A877E729363F140047F6AC /* Marker+Info+Options.swift */; };
+		08A877EF29363F140047F6AC /* Marker+Info+ArrowPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A877E829363F140047F6AC /* Marker+Info+ArrowPosition.swift */; };
+		08A877F029363F140047F6AC /* Marker+Info.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A877E929363F140047F6AC /* Marker+Info.swift */; };
+		08A877F129363F140047F6AC /* Marker+Info+Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A877EA29363F140047F6AC /* Marker+Info+Color.swift */; };
+		08A877F229363F140047F6AC /* Marker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A877EB29363F140047F6AC /* Marker.swift */; };
+		08A877F329363F140047F6AC /* Marker+Appearence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A877EC29363F140047F6AC /* Marker+Appearence.swift */; };
+		08A877F5293648B20047F6AC /* Marker+Info+CornerStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A877F4293648B20047F6AC /* Marker+Info+CornerStyle.swift */; };
+		08A877F7293648E40047F6AC /* Marker+Info+Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A877F6293648E40047F6AC /* Marker+Info+Style.swift */; };
 		08F7A68F25B074C000250D41 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08F7A68E25B074C000250D41 /* AppDelegate.swift */; };
 		08F7A69125B074C000250D41 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08F7A69025B074C000250D41 /* SceneDelegate.swift */; };
 		08F7A69325B074C000250D41 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08F7A69225B074C000250D41 /* ViewController.swift */; };
 		08F7A69625B074C000250D41 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 08F7A69425B074C000250D41 /* Main.storyboard */; };
 		08F7A69825B074C100250D41 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 08F7A69725B074C100250D41 /* Assets.xcassets */; };
 		08F7A69B25B074C100250D41 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 08F7A69925B074C100250D41 /* LaunchScreen.storyboard */; };
-		08F7A6A625B074D100250D41 /* Marker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08F7A6A525B074D100250D41 /* Marker.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		08990CF726467BAF004202BA /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
-		08B71FC625C04DED00D1FF60 /* +Info.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "+Info.swift"; sourceTree = "<group>"; };
-		08B71FC725C04DED00D1FF60 /* +Appearence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "+Appearence.swift"; sourceTree = "<group>"; };
+		08A877E629363F140047F6AC /* Marker+Info+Text.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Marker+Info+Text.swift"; sourceTree = "<group>"; };
+		08A877E729363F140047F6AC /* Marker+Info+Options.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Marker+Info+Options.swift"; sourceTree = "<group>"; };
+		08A877E829363F140047F6AC /* Marker+Info+ArrowPosition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Marker+Info+ArrowPosition.swift"; sourceTree = "<group>"; };
+		08A877E929363F140047F6AC /* Marker+Info.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Marker+Info.swift"; sourceTree = "<group>"; };
+		08A877EA29363F140047F6AC /* Marker+Info+Color.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Marker+Info+Color.swift"; sourceTree = "<group>"; };
+		08A877EB29363F140047F6AC /* Marker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Marker.swift; sourceTree = "<group>"; };
+		08A877EC29363F140047F6AC /* Marker+Appearence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Marker+Appearence.swift"; sourceTree = "<group>"; };
+		08A877F4293648B20047F6AC /* Marker+Info+CornerStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Marker+Info+CornerStyle.swift"; sourceTree = "<group>"; };
+		08A877F6293648E40047F6AC /* Marker+Info+Style.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Marker+Info+Style.swift"; sourceTree = "<group>"; };
+		08A877F8293654130047F6AC /* README_CN.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README_CN.md; sourceTree = "<group>"; };
 		08F7A68B25B074C000250D41 /* Marker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Marker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		08F7A68E25B074C000250D41 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		08F7A69025B074C000250D41 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -30,7 +44,6 @@
 		08F7A69725B074C100250D41 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		08F7A69A25B074C100250D41 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		08F7A69C25B074C100250D41 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		08F7A6A525B074D100250D41 /* Marker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Marker.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -44,13 +57,47 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		08A877DD29363E860047F6AC /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		08A877E429363F140047F6AC /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				08A877E529363F140047F6AC /* Marker */,
+			);
+			name = Sources;
+			path = ../Sources;
+			sourceTree = "<group>";
+		};
+		08A877E529363F140047F6AC /* Marker */ = {
+			isa = PBXGroup;
+			children = (
+				08A877EB29363F140047F6AC /* Marker.swift */,
+				08A877EC29363F140047F6AC /* Marker+Appearence.swift */,
+				08A877E929363F140047F6AC /* Marker+Info.swift */,
+				08A877E829363F140047F6AC /* Marker+Info+ArrowPosition.swift */,
+				08A877EA29363F140047F6AC /* Marker+Info+Color.swift */,
+				08A877E729363F140047F6AC /* Marker+Info+Options.swift */,
+				08A877E629363F140047F6AC /* Marker+Info+Text.swift */,
+				08A877F4293648B20047F6AC /* Marker+Info+CornerStyle.swift */,
+				08A877F6293648E40047F6AC /* Marker+Info+Style.swift */,
+			);
+			path = Marker;
+			sourceTree = "<group>";
+		};
 		08F7A68225B074C000250D41 = {
 			isa = PBXGroup;
 			children = (
 				08990CF726467BAF004202BA /* README.md */,
-				08F7A6A325B074D100250D41 /* Sources */,
+				08A877F8293654130047F6AC /* README_CN.md */,
+				08A877E429363F140047F6AC /* Sources */,
 				08F7A68D25B074C000250D41 /* Marker */,
 				08F7A68C25B074C000250D41 /* Products */,
+				08A877DD29363E860047F6AC /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -76,25 +123,6 @@
 			path = Marker;
 			sourceTree = "<group>";
 		};
-		08F7A6A325B074D100250D41 /* Sources */ = {
-			isa = PBXGroup;
-			children = (
-				08F7A6A425B074D100250D41 /* Marker */,
-			);
-			name = Sources;
-			path = ../Sources;
-			sourceTree = "<group>";
-		};
-		08F7A6A425B074D100250D41 /* Marker */ = {
-			isa = PBXGroup;
-			children = (
-				08B71FC725C04DED00D1FF60 /* +Appearence.swift */,
-				08B71FC625C04DED00D1FF60 /* +Info.swift */,
-				08F7A6A525B074D100250D41 /* Marker.swift */,
-			);
-			path = Marker;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -111,6 +139,8 @@
 			dependencies = (
 			);
 			name = Marker;
+			packageProductDependencies = (
+			);
 			productName = Marker;
 			productReference = 08F7A68B25B074C000250D41 /* Marker.app */;
 			productType = "com.apple.product-type.application";
@@ -165,12 +195,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				08A877EF29363F140047F6AC /* Marker+Info+ArrowPosition.swift in Sources */,
 				08F7A69325B074C000250D41 /* ViewController.swift in Sources */,
-				08B71FC825C04DED00D1FF60 /* +Info.swift in Sources */,
-				08F7A6A625B074D100250D41 /* Marker.swift in Sources */,
 				08F7A68F25B074C000250D41 /* AppDelegate.swift in Sources */,
+				08A877F7293648E40047F6AC /* Marker+Info+Style.swift in Sources */,
+				08A877ED29363F140047F6AC /* Marker+Info+Text.swift in Sources */,
 				08F7A69125B074C000250D41 /* SceneDelegate.swift in Sources */,
-				08B71FC925C04DED00D1FF60 /* +Appearence.swift in Sources */,
+				08A877F129363F140047F6AC /* Marker+Info+Color.swift in Sources */,
+				08A877EE29363F140047F6AC /* Marker+Info+Options.swift in Sources */,
+				08A877F029363F140047F6AC /* Marker+Info.swift in Sources */,
+				08A877F229363F140047F6AC /* Marker.swift in Sources */,
+				08A877F329363F140047F6AC /* Marker+Appearence.swift in Sources */,
+				08A877F5293648B20047F6AC /* Marker+Info+CornerStyle.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -16,6 +16,8 @@ extension Marker {
             UIColor(red: 255 / 255, green: 51 / 255, blue: 131 / 255, alpha: 1).cgColor
         ])
         
+        public var maxWidth: CGFloat = 240
+        
         /// Spacing between triangle arrow and highlight view.
         /// 三角箭头距离高亮视图的距离
         public var spacing: CGFloat = 10
@@ -31,7 +33,7 @@ extension Marker {
         public var timeoutAfterAnimateDidCompletion = true
         
         /// 高亮区域圆角配置，默认为跟随高亮视图 .marker
-        public var style: Info.Style = .marker
+        public var style: Info.CornerStyle = .marker
         
         /// 超时时间，0 为永不超时
         public var timeout: TimeInterval = 0
