@@ -35,7 +35,7 @@
 		08A877EC29363F140047F6AC /* Marker+Appearence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Marker+Appearence.swift"; sourceTree = "<group>"; };
 		08A877F4293648B20047F6AC /* Marker+Info+CornerStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Marker+Info+CornerStyle.swift"; sourceTree = "<group>"; };
 		08A877F6293648E40047F6AC /* Marker+Info+Style.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Marker+Info+Style.swift"; sourceTree = "<group>"; };
-		08A877F8293654130047F6AC /* README_CN.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README_CN.md; sourceTree = "<group>"; };
+		08A877F9293654F80047F6AC /* README_CN.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = README_CN.md; path = ../README_CN.md; sourceTree = "<group>"; };
 		08F7A68B25B074C000250D41 /* Marker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Marker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		08F7A68E25B074C000250D41 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		08F7A69025B074C000250D41 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -93,7 +93,7 @@
 			isa = PBXGroup;
 			children = (
 				08990CF726467BAF004202BA /* README.md */,
-				08A877F8293654130047F6AC /* README_CN.md */,
+				08A877F9293654F80047F6AC /* README_CN.md */,
 				08A877E429363F140047F6AC /* Sources */,
 				08F7A68D25B074C000250D41 /* Marker */,
 				08F7A68C25B074C000250D41 /* Products */,
