@@ -103,9 +103,24 @@ let info = Marker.Info(
     styles: [
         .dimFrame(.zero)
     ],
-    options: [.decoration]
+    options: [.decoration],
+    completion: { (markerInstance: Marker, isTriggerByUser: Bool) in
+        print("marker of enter settings dismiss with user: \(isTriggerByUser)")
+    }
 )
-Marker(info).show(on: self.view)
+
+let profile = Marker.Info(
+    marker: profileButton, 
+    intro: "Tap here to edit your profile."
+)
+Marker(info)
+    .nexts([profile])
+    .show(
+        on: self.view,
+        completion: { (markerInstance: Marker, isTriggerByUser: Bool) in 
+            print("marker of enter to settings and profile are all of dismiss")
+        }
+    )
 ```
 
 ### Global
@@ -126,5 +141,5 @@ Marker.dismiss(triggerByUser: <#Bool#>)
 #### Swift Package Manager
 
 ```swift
-.package(url: "https://github.com/iWECon/Marker", from: "2.0.2")
+.package(url: "https://github.com/iWECon/Marker", from: "3.0.0")
 ```
