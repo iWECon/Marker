@@ -82,15 +82,20 @@ public class Marker: UIView {
     
     // MARK: Show next tap gesture Action
     @objc private func showNextTriggerByUser(tap: UITapGestureRecognizer) {
-        guard !current.pin else {
+        guard !current.options.contains(.decoration) else {
             return
         }
         
-        if current.isOnlyAcceptHighlightRange, current.isEventPenetration {
+        if current.options.contains(.strongGuidance),
+           current.options.contains(.eventPenetration)
+        {
             return
         }
         
-        if current.isOnlyAcceptHighlightRange, let markView = current.marker, let markSuperview = markView.superview {
+        if current.options.contains(.strongGuidance),
+           let markView = current.marker,
+           let markSuperview = markView.superview
+        {
             let tapPoint = tap.location(in: self)
             if !markSuperview.convert(markView.frame, to: self).contains(tapPoint) {
                 return
@@ -190,7 +195,7 @@ public class Marker: UIView {
         contentLabel.frame.size = contentSize
         
         // calculator gradient frame
-        let bumpHeight: CGFloat = current.isShowArrow ? 6 : 0
+        let bumpHeight: CGFloat = current.options.contains(.hideArrow) ? 0 : 6
         // 如果视图在中心线右边，则三角形也在右边, 否则在左边
         let isRight = innerFrame.minX >= (frame.width / 2)
         
@@ -246,7 +251,7 @@ public class Marker: UIView {
         
         var labelOriginY: CGFloat = bumpHeight + padding.top
         let bezierPath = UIBezierPath()
-        if current.isShowArrow {
+        if !current.options.contains(.hideArrow) {
             
             // draw triangle
             switch current.trianglePosition {
@@ -401,12 +406,16 @@ public class Marker: UIView {
     // 点击高亮范围, 把点击事件传递下去 (仅在 `isOnlyAcceptHighlightRange` 和 `isEventPenetration` 都开启时才有效)
     public override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         // 作为展示视图时，本身不响应任何点击事件
-        if current.pin {
+        if current.options.contains(.decoration) {
             return nil
         }
-        if current.isOnlyAcceptHighlightRange, current.isEventPenetration,
-           let markView = current.marker, let markSuperview = markView.superview {
-
+        
+        if current.options.contains(.strongGuidance),
+           current.options.contains(.eventPenetration),
+           let markView = current.marker,
+           let markSuperview = markView.superview
+        {
+            
             let innertFrame = markSuperview.convert(markView.frame, to: self)
             let highlightFrame = innertFrame.insetBy(dx: -current.enlarge, dy: -current.enlarge)
             
