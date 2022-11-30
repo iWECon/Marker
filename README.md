@@ -26,6 +26,14 @@ Can be used as a decorative view, no event in response. (hitTest:) always return
  
 Global style configure, global instance by identifier, global dismiss all marker instance.
 
+- Strong guidance.
+
+Only respond event on tap marker range.
+
+Needs to set options: `[.strongGuidance]`.
+
+Default is weak guidance: tap anywhere to respond event(show next).
+
 
 # Codes
 
@@ -121,6 +129,22 @@ Marker(info)
             print("marker of enter to settings and profile are all of dismiss")
         }
     )
+```
+
+### Strong guidance
+
+#### \#1
+
+Only respond event(show next) on tap highlight range.
+```swift
+Marker.Info(... options: [.strongGuidance])
+```
+
+#### \#2
+
+Pass event to next hitTest view on tap highlight range.
+```swift
+Marker.Info(... options: [.strongGuidance, .eventPenetration])
 ```
 
 ### Global

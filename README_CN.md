@@ -130,6 +130,16 @@ public enum ArrowPosition {
 }
 ```
 
+* `仅点击高亮范围时响应`
+
+Marker.Info(... options: [.strongGuidance])
+
+* `点击高亮范围时，事件传递给高亮范围中的视图`
+
+如果高亮范围是 Button，则会响应 Button 的点击事件。
+
+Marker.Info(... options: [.strongGuidance, .eventPenetration])
+
 ## Install
 
 #### Swift Package Manager
