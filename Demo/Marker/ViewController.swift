@@ -97,7 +97,7 @@ class ViewController: UIViewController {
         Marker.default.timeout = 0
         
         let startInfo = Marker.Info(marker: startButton, intro: "起始按钮, 默认配置, 最大宽度 320, 点击任意处进入下一个", styles: [.arrowPosition(.left(offset: 0))])
-        let number2Info = Marker.Info(marker: number2Button, intro: "第二个按钮, 默认配置", styles: [.arrowPosition(.right(offset: 0))])
+        let number2Info = Marker.Info(marker: number2Button, intro: "第二个按钮, 默认配置", styles: [.arrowPosition(.right(offset: 0)), .hideArrow])
         let actionInfo = Marker.Info(marker: respondActionButton, intro: "第三个按钮, 可透传事件：仅点击高亮范围有效，且点击事，事件可以传递到按钮上（执行按钮的点击事件）并触发下一步事件", options: [.strongGuidance, .eventPenetration])
         let noMaskInfo = Marker.Info(marker: noMaskButton, intro: "第四个按钮, 没有遮罩", styles: [.arrowPosition(.center(offset: 0)), .dimFrame(.zero)])
         let roundStyleInfo = Marker.Info(marker: roundButton, intro: "第五个按钮, 圆角遮罩, 且高亮范围有 10px 的扩张", styles: [.cornerStyle(.round), .highlightRangeExpande(10)])

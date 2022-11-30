@@ -114,129 +114,34 @@ public class Marker: UIView {
     // MARK: Layout
     func layout(triggerByUser: Bool) {
         
-        guard let markView = current.marker, let markSuperView = current.marker?.superview else {
+        guard let calculate = Calculate(info: current, onView: self) else {
             showNext(triggerByUser: triggerByUser)
             return
         }
         
-        if current.timeout > 0 { // enable timeout if set timeout
-            let identifier = current.identifier
-            let timeout = Marker.default.timeoutAfterAnimateDidCompletion ? (Double(current.timeout) + animateDuration) : Double(current.timeout)
-            DispatchQueue.main.asyncAfter(deadline: .now() + timeout) { [weak self] in
-                // whether it has been manually skipped
-                guard self?.animateMaps[identifier] == false else { return }
-                self?.showNext(triggerByUser: false)
-            }
-        }
+        self.setupTimeoutIfNeeded()
+        self.setupDimmingView(calculate: calculate)
         
-        dimmingView.frame = bounds
+        self.setupIntro(calculate: calculate)
+        let gradientFrame = self.calculateGradientRange(calculate: calculate)
+        //self.setupTriangleArrow(calculate: calculate)
         
-        let spacing = Self.default.spacing
-        let innerFrame = markSuperView.convert(markView.frame, to: self)
-        let isRound = markView.layer.cornerRadius == innerFrame.height / 2
-        let markerFrame = current.dimFrame == .zero ? .zero : innerFrame.insetBy(dx: -current.enlarge, dy: -current.enlarge)
-        let withoutDimframe = innerFrame.insetBy(dx: -current.enlarge, dy: -current.enlarge)
+        let padding = Marker.default.padding
+        let innerFrame = calculate.innerFrame
+        let withoutDimframe = calculate.withoutDimFrame
+        let highlightRangeRect = calculate.highlightRangeRect
         
-        // set cornerRadiu
-        let cornerRadius: CGFloat
-        switch current.style {
-        case .marker:
-            cornerRadius = isRound ? markerFrame.height / 2 : markView.layer.cornerRadius
-        case .square:
-            cornerRadius = 0
-        case .round:
-            cornerRadius = markerFrame.height / 2
-        case .radius(let radius):
-            cornerRadius = radius
-        }
-        
-        let markerPath = UIBezierPath(roundedRect: markerFrame, cornerRadius: cornerRadius).reversing()
-        
-        // set dimming path
-        let dimmingPath = UIBezierPath(roundedRect: current.dimFrame, cornerRadius: 0)
-        dimmingPath.append(markerPath)
-        
-        if maskLayer.superlayer == nil || dimmingViewShouldTransition {
-            maskLayer.path = dimmingPath.cgPath
-            maskLayer.backgroundColor = UIColor.black.cgColor
-            dimmingView.layer.mask = maskLayer
-            UIView.animate(withDuration: animateDuration) {
-                self.dimmingView.alpha = 1
-            }
-        } else {
-            if current.dimFrame == .zero {
-                UIView.animate(withDuration: animateDuration) {
-                    self.dimmingView.alpha = 0
-                }
-            } else if dimmingView.alpha != 1 {
-                maskLayer.path = dimmingPath.cgPath
-                UIView.animate(withDuration: animateDuration) {
-                    self.dimmingView.alpha = 1
-                }
-            } else {
-                pathAnimate(from: maskLayer, to: dimmingPath)
-            }
-        }
-        
-        if let introString = current.intro as? String {
-            contentLabel.text = introString
-        } else if let attributedString = current.intro as? NSAttributedString {
-            contentLabel.attributedText = attributedString
-        } else {
-            contentLabel.text = "Can not support this type: \(type(of: current.intro))"
-        }
-        
-        // reload contentLabel size
-        let padding = Self.default.padding
-        let maxWidth = min(UIScreen.main.bounds.width - 20,
-                           current.maxWidth)
-        let contentSize = contentLabel.sizeThatFits(.init(width: maxWidth - padding.left - padding.right, height: .greatestFiniteMagnitude))
-        contentLabel.frame.size = contentSize
-        
-        // calculator gradient frame
+        let bumpOffsetX: CGFloat = 0
         let bumpHeight: CGFloat = current.isArrowHidden ? 0 : 6
-        // 如果视图在中心线右边，则三角形也在右边, 否则在左边
-        let isRight = innerFrame.minX >= (frame.width / 2)
+        let isRight = false
         
-        var gradientFrame: CGRect = .zero
-        gradientFrame.size = .init(width: contentSize.width + padding.left + padding.right,
-                                   height: contentSize.height + padding.top + padding.bottom + bumpHeight)
+        let isBottom = (gradientFrame.maxY < highlightRangeRect.minY)
         
-        // 三角形起点偏移量
-        var bumpOffsetX: CGFloat = 0
-        
-        if isRight {
-            // right
-            gradientFrame.origin.x = innerFrame.maxX - gradientFrame.width
-            if gradientFrame.origin.x < 10 {
-                bumpOffsetX = -gradientFrame.origin.x + 10
-                gradientFrame.origin.x = 10
-            }
-        } else {
-            // left
-            gradientFrame.origin.x = innerFrame.minX
-            if gradientFrame.maxX > UIScreen.main.bounds.width - 10 { // 右边超出右边
-                bumpOffsetX = gradientFrame.minX - (UIScreen.main.bounds.width - gradientFrame.width - 10)
-                gradientFrame.origin.x = UIScreen.main.bounds.width - gradientFrame.width - 10
-            } else if gradientFrame.minX < 10 {
-                gradientFrame.origin.x = 10
-            }
-        }
-        
-        let isBottom = innerFrame.maxY >= frame.height / 2
-        if isBottom {
-            // bottom
-            gradientFrame.origin.y = innerFrame.minY - gradientFrame.height - spacing - current.enlarge
-        } else {
-            // top
-            gradientFrame.origin.y = innerFrame.maxY + spacing + current.enlarge
-        }
-        gradientLayer.bounds = .init(x: 0, y: 0, width: gradientFrame.width, height: gradientFrame.height)
-        
+        self.gradientLayer.bounds = CGRect(origin: .zero, size: gradientFrame.size)
         if contentView.frame == .zero {
             contentView.alpha = 0
             contentView.frame = gradientFrame
-            contentView.transform = .init(translationX: 0, y: isBottom ? -20 : 20)
+            contentView.transform = .init(translationX: 0, y: isBottom ? 20 : -20).concatenating(CGAffineTransform(scaleX: 0.95, y: 0.95))
             UIView.animate(withDuration: animateDuration) {
                 self.contentView.alpha = 1
                 self.contentView.transform = .identity
@@ -382,6 +287,7 @@ public class Marker: UIView {
         }
         
         current.completion?(self, triggerByUser)
+        current.completion = nil // release
         guard let next = nexts.first else {
             // dimiss
             dismiss(triggerByUser: triggerByUser)
@@ -440,9 +346,9 @@ public extension Marker {
             
             self.contentView.alpha = 0
             self.contentView.transform = CGAffineTransform(translationX: 0, y: 20).concatenating(CGAffineTransform(scaleX: 0.95, y: 0.95))
-        } completion: { [weak self] (_) in
-            guard let self = self else { return }
+        } completion: { (_) in
             self.completion?(self, triggerByUser)
+            self.completion = nil
             self.removeFromSuperview()
         }
     }

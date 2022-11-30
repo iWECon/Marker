@@ -21,6 +21,9 @@ extension Marker.Info {
         case timeout(TimeInterval)
         case maxWidth(CGFloat)
         case cornerStyle(CornerStyle)
+        
+        case hAlignment(HAlignment)
+        case vAlignment(VAlignment)
     }
     
 }
@@ -55,6 +58,11 @@ extension Marker.Info.Style: Equatable {
             return true
             
         case (.cornerStyle(_), .cornerStyle(_)):
+            return true
+            
+        case (.hAlignment(_), .hAlignment(_)):
+            return true
+        case (.vAlignment(_), .vAlignment(_)):
             return true
             
         default:

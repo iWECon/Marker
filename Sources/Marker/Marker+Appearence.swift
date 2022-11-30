@@ -21,7 +21,7 @@ extension Marker {
         public var textColor: UIColor = .white
         
         /// Spacing between triangle arrow and highlight view.
-        public var spacing: CGFloat = 10
+        public var spacing: CGFloat = 6
         
         /// Padding of intro(text/description).
         public var padding: UIEdgeInsets = .init(top: 5, left: 10, bottom: 5, right: 10)
