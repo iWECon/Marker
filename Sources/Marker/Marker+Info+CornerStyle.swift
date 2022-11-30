@@ -7,7 +7,7 @@ import UIKit
 extension Marker.Info {
     
     public enum CornerStyle {
-        /// follow marker.layer.cornerRadius, `default`
+        /// Default. Follow `marker.layer.cornerRadius`.
         case marker
         
         case square

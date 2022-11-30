@@ -8,7 +8,13 @@ extension Marker.Info {
     
     public enum Style {
         case hideArrow
-        case color(Color)
+        
+        /// font of `intro`
+        case font(UIFont)
+        /// text color of `intro`
+        case textColor(UIColor)
+        
+        case backgroundColor(Color)
         case arrowPosition(ArrowPosition)
         case dimFrame(CGRect)
         case highlightRangeExpande(CGFloat)
@@ -26,7 +32,11 @@ extension Marker.Info.Style: Equatable {
         case (.hideArrow, .hideArrow):
             return true
             
-        case (.color(_), .color(_)):
+        case (.font(_), .font(_)):
+            return true
+        case (.textColor(_), .textColor(_)):
+            return true
+        case (.backgroundColor(_), .backgroundColor(_)):
             return true
             
         case (.arrowPosition(_), .arrowPosition(_)):

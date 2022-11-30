@@ -17,11 +17,13 @@ extension Marker {
         var dimFrame: CGRect
         let style: CornerStyle
         let trianglePosition: ArrowPosition
-        let color: Info.Color
+        let backgroundColor: Info.Color
+        let font: UIFont
+        let textColor: UIColor
         let timeout: TimeInterval
         let enlarge: CGFloat
-        let hideArrow: Bool
         
+        let isArrowHidden: Bool
         let isStrongGuidance: Bool
         let isEventPenetration: Bool
         let isDecoration: Bool
@@ -41,17 +43,33 @@ extension Marker {
             self.intro = intro
             
             if styles.contains(.hideArrow) {
-                self.hideArrow = true
+                self.isArrowHidden = true
             } else {
-                self.hideArrow = !Marker.default.isShowArrow
+                self.isArrowHidden = !Marker.default.isShowArrow
             }
             
-            if let colorStyle = styles.first(where: { $0 == .color(Color(colors: [])) }),
-               case .color(let value) = colorStyle
+            if let fontStyle = styles.first(where: { $0 == .font(UIFont()) }),
+               case .font(let value) = fontStyle
             {
-                self.color = value
+                self.font = value
             } else {
-                self.color = Marker.default.color
+                self.font = Marker.default.textFont
+            }
+            
+            if let colorStyle = styles.first(where: { $0 == .textColor(.white) }),
+               case .textColor(let value) = colorStyle
+            {
+                self.textColor = value
+            } else {
+                self.textColor = Marker.default.textColor
+            }
+            
+            if let colorStyle = styles.first(where: { $0 == .backgroundColor(Color(colors: [])) }),
+               case .backgroundColor(let value) = colorStyle
+            {
+                self.backgroundColor = value
+            } else {
+                self.backgroundColor = Marker.default.color
             }
             
             if let arrowPositionStyle = styles.first(where: { $0 == .arrowPosition(.auto) }),
