@@ -12,23 +12,23 @@ public class Marker: UIView {
     // MARK: Static properties
     private static var markerInstances = NSMapTable<NSString, Marker>.strongToWeakObjects()
     
-    
     // MARK: Public properties
     public typealias CompletionBlock = (_: Marker, _ isTriggerByUser: Bool) -> Void
     
+    /// Global appearence settings. More detail see `Marker+Appearence.swift`.
     public static var `default` = Marker.Appearence()
-    public var animateDuration: TimeInterval = 0.34
+    
     public var identifier: String?
+    
+    public var animateDuration: TimeInterval = 0.34
     
     // MARK: Internal properties
     weak var onView: UIView?
     
     // Datas
-    var previousNextTimestamp: TimeInterval = 0
     var current: Info!
     var nexts: [Info] = []
     var animateMaps: [String: Bool] = [:]
-    /// 所有任务完成后的 completion.
     var completion: CompletionBlock?
     
     // Views
@@ -52,18 +52,18 @@ public class Marker: UIView {
     }
     
     func installViews() {
-        contentLabel.font = Self.default.textFont
-        contentLabel.textColor = Self.default.textColor
+        contentLabel.font = current.font
+        contentLabel.textColor = current.textColor
         contentLabel.numberOfLines = 0
         
         dimmingView.alpha = 0
         dimmingView.backgroundColor = UIColor.black.withAlphaComponent(0.4)
         
         gradientLayer.anchorPoint = .zero
-        gradientLayer.colors = current.color.colors
-        gradientLayer.startPoint = current.color.startPoint
-        gradientLayer.endPoint = current.color.endPoint
-        if let locations = current.color.locations {
+        gradientLayer.colors = current.backgroundColor.colors
+        gradientLayer.startPoint = current.backgroundColor.startPoint
+        gradientLayer.endPoint = current.backgroundColor.endPoint
+        if let locations = current.backgroundColor.locations {
             gradientLayer.locations = locations
         }
         
@@ -82,15 +82,19 @@ public class Marker: UIView {
     
     // MARK: Show next tap gesture Action
     @objc private func showNextTriggerByUser(tap: UITapGestureRecognizer) {
-        guard !current.pin else {
+        guard !current.isDecoration else { // is not decoration
             return
         }
         
-        if current.isOnlyAcceptHighlightRange, current.isEventPenetration {
+        // and is not event penetration
+        if current.isStrongGuidance, current.isEventPenetration {
             return
         }
         
-        if current.isOnlyAcceptHighlightRange, let markView = current.marker, let markSuperview = markView.superview {
+        if current.isStrongGuidance,
+           let markView = current.marker,
+           let markSuperview = markView.superview
+        {
             let tapPoint = tap.location(in: self)
             if !markSuperview.convert(markView.frame, to: self).contains(tapPoint) {
                 return
@@ -115,11 +119,11 @@ public class Marker: UIView {
             return
         }
         
-        if current.timeout > 0 { // 如果有超时时间，则开启超时
+        if current.timeout > 0 { // enable timeout if set timeout
             let identifier = current.identifier
             let timeout = Marker.default.timeoutAfterAnimateDidCompletion ? (Double(current.timeout) + animateDuration) : Double(current.timeout)
             DispatchQueue.main.asyncAfter(deadline: .now() + timeout) { [weak self] in
-                // 超时后判断是否已手动跳过
+                // whether it has been manually skipped
                 guard self?.animateMaps[identifier] == false else { return }
                 self?.showNext(triggerByUser: false)
             }
@@ -190,7 +194,7 @@ public class Marker: UIView {
         contentLabel.frame.size = contentSize
         
         // calculator gradient frame
-        let bumpHeight: CGFloat = current.isShowArrow ? 6 : 0
+        let bumpHeight: CGFloat = current.isArrowHidden ? 0 : 6
         // 如果视图在中心线右边，则三角形也在右边, 否则在左边
         let isRight = innerFrame.minX >= (frame.width / 2)
         
@@ -246,8 +250,7 @@ public class Marker: UIView {
         
         var labelOriginY: CGFloat = bumpHeight + padding.top
         let bezierPath = UIBezierPath()
-        if current.isShowArrow {
-            
+        if !current.isArrowHidden {
             // draw triangle
             switch current.trianglePosition {
             case .auto:
@@ -372,12 +375,6 @@ public class Marker: UIView {
     
     // MARK: Show next
     @objc public func showNext(triggerByUser: Bool) {
-        // add delay to ignore called twice of hittest
-        if previousNextTimestamp != 0, (Date().timeIntervalSince1970 - previousNextTimestamp) <= 0.1 {
-            return
-        }
-        previousNextTimestamp = Date().timeIntervalSince1970
-        
         // show next or dimiss
         animateMaps[current.identifier] = true
         if current.dimFrame == .zero {
@@ -398,15 +395,17 @@ public class Marker: UIView {
         }
     }
     
-    // 点击高亮范围, 把点击事件传递下去 (仅在 `isOnlyAcceptHighlightRange` 和 `isEventPenetration` 都开启时才有效)
     public override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
-        // 作为展示视图时，本身不响应任何点击事件
-        if current.pin {
+        // decoration not respond any event
+        if current.isDecoration {
             return nil
         }
-        if current.isOnlyAcceptHighlightRange, current.isEventPenetration,
-           let markView = current.marker, let markSuperview = markView.superview {
-
+        
+        // eventPenetration and strongGuidance
+        // means: only respond on tap the highlight range.
+        if current.isStrongGuidance, current.isEventPenetration,
+           let markView = current.marker, let markSuperview = markView.superview
+        {
             let innertFrame = markSuperview.convert(markView.frame, to: self)
             let highlightFrame = innertFrame.insetBy(dx: -current.enlarge, dy: -current.enlarge)
             
@@ -433,7 +432,7 @@ public extension Marker {
         return self
     }
     
-    func dismiss(triggerByUser: Bool) {
+    func dismiss(triggerByUser: Bool = true) {
         Self.removeInstance(self)
         
         UIView.animate(withDuration: animateDuration) {
