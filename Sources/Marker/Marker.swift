@@ -236,7 +236,7 @@ public class Marker: UIView {
         if contentView.frame == .zero {
             contentView.alpha = 0
             contentView.frame = gradientFrame
-            contentView.transform = .init(translationX: 0, y: isBottom ? -30 : 30)
+            contentView.transform = .init(translationX: 0, y: isBottom ? -20 : 20)
             UIView.animate(withDuration: animateDuration) {
                 self.contentView.alpha = 1
                 self.contentView.transform = .identity
@@ -439,7 +439,7 @@ public extension Marker {
             self.dimmingView.alpha = 0
             
             self.contentView.alpha = 0
-            self.contentView.transform = CGAffineTransform(translationX: 0, y: 50).concatenating(CGAffineTransform(scaleX: 1.1, y: 1.1))
+            self.contentView.transform = CGAffineTransform(translationX: 0, y: 20).concatenating(CGAffineTransform(scaleX: 0.95, y: 0.95))
         } completion: { [weak self] (_) in
             guard let self = self else { return }
             self.completion?(self, triggerByUser)
