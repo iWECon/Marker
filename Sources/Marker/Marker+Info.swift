@@ -23,15 +23,18 @@ extension Marker {
         let timeout: TimeInterval
         let enlarge: CGFloat
         
+        let hAlignment: HAlignment
+        let vAlignment: VAlignment
+        
         let isArrowHidden: Bool
         let isStrongGuidance: Bool
         let isEventPenetration: Bool
         let isDecoration: Bool
         
-        let completion: CompletionBlock?
+        var completion: CompletionBlock?
         
         var identifier: String {
-            "\(marker?.description ?? "")-\(String(describing: intro))-\(dimFrame)-\(timeout)-\(style)"
+            "\(marker?.frame ?? .zero)-\(String(describing: intro))-\(dimFrame)-\(timeout)"
         }
         
         public init(marker: UIView?,
@@ -118,6 +121,22 @@ extension Marker {
                 self.style = style
             } else {
                 self.style = Marker.default.style
+            }
+            
+            if let hAlignmentStyle = styles.first(where: { $0 == .hAlignment(.center) }),
+               case .hAlignment(let alignment) = hAlignmentStyle
+            {
+                self.hAlignment = alignment
+            } else {
+                self.hAlignment = .center
+            }
+            
+            if let vAlignmentStyle = styles.first(where: { $0 == .vAlignment(.auto) }),
+               case .vAlignment(let alignment) = vAlignmentStyle
+            {
+                self.vAlignment = alignment
+            } else {
+                self.vAlignment = .auto
             }
             
             self.isDecoration = options.contains(.decoration)

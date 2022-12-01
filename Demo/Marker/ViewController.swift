@@ -53,19 +53,19 @@ class ViewController: UIViewController {
     }
     
     @objc func bottomAction(_ sender: UIButton) {
-        let marker = Marker(.init(marker: bottomButton, intro: "Marker 引导，显示在控件上方"), identifier: "bottom")
-        marker.next(.init(marker: bottomButtons[0], intro: "Marker: 支持三角箭头位置调整, 支持调整左/中/右, 且可调整偏移量, 本次显示为自动处理三角箭头位置"))
-        marker.next(.init(marker: bottomButtons[1], intro: "本次三角箭头在左侧，且向右偏移（移动） 10px", styles: [.arrowPosition(.left(offset: 10))]))
-        marker.next(.init(marker: bottomButtons[2], intro: "本次三角箭头在右侧，且向左偏移（移动） 10px", styles: [.arrowPosition(.right(offset: -10))]))
-        marker.next(.init(marker: bottomButtons[3], intro: "本次三角箭头在中间，无偏移", styles: [.arrowPosition(.center(offset: 0))]))
-        marker.next(.init(marker: bottomButtons[4], intro: "无"))
-        marker.next(.init(marker: bottomButtons[5], intro: "无"))
+        let marker = Marker(.init(marker: bottomButton, intro: "Marker guide, all configurate is default. auto handle and display.\n所有配置都是默认的。"), identifier: "bottom")
+        marker.next(.init(marker: bottomButtons[0], intro: "Support control triangle arrow position (left, center, right) and offset.\n支持三角箭头位置调整(左/中/右), 且可调整偏移量, 本次显示为自动处理三角箭头位置."))
+        marker.next(.init(marker: bottomButtons[1], intro: "Triangle arrow on left, and offset set 10.\n本次三角箭头在左侧，且向右偏移 10px.", styles: [.arrowPosition(.left(offset: 10))]))
+        marker.next(.init(marker: bottomButtons[2], intro: "Triangle arrow on right, and offset set -10.\n本次三角箭头在右侧，且向左偏移 10px.", styles: [.arrowPosition(.right(offset: -10))]))
+        marker.next(.init(marker: bottomButtons[3], intro: "Triangle arrow on center (default value).\n居中，默认处理方式。", styles: [.arrowPosition(.center(offset: 0))]))
+        marker.next(.init(marker: bottomButtons[4], intro: "Align left. triangle position auto handle.\n左对齐，三角箭头自动处理。", styles: [.hAlignment(.left)]))
+        marker.next(.init(marker: bottomButtons[5], intro: "Align right. triangle position auto handle.\n右对齐，三角箭头自动处理。", styles: [.hAlignment(.right)]))
         marker.show(on: self.view, completion: nil)
     }
     
     @objc func respondAction(_ sender: UIButton) {
-        let alert = UIAlertController(title: "透传事件", message: "你点击了透传按钮, 且按下`知道了`的时候会触发下一步引导", preferredStyle: .alert)
-        alert.addAction(.init(title: "知道了", style: .cancel, handler: { _ in
+        let alert = UIAlertController(title: "Pass event 事件穿透", message: "You click on the highlighted range and the click event is passed to the button.\n你点击了高亮范围，并且事件被传递到了按钮上.", preferredStyle: .alert)
+        alert.addAction(.init(title: "I know 我晓得了", style: .cancel, handler: { _ in
             Marker.instance(from: "normal")?.showNext(triggerByUser: true)
         }))
         self.present(alert, animated: true, completion: nil)
@@ -96,13 +96,13 @@ class ViewController: UIViewController {
         Marker.default.timeoutAfterAnimateDidCompletion = true
         Marker.default.timeout = 0
         
-        let startInfo = Marker.Info(marker: startButton, intro: "起始按钮, 默认配置, 最大宽度 320, 点击任意处进入下一个", styles: [.arrowPosition(.left(offset: 0))])
-        let number2Info = Marker.Info(marker: number2Button, intro: "第二个按钮, 默认配置", styles: [.arrowPosition(.right(offset: 0))])
-        let actionInfo = Marker.Info(marker: respondActionButton, intro: "第三个按钮, 可透传事件：仅点击高亮范围有效，且点击事，事件可以传递到按钮上（执行按钮的点击事件）并触发下一步事件", options: [.strongGuidance, .eventPenetration])
-        let noMaskInfo = Marker.Info(marker: noMaskButton, intro: "第四个按钮, 没有遮罩", styles: [.arrowPosition(.center(offset: 0)), .dimFrame(.zero)])
-        let roundStyleInfo = Marker.Info(marker: roundButton, intro: "第五个按钮, 圆角遮罩, 且高亮范围有 10px 的扩张", styles: [.cornerStyle(.round), .highlightRangeExpande(10)])
-        let squareStyleInfo = Marker.Info(marker: squareButton, intro: "第六个按钮, 方形遮罩", styles: [.cornerStyle(.square)])
-        let followStyleInfo = Marker.Info(marker: followStyleButton, intro: "第七个按钮, 跟随视图的风格, 视图是圆角就是圆角，方形就是方形, 高亮范围有 4px 的扩张", styles: [.cornerStyle(.marker), .highlightRangeExpande(4)])
+        let startInfo = Marker.Info(marker: startButton, intro: "Description.\n样式描述。")
+        let number2Info = Marker.Info(marker: number2Button, intro: "styles: [.hideArrow], no triangle arrow.\n没有三角指示箭头。", styles: [.hideArrow])
+        let actionInfo = Marker.Info(marker: respondActionButton, intro: "options: [.strongGuidance, .eventPenetration], now you can tap the button.\n强引导和事件穿透，你可以点击触发按钮的响应事件了。", options: [.strongGuidance, .eventPenetration])
+        let noMaskInfo = Marker.Info(marker: noMaskButton, intro: "styles: [.dimFrame(.zero)], no gray mask.\n没有遮罩。", styles: [.dimFrame(.zero)])
+        let roundStyleInfo = Marker.Info(marker: roundButton, intro: "styles: [.cornerStyle(.round), .highlightRangeExpande(10)], highlight range is round and it has a 10px expande.\n圆角遮罩, 且高亮范围有 10px 的扩张。", styles: [.cornerStyle(.round), .highlightRangeExpande(10)])
+        let squareStyleInfo = Marker.Info(marker: squareButton, intro: "styles: [.timeout(2)], timeout 2 seconds.\n两秒后自动消失。", styles: [.timeout(2)])
+        let followStyleInfo = Marker.Info(marker: followStyleButton, intro: "More details see: `Marker+Info+Style` and `Marker+Info+Option`.\n更多信息请参考`Marker+Info+Style` 和 `Marker+Info+Option`。", styles: [.cornerStyle(.marker), .highlightRangeExpande(4)])
 
         Marker(startInfo, identifier: "normal")
             .nexts([number2Info, actionInfo, noMaskInfo, roundStyleInfo, squareStyleInfo, followStyleInfo])

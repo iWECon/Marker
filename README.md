@@ -6,7 +6,7 @@ Light, convenient, and qualified guidance prompts.
 
 # Preview
 
-![Demo](Demo/preview.gif)
+![Demo](Demo/preview-new.gif)
 
 # Features
 
@@ -129,6 +129,40 @@ Marker(info)
             print("marker of enter to settings and profile are all of dismiss")
         }
     )
+```
+
+### HAlignment / VAlignment
+
+#### \#HAlignment
+
+Describe `intro` horizontal alignment.
+```swift
+public enum HAlignment {
+    /// `Default` if available.
+    case center
+    
+    case left
+    case right
+}
+
+Marker.Info(... styles: [.hAlignment(Marker.Info.HAlignment)])
+```
+
+#### \#VAlignment
+
+Describe `intro` vertical alignment.
+```swift
+public enum VAlignment {
+    /// `Default`.
+    case auto
+    
+    /// Above the highlighted view.
+    case top
+    /// Below the highlighted view.
+    case bottom
+}
+
+Marker.Info(... styles: [.vAlignment(Marker.Info.VAlignment)])
 ```
 
 ### Strong guidance
