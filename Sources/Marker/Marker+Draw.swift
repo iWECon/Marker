@@ -107,16 +107,17 @@ extension Marker {
         }
         
         // MARK: check and fix origin.x
-        if gradientRect.minX < 10 { // horizontally safe area
+        var gradientRectAtWindow = self.convert(gradientRect, to: nil)
+        if gradientRectAtWindow.minX < 10 { // horizontally safe area
             gradientRect.origin.x = 10
         }
-        if gradientRect.maxX > calculate.safetyRangeSize.width {
+        if gradientRectAtWindow.maxX > calculate.safetyRangeSize.width {
             gradientRect.origin.x = calculate.safetyRangeSize.width - gradientRect.width
         }
         
         // MARK: origin.y
-        let topOriginY: CGFloat = highlightRangeRect.minY - Marker.default.spacing - gradientRect.height - bumpHeight
-        let bottomOriginY: CGFloat = highlightRangeRect.maxY + Marker.default.spacing + bumpHeight
+        let topOriginY: CGFloat = highlightRangeRect.minY - calculate.info.spacing - gradientRect.height - bumpHeight
+        let bottomOriginY: CGFloat = highlightRangeRect.maxY + calculate.info.spacing + bumpHeight
         
         var resultVAlignment: Info.VAlignment = .auto
         switch calculate.info.vAlignment {
@@ -125,7 +126,7 @@ extension Marker {
             resultVAlignment = .top
             
             // MARK: check and fix origin.y
-            let gradientRectAtWindow = self.convert(gradientRect, to: nil)
+            gradientRectAtWindow = self.convert(gradientRect, to: nil)
             if gradientRectAtWindow.minY < 120 {
                 // display on dynamic island or notch
                 // switch to `.bottom`

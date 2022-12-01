@@ -22,6 +22,7 @@ extension Marker {
         let textColor: UIColor
         let timeout: TimeInterval
         let enlarge: CGFloat
+        let spacing: CGFloat
         
         let hAlignment: HAlignment
         let vAlignment: VAlignment
@@ -137,6 +138,14 @@ extension Marker {
                 self.vAlignment = alignment
             } else {
                 self.vAlignment = .auto
+            }
+            
+            if let spacingStyle = styles.first(where: { $0 == .spacing(0) }),
+               case .spacing(let value) = spacingStyle
+            {
+                self.spacing = value
+            } else {
+                self.spacing = Marker.default.spacing
             }
             
             self.isDecoration = options.contains(.decoration)

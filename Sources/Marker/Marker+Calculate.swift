@@ -39,7 +39,7 @@ extension Marker {
                 return nil
             }
             
-            self.spacing = Marker.default.spacing
+            self.spacing = info.spacing
             self.innerFrame = markedSuperview.convert(marked.frame, to: onView)
             self.isRound = marked.layer.cornerRadius == innerFrame.height / 2
             self.markerFrame = info.dimFrame == .zero ? .zero : innerFrame.insetBy(dx: -info.enlarge, dy: -info.enlarge)

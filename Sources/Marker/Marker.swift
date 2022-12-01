@@ -127,8 +127,11 @@ public class Marker: UIView {
         if contentView.frame == .zero {
             contentView.alpha = 0
             contentView.frame = gradientFrame
-            contentView.transform = CGAffineTransform(translationX: 0, y: vAlignment == .top ? 20 : -20)
-                .concatenating(CGAffineTransform(scaleX: 0.95, y: 0.95))
+            contentView.transform = CGAffineTransform(
+                translationX: 0,
+                y: vAlignment == .top ? (current.spacing) : (-current.spacing)
+            )
+                .concatenating(CGAffineTransform(scaleX: 0.98, y: 0.98))
             
             UIView.animate(withDuration: animateDuration) {
                 self.contentView.alpha = 1
@@ -234,12 +237,14 @@ public extension Marker {
     func dismiss(triggerByUser: Bool = true) {
         Self.removeInstance(self)
         
+        let translationY: CGFloat = self.lastVAlignment == .bottom ? (-current.spacing) : (current.spacing)
+        
         UIView.animate(withDuration: animateDuration) {
             self.dimmingView.alpha = 0
             
             self.contentView.alpha = 0
-            self.contentView.transform = CGAffineTransform(translationX: 0, y: self.lastVAlignment == .bottom ? -20 : 20)
-                .concatenating(CGAffineTransform(scaleX: 0.95, y: 0.95))
+            self.contentView.transform = CGAffineTransform(translationX: 0, y: translationY)
+                .concatenating(CGAffineTransform(scaleX: 0.98, y: 0.98))
         } completion: { (_) in
             self.completion?(self, triggerByUser)
             self.completion = nil

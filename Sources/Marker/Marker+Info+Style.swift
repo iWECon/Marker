@@ -24,6 +24,10 @@ extension Marker.Info {
         
         case hAlignment(HAlignment)
         case vAlignment(VAlignment)
+        
+        /// Spacing between triangle arrow and highlighted view.
+        /// Default value see `Marker.default.spacing`.
+        case spacing(CGFloat)
     }
     
 }
@@ -63,6 +67,9 @@ extension Marker.Info.Style: Equatable {
         case (.hAlignment(_), .hAlignment(_)):
             return true
         case (.vAlignment(_), .vAlignment(_)):
+            return true
+            
+        case (.spacing(_), .spacing(_)):
             return true
             
         default:

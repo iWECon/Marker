@@ -28,10 +28,26 @@ class ViewController: UIViewController {
     @IBOutlet weak var clickableInButton: UIButton!
     @IBOutlet weak var clickableOutButton: UIButton!
     
+    @objc func dismissBarButtonMarkerAction(_ sender: UIButton) {
+        Marker.instance(from: "nav-bar-marker")?.dismiss()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         view.backgroundColor = .white
+        
+        let barButton = UIButton(type: .custom)
+        barButton.setTitle("OnBarButton", for: .normal)
+        barButton.setTitleColor(.black, for: .normal)
+        barButton.addTarget(self, action: #selector(dismissBarButtonMarkerAction(_:)), for: .touchUpInside)
+        let item = UIBarButtonItem(customView: barButton)
+        self.navigationItem.rightBarButtonItem = item
+        
+        DispatchQueue.main.asyncAfter(wallDeadline: .now() + 1) {
+            Marker(Marker.Info(marker: barButton, intro: "Show on navigation bar. tap highlight range to dismiss.", styles: [.spacing(-10)], options: [.decoration]), identifier: "nav-bar-marker")
+                .show(on: self.view)
+        }
         
         startButton.addTarget(self, action: #selector(tapAction(sender:)), for: .touchUpInside)
         
@@ -80,14 +96,6 @@ class ViewController: UIViewController {
                                 .highlightRangeExpande(4)
                                ])
         Marker(info, identifier: "inSubview").show(on: subviewContainer, completion: nil)
-    }
-    
-    @objc func topLeftAlert(sender: UIButton) {
-        let alert = UIAlertController(title: "提示", message: "透传事件", preferredStyle: .alert)
-        alert.addAction(.init(title: "确认", style: .default, handler: nil))
-        present(alert, animated: true, completion: nil)
-        
-        Marker.instance(from: "asdf")?.dismiss(triggerByUser: true)
     }
     
     @objc func tapAction(sender: UIButton) {
