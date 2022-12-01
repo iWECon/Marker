@@ -112,7 +112,7 @@ extension Marker {
             gradientRect.origin.x = 10
         }
         if gradientRectAtWindow.maxX > calculate.safetyRangeSize.width {
-            gradientRect.origin.x = calculate.safetyRangeSize.width - gradientRect.width
+            gradientRect.origin.x = calculate.safetyRangeSize.width - gradientRect.width + 10
         }
         
         // MARK: origin.y
