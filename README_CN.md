@@ -2,143 +2,204 @@
 
 轻量，便捷，可配置的引导提示。
 
-# Demo 预览
+# Preview
 
-![Demo](Demo/preview.gif)
-
-## 代码预览
-
-通用代码
-
-Marker.Info 中有多种配置，可自行查看
-
-```swift
-        
-let startInfo = Marker.Info(marker: startButton, intro: "起始按钮, 默认配置, 最大宽度 320, 点击任意处进入下一个", styles: [.arrowPosition(.left(offset: 0))])
-let number2Info = Marker.Info(marker: number2Button, intro: "第二个按钮, 默认配置", styles: [.arrowPosition(.right(offset: 0))])
-let actionInfo = Marker.Info(marker: respondActionButton, intro: "第三个按钮, 可透传事件：仅点击高亮范围有效，且点击事，事件可以传递到按钮上（执行按钮的点击事件）并触发下一步事件", options: [.strongGuidance, .eventPenetration])
-let noMaskInfo = Marker.Info(marker: noMaskButton, intro: "第四个按钮, 没有遮罩", styles: [.arrowPosition(.center(offset: 0)), .dimFrame(.zero)])
-let roundStyleInfo = Marker.Info(marker: roundButton, intro: "第五个按钮, 圆角遮罩, 且高亮范围有 10px 的扩张", styles: [.cornerStyle(.round), .highlightRangeExpande(10)])
-let squareStyleInfo = Marker.Info(marker: squareButton, intro: "第六个按钮, 方形遮罩", styles: [.cornerStyle(.square)])
-let followStyleInfo = Marker.Info(marker: followStyleButton, intro: "第七个按钮, 跟随视图的风格, 视图是圆角就是圆角，方形就是方形, 高亮范围有 4px 的扩张", styles: [.cornerStyle(.marker), .highlightRangeExpande(4)])
-
-Marker(startInfo, identifier: "normal")
-    .nexts([number2Info, actionInfo, noMaskInfo, roundStyleInfo, squareStyleInfo, followStyleInfo])
-    .show(on: self.view, completion: nil)
-```
-
-全局获取实例，并进行到下一步
-```swift
-let alert = UIAlertController(title: "透传事件", message: "你点击了透传按钮, 且按下`知道了`的时候会触发下一步引导", preferredStyle: .alert)
-alert.addAction(.init(title: "知道了", style: .cancel, handler: { _ in
-    // 通过 instance(from:) 获取
-    Marker.instance(from: "normal")?.showNext(triggerByUser: true)
-}))
-self.present(alert, animated: true, completion: nil)
-```
+![Demo](Demo/preview-new.gif)
 
 
-## 优势
+# 功能
 
-* `无需任何计算（相对位置等计算）`
+- 简单。
 
-* `支持全局获取实例（通过 identifier)`
+简单的 API，简单的用法，简单的配置。
+
+- 无计算。
+
+不需要手动计算相对位置等。
+
+- 可装饰。
+
+可将视图用作固定显示的 UIView 且不处理任何点击事件。(hitTest:) 总是返回 nil。
+
+- 全局。
+
+全局样式配置，全局实例获取，全局 dismiss。
+
+- 强弱引导。
+
+弱引导：点击屏幕任意位置都可跳转到下一步。（默认）
+
+强引导：仅点击高亮范围才能进行下一步。
+
+强引导需要配置 options: `[.strongGuidance]`。
+
+# 用法示例
+
+### Marker.Info 解释
+
+`Marker.Info` 是一个描述 Marker 如何显示的结构体。
 
 ```swift
-static func instance(from identifier: String) -> Marker?
-
-use:
-// 创建和显示 Create and show
-Marker(startInfo, identifier: "demoGuide").show(on: self.view)
-
-// 获取实例并操作显示下一个或者使其消失 Get instance and show next or dismiss
-let instance: Marker? = Marker.instance(from: "demoGuide")
-instance?.showNext(triggerByUser: true)
-instance?.dismiss(triggerByUser: true)
-```
-
-* `支持事件透传`
-
-```swift
-Marker.Info(marker: doneButton, intro: "完成~", options: [.strongGuidance, .eventPenetration])
-
-`strongGuidance` 和 `eventPenetration` 同时使用: 只能点击高亮范围(doneButton)才有响应，同时会响应 doneButton 的点击事件。
-
-如需要对 marker 进行操作，可使用上面的获取全局实例。
-```
-
-* `支持全局定义背景颜色，也可以独立设置背景颜色`
-
-全局所有可配置的内容在 `+Appearence.swift` 文件中，可自行查阅。
-
-CODE: `Marker.default.[property]`
-
-* `支持圆角跟随高亮视图`
-
-默认行为：高亮的圆角跟随高亮视图。也可以自定义圆角度数。
-
-```swift
-`Marker.Info(... styles: [.cornerStyle(CornerStyle)])`
-
-enum CornerStyle {
-    /// follow marker.layer.cornerRadius, default
-    case marker
+Marker.Info(
+    // 需要高亮显示的视图
+    marker: UIView?,
     
-    case square
+    // String 或者 NSAttributedString
+    intro: Any?, 
     
-    /// radius = height/2
-    case round
+    // Marker 显示的样式
+    styles: [Marker.Info.Style] = [],
+    // 一些可配置的额外选项
+    options: [Options] = [],
     
-    /// custom the corner radius
-    case radius(_ radius: CGFloat)
+    // 当前引导显示完成的回执 (这里仅单个)
+    completion: CompletionBlock? = nil
+)
+
+
+styles: [Marker.Info.Style]: [
+    // 隐藏 三角 箭头
+    case hideArrow
+    
+    // 引导文本的字体
+    case font(UIFont)
+    // 引导文本的字体颜色
+    case textColor(UIColor)
+    
+    // 背景
+    case backgroundColor(Color)
+    // 三角箭头的位置
+    case arrowPosition(ArrowPosition)
+    // 灰底背景 frame
+    case dimFrame(CGRect)
+    // 高亮范围扩展
+    case highlightRangeExpande(CGFloat)
+    // 超时时间
+    case timeout(TimeInterval)
+    // 引导文本的最大宽度
+    case maxWidth(CGFloat)
+    // 高亮范围的圆角样式
+    case cornerStyle(CornerStyle)
+    
+    // 横向对齐方式
+    case hAlignment(HAlignment)
+    // 纵向对齐方式
+    case vAlignment(VAlignment)
+    
+    // 三角箭头 到 高亮范围的间距
+    case spacing(CGFloat)
+]
+
+options: [Options]: [
+    // 强引导
+    // 即：只有点击高亮范围才可触发下一步。
+    .strongGuidance,
+    
+    // 事件穿透
+    // 即：如果高亮视图是 Button，则会响应 Button 的点击事件。Marker 不再响应任何触摸事件。
+    .eventPenetration,
+    
+    // 装饰
+    // 用作装饰，Marker 不响应任何点击事件，同时会将 dimFrame 设置为 `.zero`。
+    .decoration
+]
+```
+
+### 全局样式配置
+
+使用 `Marker.default` 即可进行全局样式配置。
+
+可配置：`maxWidth`, `color`, `spacing`, `padding`, `textFont`, `textColor`, `showArrow`...
+
+更多详情查看 `Marker+Appearence.swift`。
+
+
+### 正常使用
+
+```swift
+let info = Marker.Info(
+    marker: settingsButton, 
+    intro: "Tap here enter to settings.",
+    styles: [
+        .dimFrame(.zero)
+    ],
+    options: [.decoration],
+    completion: { (markerInstance: Marker, isTriggerByUser: Bool) in
+        print("marker of enter settings dismiss with user: \(isTriggerByUser)")
+    }
+)
+
+let profile = Marker.Info(
+    marker: profileButton, 
+    intro: "Tap here to edit your profile."
+)
+
+// 这里注意 ⚠️，`.show(on:completion:)` 这里的 completion 是所有引导都完成的时候触发的。
+
+Marker(info)
+    .nexts([profile])
+    .show(
+        on: self.view,
+        completion: { (markerInstance: Marker, isTriggerByUser: Bool) in 
+            print("marker of enter to settings and profile are all of dismiss")
+        }
+    )
+```
+
+### 水平位置 / 垂直位置
+
+#### \#HAlignment
+
+描述 Marker 与高亮视图是左对齐还是右对齐。
+
+```swift
+public enum HAlignment {
+    /// `Default` if available.
+    case center
+    
+    case left
+    case right
 }
+
+Marker.Info(... styles: [.hAlignment(Marker.Info.HAlignment)])
 ```
 
-* `支持超时时间设定，可全局配置，也可根据业务需求对单独的引导进行设置`
+#### \#VAlignment
 
+描述 Marker 与高亮视图的上下关系。
 ```swift
-全局配置超时时间：
-Marker.default.timeout = newValue
-
-全局所有可配置的内容在 `+Appearence.swift` 文件中，可自行查阅。
-```
-
-* `支持高亮范围扩展`
-
-`Marker.Info(... styles: [.highlightRangeExpand(CGFloat)])`
-
-* `支持显示/隐藏三角箭头`
-
-`Marker.Info(... styles: [.hideArrow])`
-
-* `可配置三角箭头所在位置（左/中/右）且支持设置偏移量`
-
-```swift
-`Marker.Info(... styles: [.arrowPosition(ArrowPosition)])`
-
-/// 三角箭头所在位置
-public enum ArrowPosition {
-    /// 自动处理
+public enum VAlignment {
+    // `默认`. 自动处理。 
     case auto
     
-    /// 在左侧
-    case left(offset: CGFloat = 0)
-    /// 在中间
-    case center(offset: CGFloat = 0)
-    /// 在右侧
-    case right(offset: CGFloat = 0)
+    // Marker 显示在高亮视图上方。
+    case top
+    // Marker 显示在高亮视图下方。 
+    case bottom
 }
+
+Marker.Info(... styles: [.vAlignment(Marker.Info.VAlignment)])
 ```
 
-* `仅点击高亮范围时响应`
+### 全局
 
-Marker.Info(... options: [.strongGuidance])
+```swift
+// Marker 初始化时可配置 identifier
+Marker(info, identifier: "settings-marked").show(on: self.view)
 
-* `点击高亮范围时，事件传递给高亮范围中的视图`
+// 可使用 instance(from:) 来获取显示中的 Marker 实例
+Marker.instance(from: "settings-marked")?.dismiss()
 
-如果高亮范围是 Button，则会响应 Button 的点击事件。
+// 所有 Marker dismiss
+Marker.dismiss(triggerByUser: <#Bool#>)
+```
 
-Marker.Info(... options: [.strongGuidance, .eventPenetration])
+
+# 💡
+
+更多样式配置等，可下载 Demo 查看，或查看相关 API：
+
+`Marker+Info+Style.swift` 所有样式配置。
 
 ## Install
 

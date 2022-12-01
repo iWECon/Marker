@@ -58,24 +58,38 @@ Marker.Info(
 
 
 styles: [Marker.Info.Style]: [
-    // hide triangle arrow
-    .hideArrow,
+    case hideArrow
     
-    // color of intro
-    .color(Color),
+    /// font of intro text
+    case font(UIFont)
+    /// text color of intro text
+    case textColor(UIColor)
     
-    // triangle arrow display position
-    .arrowPosition(ArrowPosition),
+    case backgroundColor(Color)
     
-    // dimming background frame
-    .dimFrame(CGRect),
+    case arrowPosition(ArrowPosition)
     
-    // highlight range expanded
-    .highlightRangeExpande(CGFloat),
+    case dimFrame(CGRect)
     
-    .timeout(TimeInterval),
-    .maxWidth(CGFloat),
-    .cornerStyle(CornerStyle)
+    case highlightRangeExpande(CGFloat)
+    
+    case timeout(TimeInterval)
+    
+    /// max width of intro text
+    case maxWidth(CGFloat)
+    
+    /// corner style of highlight range
+    case cornerStyle(CornerStyle)
+    
+    /// horizontal alignment
+    case hAlignment(HAlignment)
+    
+    /// vertical alignment
+    case vAlignment(VAlignment)
+    
+    /// Spacing between triangle arrow and highlighted view.
+    /// Default value see `Marker.default.spacing`.
+    case spacing(CGFloat)
 ]
 
 options: [Options]: [

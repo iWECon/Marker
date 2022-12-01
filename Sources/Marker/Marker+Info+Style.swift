@@ -7,22 +7,34 @@ import UIKit
 extension Marker.Info {
     
     public enum Style {
+        
         case hideArrow
         
-        /// font of `intro`
+        /// font of intro text
         case font(UIFont)
-        /// text color of `intro`
+        /// text color of intro text
         case textColor(UIColor)
         
         case backgroundColor(Color)
+        
         case arrowPosition(ArrowPosition)
+        
         case dimFrame(CGRect)
+        
         case highlightRangeExpande(CGFloat)
+        
         case timeout(TimeInterval)
+        
+        /// max width of intro text
         case maxWidth(CGFloat)
+        
+        /// corner style of highlight range
         case cornerStyle(CornerStyle)
         
+        /// horizontal alignment
         case hAlignment(HAlignment)
+        
+        /// vertical alignment
         case vAlignment(VAlignment)
         
         /// Spacing between triangle arrow and highlighted view.
