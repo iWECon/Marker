@@ -27,14 +27,23 @@ extension Marker {
     }
     
     internal func setupIntro(calculate: Calculate) {
-        if let introString = current.intro as? String {
-            contentLabel.text = introString
-        } else if let attributedString = current.intro as? NSAttributedString {
-            contentLabel.attributedText = attributedString
+        // make content change has a fade effect
+        contentLabel.layer.removeAnimation(forKey: "marker-fade-animation")
+        let transition = CATransition()
+        transition.timingFunction = CAMediaTimingFunction(name: .easeOut)
+        transition.type = .fade
+        transition.duration = animateDuration
+        contentLabel.layer.add(transition, forKey: "marker-fade-animation")
+        
+        // change content
+        if let introString = calculate.info.intro as? String {
+            self.contentLabel.text = introString
+        } else if let attributedString = calculate.info.intro as? NSAttributedString {
+            self.contentLabel.attributedText = attributedString
         } else {
-            contentLabel.text = "Can not support this type: \(type(of: current.intro))"
+            self.contentLabel.text = "Can not support this type: \(type(of: calculate.info.intro))"
         }
-        contentLabel.frame.size = calculate.calculateContentSize(label: contentLabel)
+        self.contentLabel.frame.size = calculate.calculateContentSize(label: self.contentLabel)
     }
     
     internal func setupDimmingView(calculate: Calculate) {
