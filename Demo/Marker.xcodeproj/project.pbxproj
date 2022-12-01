@@ -8,9 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		0856B5EE2937A1B6001B6369 /* Marker+Draw.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0856B5ED2937A1B6001B6369 /* Marker+Draw.swift */; };
-		0856B5F02937A728001B6369 /* Marker+Calculate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0856B5EF2937A728001B6369 /* Marker+Calculate.swift */; };
 		0856B5F22937B160001B6369 /* Marker+Info+Alignment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0856B5F12937B160001B6369 /* Marker+Info+Alignment.swift */; };
-		08A877ED29363F140047F6AC /* Marker+Info+Text.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A877E629363F140047F6AC /* Marker+Info+Text.swift */; };
+		08762CBA2938489500BF9409 /* Marker+Calculate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08762CB92938489500BF9409 /* Marker+Calculate.swift */; };
 		08A877EE29363F140047F6AC /* Marker+Info+Options.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A877E729363F140047F6AC /* Marker+Info+Options.swift */; };
 		08A877EF29363F140047F6AC /* Marker+Info+ArrowPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A877E829363F140047F6AC /* Marker+Info+ArrowPosition.swift */; };
 		08A877F029363F140047F6AC /* Marker+Info.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A877E929363F140047F6AC /* Marker+Info.swift */; };
@@ -29,10 +28,9 @@
 
 /* Begin PBXFileReference section */
 		0856B5ED2937A1B6001B6369 /* Marker+Draw.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Marker+Draw.swift"; sourceTree = "<group>"; };
-		0856B5EF2937A728001B6369 /* Marker+Calculate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Marker+Calculate.swift"; path = "../../../../../.Trash/Marker+Calculate.swift"; sourceTree = "<group>"; };
 		0856B5F12937B160001B6369 /* Marker+Info+Alignment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Marker+Info+Alignment.swift"; sourceTree = "<group>"; };
+		08762CB92938489500BF9409 /* Marker+Calculate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Marker+Calculate.swift"; sourceTree = "<group>"; };
 		08990CF726467BAF004202BA /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
-		08A877E629363F140047F6AC /* Marker+Info+Text.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Marker+Info+Text.swift"; sourceTree = "<group>"; };
 		08A877E729363F140047F6AC /* Marker+Info+Options.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Marker+Info+Options.swift"; sourceTree = "<group>"; };
 		08A877E829363F140047F6AC /* Marker+Info+ArrowPosition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Marker+Info+ArrowPosition.swift"; sourceTree = "<group>"; };
 		08A877E929363F140047F6AC /* Marker+Info.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Marker+Info.swift"; sourceTree = "<group>"; };
@@ -83,17 +81,16 @@
 			isa = PBXGroup;
 			children = (
 				08A877EB29363F140047F6AC /* Marker.swift */,
-				0856B5ED2937A1B6001B6369 /* Marker+Draw.swift */,
-				0856B5EF2937A728001B6369 /* Marker+Calculate.swift */,
 				08A877EC29363F140047F6AC /* Marker+Appearence.swift */,
+				08762CB92938489500BF9409 /* Marker+Calculate.swift */,
+				0856B5ED2937A1B6001B6369 /* Marker+Draw.swift */,
 				08A877E929363F140047F6AC /* Marker+Info.swift */,
+				0856B5F12937B160001B6369 /* Marker+Info+Alignment.swift */,
 				08A877E829363F140047F6AC /* Marker+Info+ArrowPosition.swift */,
 				08A877EA29363F140047F6AC /* Marker+Info+Color.swift */,
-				08A877E729363F140047F6AC /* Marker+Info+Options.swift */,
-				08A877E629363F140047F6AC /* Marker+Info+Text.swift */,
 				08A877F4293648B20047F6AC /* Marker+Info+CornerStyle.swift */,
+				08A877E729363F140047F6AC /* Marker+Info+Options.swift */,
 				08A877F6293648E40047F6AC /* Marker+Info+Style.swift */,
-				0856B5F12937B160001B6369 /* Marker+Info+Alignment.swift */,
 			);
 			path = Marker;
 			sourceTree = "<group>";
@@ -210,12 +207,11 @@
 				0856B5EE2937A1B6001B6369 /* Marker+Draw.swift in Sources */,
 				08F7A68F25B074C000250D41 /* AppDelegate.swift in Sources */,
 				08A877F7293648E40047F6AC /* Marker+Info+Style.swift in Sources */,
-				08A877ED29363F140047F6AC /* Marker+Info+Text.swift in Sources */,
 				08F7A69125B074C000250D41 /* SceneDelegate.swift in Sources */,
 				08A877F129363F140047F6AC /* Marker+Info+Color.swift in Sources */,
 				08A877EE29363F140047F6AC /* Marker+Info+Options.swift in Sources */,
 				08A877F029363F140047F6AC /* Marker+Info.swift in Sources */,
-				0856B5F02937A728001B6369 /* Marker+Calculate.swift in Sources */,
+				08762CBA2938489500BF9409 /* Marker+Calculate.swift in Sources */,
 				08A877F229363F140047F6AC /* Marker.swift in Sources */,
 				08A877F329363F140047F6AC /* Marker+Appearence.swift in Sources */,
 				08A877F5293648B20047F6AC /* Marker+Info+CornerStyle.swift in Sources */,

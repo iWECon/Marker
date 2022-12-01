@@ -34,7 +34,7 @@ extension Marker {
         var completion: CompletionBlock?
         
         var identifier: String {
-            "\(marker?.description ?? "")-\(String(describing: intro))-\(dimFrame)-\(timeout)-\(style)"
+            "\(marker?.frame ?? .zero)-\(String(describing: intro))-\(dimFrame)-\(timeout)"
         }
         
         public init(marker: UIView?,

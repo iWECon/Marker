@@ -20,7 +20,9 @@ extension Marker.Info {
         /// `Default`.
         case auto
         
+        /// Above the highlighted view.
         case top
+        /// Below the highlighted view.
         case bottom
     }
 }

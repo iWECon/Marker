@@ -1,7 +1,4 @@
 //
-//  Marker.swift
-//  vietnam
-//
 //  Created by iWw on 2021/1/15.
 //
 
@@ -30,6 +27,7 @@ public class Marker: UIView {
     var nexts: [Info] = []
     var animateMaps: [String: Bool] = [:]
     var completion: CompletionBlock?
+    var lastVAlignment: Info.VAlignment = .auto
     
     // Views
     let dimmingView = UIView()
@@ -123,25 +121,15 @@ public class Marker: UIView {
         self.setupDimmingView(calculate: calculate)
         
         self.setupIntro(calculate: calculate)
-        let gradientFrame = self.calculateGradientRange(calculate: calculate)
-        //self.setupTriangleArrow(calculate: calculate)
         
-        let padding = Marker.default.padding
-        let innerFrame = calculate.innerFrame
-        let withoutDimframe = calculate.withoutDimFrame
-        let highlightRangeRect = calculate.highlightRangeRect
-        
-        let bumpOffsetX: CGFloat = 0
-        let bumpHeight: CGFloat = current.isArrowHidden ? 0 : 6
-        let isRight = false
-        
-        let isBottom = (gradientFrame.maxY < highlightRangeRect.minY)
-        
+        let (gradientFrame, vAlignment) = self.calculateGradientRange(calculate: calculate)
         self.gradientLayer.bounds = CGRect(origin: .zero, size: gradientFrame.size)
         if contentView.frame == .zero {
             contentView.alpha = 0
             contentView.frame = gradientFrame
-            contentView.transform = .init(translationX: 0, y: isBottom ? 20 : -20).concatenating(CGAffineTransform(scaleX: 0.95, y: 0.95))
+            contentView.transform = CGAffineTransform(translationX: 0, y: vAlignment == .top ? 20 : -20)
+                .concatenating(CGAffineTransform(scaleX: 0.95, y: 0.95))
+            
             UIView.animate(withDuration: animateDuration) {
                 self.contentView.alpha = 1
                 self.contentView.transform = .identity
@@ -150,115 +138,20 @@ public class Marker: UIView {
             contentView.frame = gradientFrame
         }
         
-        // make mask
-        var rectY: CGFloat = bumpHeight
-        
-        var labelOriginY: CGFloat = bumpHeight + padding.top
-        let bezierPath = UIBezierPath()
-        if !current.isArrowHidden {
-            // draw triangle
-            switch current.trianglePosition {
-            case .auto:
-                if isRight, !isBottom { // top, right
-                    //labelOriginY
-                    let startPoint = CGPoint(x: gradientFrame.width - 15 - bumpOffsetX, y: bumpHeight)
-                    bezierPath.move(to: startPoint)
-                    bezierPath.addLine(to: .init(x: startPoint.x - 6, y: 0))
-                    bezierPath.addLine(to: .init(x: startPoint.x - 12, y: startPoint.y))
-                } else if isRight, isBottom { // bottom, right
-                    rectY = 0
-                    labelOriginY = gradientFrame.height - bumpHeight - padding.bottom - contentLabel.frame.height
-                    
-                    let startPoint = CGPoint(x: gradientFrame.width - 15 - bumpOffsetX, y: gradientFrame.height - bumpHeight)
-                    bezierPath.move(to: startPoint)
-                    bezierPath.addLine(to: .init(x: startPoint.x - 6, y: gradientFrame.height))
-                    bezierPath.addLine(to: .init(x: startPoint.x - 12, y: startPoint.y))
-                } else if !isRight, isBottom { // bottom, left
-                    rectY = 0
-                    labelOriginY = gradientFrame.height - bumpHeight - padding.bottom - contentLabel.frame.height
-                    
-                    let startPoint = CGPoint(x: 15 + bumpOffsetX, y: gradientFrame.height - bumpHeight)
-                    bezierPath.move(to: startPoint)
-                    bezierPath.addLine(to: .init(x: startPoint.x + 6, y: gradientFrame.height))
-                    bezierPath.addLine(to: .init(x: startPoint.x + 12, y: startPoint.y))
-                    
-                } else if !isRight, !isBottom { // top, left
-                    let startPoint = CGPoint(x: 15 + bumpOffsetX, y: bumpHeight)
-                    bezierPath.move(to: startPoint)
-                    bezierPath.addLine(to: .init(x: startPoint.x + 6, y: 0))
-                    bezierPath.addLine(to: .init(x: startPoint.x + 12, y: startPoint.y))
-                }
-                
-            case .left(let offset):
-                let minX = min(gradientFrame.minX, withoutDimframe.minX)
-                if isBottom {
-                    // triangle on bottom-left
-                    rectY = 0
-                    labelOriginY = gradientFrame.height - bumpHeight - padding.bottom - contentLabel.frame.height
-                    
-                    let startPoint = CGPoint(x: minX + 10 + offset, y: gradientFrame.height - bumpHeight)
-                    bezierPath.move(to: startPoint)
-                    bezierPath.addLine(to: .init(x: startPoint.x + 6, y: gradientFrame.height))
-                    bezierPath.addLine(to: .init(x: startPoint.x + 12, y: startPoint.y))
-                } else {
-                    // triangle on top-left
-                    let startPoint = CGPoint(x: minX + 10 + offset, y: bumpHeight)
-                    bezierPath.move(to: startPoint)
-                    bezierPath.addLine(to: .init(x: startPoint.x + 6, y: 0))
-                    bezierPath.addLine(to: .init(x: startPoint.x + 12, y: startPoint.y))
-                }
-                break
-            case .center(let offset):
-                //let width = min(gradientFrame.width, withoutDimframe.width)
-                let width = self.convert(withoutDimframe, to: contentView).midX
-                if isBottom {
-                    // triangle on bottom-center
-                    rectY = 0
-                    labelOriginY = gradientFrame.height - bumpHeight - padding.bottom - contentLabel.frame.height
-                    
-                    let startPoint = CGPoint(x: width + 6 + offset, y: gradientFrame.height - bumpHeight)
-                    bezierPath.move(to: startPoint)
-                    bezierPath.addLine(to: .init(x: startPoint.x - 6, y: gradientFrame.height))
-                    bezierPath.addLine(to: .init(x: startPoint.x - 12, y: startPoint.y))
-                } else {
-                    // triangle on top-center
-                    let startPoint = CGPoint(x: width + 6 + offset, y: bumpHeight)
-                    bezierPath.move(to: startPoint)
-                    bezierPath.addLine(to: .init(x: startPoint.x - 6, y: 0))
-                    bezierPath.addLine(to: .init(x: startPoint.x - 12, y: startPoint.y))
-                }
-                
-            case .right(let offset):
-                let width = min(gradientFrame.width, withoutDimframe.width)
-                if isBottom {
-                    // triangle on bottom-right
-                    rectY = 0
-                    labelOriginY = gradientFrame.height - bumpHeight - padding.bottom - contentLabel.frame.height
-                    
-                    let startPoint = CGPoint(x: width - 10 + offset, y: gradientFrame.height - bumpHeight)
-                    bezierPath.move(to: startPoint)
-                    bezierPath.addLine(to: .init(x: startPoint.x - 6, y: gradientFrame.height))
-                    bezierPath.addLine(to: .init(x: startPoint.x - 12, y: startPoint.y))
-                } else {
-                    // triangle on top-right
-                    let startPoint = CGPoint(x: width - 10 + offset, y: bumpHeight)
-                    bezierPath.move(to: startPoint)
-                    bezierPath.addLine(to: .init(x: startPoint.x - 6, y: 0))
-                    bezierPath.addLine(to: .init(x: startPoint.x - 12, y: startPoint.y))
-                }
-            }
-        }
-        bezierPath.append(.init(roundedRect: .init(x: 0, y: rectY, width: gradientLayer.frame.width, height: gradientLayer.frame.height - bumpHeight), cornerRadius: 6))
-        
-        contentLabel.frame.origin.x = padding.left
-        contentLabel.frame.origin.y = labelOriginY
+        let (arrowBezierPath, labelOrigin) = self.triangleArrowBezierPath(
+            calculate: calculate,
+            gradientFrame: gradientFrame,
+            vAlignment: vAlignment
+        )
+        self.lastVAlignment = vAlignment
+        contentLabel.frame.origin = labelOrigin
         
         if gradientLayer.mask == nil {
-            bumpLayer.path = bezierPath.cgPath
+            bumpLayer.path = arrowBezierPath.cgPath
             bumpLayer.backgroundColor = UIColor.black.cgColor
             gradientLayer.mask = bumpLayer
         } else {
-            pathAnimate(from: bumpLayer, to: bezierPath)
+            pathAnimate(from: bumpLayer, to: arrowBezierPath)
         }
     }
     
@@ -345,7 +238,8 @@ public extension Marker {
             self.dimmingView.alpha = 0
             
             self.contentView.alpha = 0
-            self.contentView.transform = CGAffineTransform(translationX: 0, y: 20).concatenating(CGAffineTransform(scaleX: 0.95, y: 0.95))
+            self.contentView.transform = CGAffineTransform(translationX: 0, y: self.lastVAlignment == .bottom ? -20 : 20)
+                .concatenating(CGAffineTransform(scaleX: 0.95, y: 0.95))
         } completion: { (_) in
             self.completion?(self, triggerByUser)
             self.completion = nil

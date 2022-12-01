@@ -1,5 +1,5 @@
 //
-//  Created by bro on 2022/11/29.
+//  Created by i on 2022/11/29.
 //
 
 import UIKit
@@ -12,12 +12,13 @@ extension Marker.Info {
         /// Default is weak guidance: tap anywhere to continue(next).
         ///
         /// `强引导`，只有点击高亮范围才会响应下一步操作。
+        /// 这里不会出现`事件穿透`现象，需要与`eventPenetration`搭配才有。
         case strongGuidance
         
         /// Will not repond any tap events. Pass the event to the next hitTestView.
         /// ⚠️ Need to be used with `strongGuidance`.
         ///
-        /// `事件穿透`，需要与 `strongGuidance` 搭配使用，将触摸事件向高亮范围传递下去。
+        /// `事件穿透`，需要与 `strongGuidance` 强引导搭配使用，将触摸事件向高亮范围传递下去。
         /// 意思就是：如果高亮范围是个 Button，那么就会触发 Button 的点击事件。
         case eventPenetration
         

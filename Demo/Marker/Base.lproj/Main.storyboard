@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -17,56 +17,56 @@
                         <rect key="frame" x="0.0" y="0.0" width="390" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="24" translatesAutoresizingMaskIntoConstraints="NO" id="yT4-ri-cSb">
-                                <rect key="frame" x="24" y="74" width="342" height="141"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="14" translatesAutoresizingMaskIntoConstraints="NO" id="yT4-ri-cSb">
+                                <rect key="frame" x="24" y="78" width="342" height="131.5"/>
                                 <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="51" translatesAutoresizingMaskIntoConstraints="NO" id="MaI-2t-Ux0">
-                                        <rect key="frame" x="0.0" y="0.0" width="342" height="31"/>
+                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="MaI-2t-Ux0">
+                                        <rect key="frame" x="0.0" y="0.0" width="342" height="34.5"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DXY-mh-lqy">
-                                                <rect key="frame" x="0.0" y="0.0" width="80" height="31"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="114" height="34.5"/>
                                                 <state key="normal" title="Button"/>
-                                                <buttonConfiguration key="configuration" style="plain" title="起始"/>
+                                                <buttonConfiguration key="configuration" style="plain" title="Describe"/>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9qx-bB-K5x">
-                                                <rect key="frame" x="131" y="0.0" width="80" height="31"/>
+                                                <rect key="frame" x="114" y="0.0" width="114" height="34.5"/>
                                                 <state key="normal" title="Button"/>
-                                                <buttonConfiguration key="configuration" style="plain" title="第二个"/>
+                                                <buttonConfiguration key="configuration" style="plain" title="hideArrow"/>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kll-FK-2mb">
-                                                <rect key="frame" x="262" y="0.0" width="80" height="31"/>
+                                                <rect key="frame" x="228" y="0.0" width="114" height="34.5"/>
                                                 <state key="normal" title="Button"/>
-                                                <buttonConfiguration key="configuration" style="plain" title="透传"/>
+                                                <buttonConfiguration key="configuration" style="plain" title="pass event"/>
                                             </button>
                                         </subviews>
                                     </stackView>
-                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" spacing="51" translatesAutoresizingMaskIntoConstraints="NO" id="5Ex-22-vF4">
-                                        <rect key="frame" x="0.0" y="55" width="342" height="31"/>
+                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="5Ex-22-vF4">
+                                        <rect key="frame" x="0.0" y="48.5" width="342" height="34.5"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Gdu-Be-pGO">
-                                                <rect key="frame" x="0.0" y="0.0" width="67" height="31"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="114" height="34.5"/>
                                                 <state key="normal" title="Button"/>
-                                                <buttonConfiguration key="configuration" style="plain" title="无遮罩"/>
+                                                <buttonConfiguration key="configuration" style="plain" title="no mask"/>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Adm-Mp-WJl">
-                                                <rect key="frame" x="151.5" y="0.0" width="53" height="31"/>
+                                                <rect key="frame" x="114" y="0.0" width="114" height="34.5"/>
                                                 <state key="normal" title="Button"/>
-                                                <buttonConfiguration key="configuration" style="plain" title="圆角"/>
+                                                <buttonConfiguration key="configuration" style="plain" title="round"/>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XIU-Fn-35K">
-                                                <rect key="frame" x="289" y="0.0" width="53" height="31"/>
+                                                <rect key="frame" x="228" y="0.0" width="114" height="34.5"/>
                                                 <state key="normal" title="Button"/>
-                                                <buttonConfiguration key="configuration" style="plain" title="方形"/>
+                                                <buttonConfiguration key="configuration" style="plain" title="timeout"/>
                                             </button>
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="1Gt-0b-la0">
-                                        <rect key="frame" x="144.5" y="110" width="53" height="31"/>
+                                        <rect key="frame" x="112.5" y="97" width="117.5" height="34.5"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ixu-ZV-qFd">
-                                                <rect key="frame" x="0.0" y="0.0" width="53" height="31"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="117.5" height="34.5"/>
                                                 <state key="normal" title="Button"/>
-                                                <buttonConfiguration key="configuration" style="plain" title="跟随"/>
+                                                <buttonConfiguration key="configuration" style="plain" title="more details"/>
                                             </button>
                                         </subviews>
                                     </stackView>
@@ -79,12 +79,12 @@
                                 </constraints>
                             </stackView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wwZ-Bv-LeM">
-                                <rect key="frame" x="0.0" y="235" width="390" height="120"/>
+                                <rect key="frame" x="0.0" y="229.5" width="390" height="120"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1FU-GK-DWg">
-                                        <rect key="frame" x="108.5" y="56.5" width="173" height="31"/>
+                                        <rect key="frame" x="113" y="55" width="164" height="34.5"/>
                                         <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain" title="显示在子视图的 Marker"/>
+                                        <buttonConfiguration key="configuration" style="plain" title="Display in subview"/>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemGray5Color"/>
@@ -94,56 +94,56 @@
                                     <constraint firstItem="1FU-GK-DWg" firstAttribute="centerY" secondItem="wwZ-Bv-LeM" secondAttribute="centerY" multiplier="1.2" id="oQ0-4z-6dn"/>
                                 </constraints>
                             </view>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="24" translatesAutoresizingMaskIntoConstraints="NO" id="bmQ-a9-AZ1">
-                                <rect key="frame" x="24" y="375" width="342" height="141"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="14" translatesAutoresizingMaskIntoConstraints="NO" id="bmQ-a9-AZ1">
+                                <rect key="frame" x="24" y="369.5" width="342" height="166"/>
                                 <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="51" translatesAutoresizingMaskIntoConstraints="NO" id="3iT-Pb-zF6">
-                                        <rect key="frame" x="0.0" y="0.0" width="342" height="31"/>
+                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="3iT-Pb-zF6">
+                                        <rect key="frame" x="0.0" y="0.0" width="342" height="34.5"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AML-Kd-T0A">
-                                                <rect key="frame" x="0.0" y="0.0" width="80" height="31"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="114" height="34.5"/>
                                                 <state key="normal" title="Button"/>
-                                                <buttonConfiguration key="configuration" style="plain" title="以下"/>
+                                                <buttonConfiguration key="configuration" style="plain" title="Arrow"/>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="v6K-Bs-M3X">
-                                                <rect key="frame" x="131" y="0.0" width="80" height="31"/>
+                                                <rect key="frame" x="114" y="0.0" width="114" height="34.5"/>
                                                 <state key="normal" title="Button"/>
-                                                <buttonConfiguration key="configuration" style="plain" title="Marker"/>
+                                                <buttonConfiguration key="configuration" style="plain" title="Describe"/>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CCb-Ch-U0d">
-                                                <rect key="frame" x="262" y="0.0" width="80" height="31"/>
+                                                <rect key="frame" x="228" y="0.0" width="114" height="34.5"/>
                                                 <state key="normal" title="Button"/>
-                                                <buttonConfiguration key="configuration" style="plain" title="显示"/>
+                                                <buttonConfiguration key="configuration" style="plain" title="On left"/>
                                             </button>
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" translatesAutoresizingMaskIntoConstraints="NO" id="X0f-yu-8v8">
-                                        <rect key="frame" x="0.0" y="55" width="342" height="31"/>
+                                        <rect key="frame" x="0.0" y="48.5" width="342" height="34.5"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="j0m-zl-39D">
-                                                <rect key="frame" x="0.0" y="0.0" width="184.5" height="31"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="158.5" height="34.5"/>
                                                 <state key="normal" title="Button"/>
-                                                <buttonConfiguration key="configuration" style="plain" title="在控件上方显示"/>
+                                                <buttonConfiguration key="configuration" style="plain" title="On right"/>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Dqo-II-mLy">
-                                                <rect key="frame" x="184.5" y="0.0" width="78.5" height="31"/>
+                                                <rect key="frame" x="158.5" y="0.0" width="183.5" height="34.5"/>
                                                 <state key="normal" title="Button"/>
-                                                <buttonConfiguration key="configuration" style="plain" title="控件"/>
-                                            </button>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jR4-kh-y2q">
-                                                <rect key="frame" x="263" y="0.0" width="79" height="31"/>
-                                                <state key="normal" title="Button"/>
-                                                <buttonConfiguration key="configuration" style="plain" title="上方"/>
+                                                <buttonConfiguration key="configuration" style="plain" title="On center"/>
                                             </button>
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="bdr-UW-xiv">
-                                        <rect key="frame" x="45" y="110" width="252.5" height="31"/>
+                                        <rect key="frame" x="73" y="97" width="196.5" height="69"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="B8o-fn-YV4">
-                                                <rect key="frame" x="0.0" y="0.0" width="252.5" height="31"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="196.5" height="34.5"/>
                                                 <state key="normal" title="Button"/>
-                                                <buttonConfiguration key="configuration" style="plain" title="显示（自动处理且不支持调整方位）"/>
+                                                <buttonConfiguration key="configuration" style="plain" title="Horizontally Align left"/>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jR4-kh-y2q">
+                                                <rect key="frame" x="0.0" y="34.5" width="196.5" height="34.5"/>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="plain" title="Horizontally Align right"/>
                                             </button>
                                         </subviews>
                                     </stackView>
@@ -257,8 +257,8 @@
                         <outletCollection property="bottomButtons" destination="CCb-Ch-U0d" collectionClass="NSMutableArray" id="a5Q-Zv-xE9"/>
                         <outletCollection property="bottomButtons" destination="j0m-zl-39D" collectionClass="NSMutableArray" id="VSr-PX-Fc9"/>
                         <outletCollection property="bottomButtons" destination="Dqo-II-mLy" collectionClass="NSMutableArray" id="GdV-22-e1I"/>
-                        <outletCollection property="bottomButtons" destination="jR4-kh-y2q" collectionClass="NSMutableArray" id="tdA-k8-p5g"/>
                         <outletCollection property="bottomButtons" destination="B8o-fn-YV4" collectionClass="NSMutableArray" id="4Wj-E3-o92"/>
+                        <outletCollection property="bottomButtons" destination="jR4-kh-y2q" collectionClass="NSMutableArray" id="tdA-k8-p5g"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
