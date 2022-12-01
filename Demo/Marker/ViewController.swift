@@ -28,6 +28,9 @@ class ViewController: UIViewController {
     @IBOutlet weak var clickableInButton: UIButton!
     @IBOutlet weak var clickableOutButton: UIButton!
     
+    @IBOutlet weak var subviewRightButton: UIButton!
+    @IBOutlet weak var subviewLeftButton: UIButton!
+    
     @objc func dismissBarButtonMarkerAction(_ sender: UIButton) {
         Marker.instance(from: "nav-bar-marker")?.dismiss()
     }
@@ -95,7 +98,26 @@ class ViewController: UIViewController {
                                 .cornerStyle(.radius(10)),
                                 .highlightRangeExpande(4)
                                ])
-        Marker(info, identifier: "inSubview").show(on: subviewContainer, completion: nil)
+        let right = Marker.Info(
+            marker: subviewRightButton,
+            intro: "align right in subview, and below.",
+            styles: [
+                .hAlignment(.right), .vAlignment(.bottom),
+                .cornerStyle(.radius(8))
+            ]
+        )
+        
+        let left = Marker.Info(
+            marker: subviewLeftButton,
+            intro: "align left in subview",
+            styles: [
+                .hAlignment(.left), .vAlignment(.top),
+                .cornerStyle(.radius(8))
+            ]
+        )
+        Marker(info, identifier: "inSubview")
+            .nexts([right, left])
+            .show(on: subviewContainer, completion: nil)
     }
     
     @objc func tapAction(sender: UIButton) {

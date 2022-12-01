@@ -82,16 +82,30 @@
                                 <rect key="frame" x="0.0" y="264" width="390" height="120"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1FU-GK-DWg">
-                                        <rect key="frame" x="113.33333333333333" y="55" width="163.66666666666669" height="34.333333333333343"/>
+                                        <rect key="frame" x="113.33333333333333" y="43" width="163.66666666666669" height="34.333333333333343"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" title="Display in subview"/>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EI5-Jg-7Ro">
+                                        <rect key="frame" x="254.33333333333334" y="8" width="127.66666666666666" height="34.333333333333336"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="gray" title="Subview right"/>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Gyg-Gt-CKb">
+                                        <rect key="frame" x="7.9999999999999929" y="77.666666666666686" width="117.33333333333331" height="34.333333333333343"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="gray" title="Subview left"/>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemGray5Color"/>
                                 <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="Gyg-Gt-CKb" secondAttribute="bottom" constant="8" id="CAO-2D-qed"/>
+                                    <constraint firstItem="EI5-Jg-7Ro" firstAttribute="top" secondItem="wwZ-Bv-LeM" secondAttribute="top" constant="8" id="GA8-4R-D7z"/>
                                     <constraint firstAttribute="height" constant="120" id="USL-le-rO9"/>
+                                    <constraint firstItem="Gyg-Gt-CKb" firstAttribute="leading" secondItem="wwZ-Bv-LeM" secondAttribute="leading" constant="8" id="Zod-a1-YlH"/>
                                     <constraint firstItem="1FU-GK-DWg" firstAttribute="centerX" secondItem="wwZ-Bv-LeM" secondAttribute="centerX" id="hEO-fI-pwT"/>
-                                    <constraint firstItem="1FU-GK-DWg" firstAttribute="centerY" secondItem="wwZ-Bv-LeM" secondAttribute="centerY" multiplier="1.2" id="oQ0-4z-6dn"/>
+                                    <constraint firstItem="1FU-GK-DWg" firstAttribute="centerY" secondItem="wwZ-Bv-LeM" secondAttribute="centerY" id="oQ0-4z-6dn"/>
+                                    <constraint firstAttribute="trailing" secondItem="EI5-Jg-7Ro" secondAttribute="trailing" constant="8" id="td4-hz-nib"/>
                                 </constraints>
                             </view>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="14" translatesAutoresizingMaskIntoConstraints="NO" id="bmQ-a9-AZ1">
@@ -254,6 +268,8 @@
                         <outlet property="squareButton" destination="XIU-Fn-35K" id="Fzx-bg-SO1"/>
                         <outlet property="startButton" destination="DXY-mh-lqy" id="sNC-Lk-mTE"/>
                         <outlet property="subviewContainer" destination="wwZ-Bv-LeM" id="Yni-Mt-BY1"/>
+                        <outlet property="subviewLeftButton" destination="Gyg-Gt-CKb" id="FHU-Jk-8W2"/>
+                        <outlet property="subviewRightButton" destination="EI5-Jg-7Ro" id="gY4-de-3N8"/>
                         <outletCollection property="bottomButtons" destination="v6K-Bs-M3X" collectionClass="NSMutableArray" id="YKc-Kv-1vb"/>
                         <outletCollection property="bottomButtons" destination="CCb-Ch-U0d" collectionClass="NSMutableArray" id="a5Q-Zv-xE9"/>
                         <outletCollection property="bottomButtons" destination="j0m-zl-39D" collectionClass="NSMutableArray" id="VSr-PX-Fc9"/>
