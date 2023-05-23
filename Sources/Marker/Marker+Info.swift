@@ -34,9 +34,7 @@ extension Marker {
         
         var completion: CompletionBlock?
         
-        var identifier: String {
-            UUID().uuidString
-        }
+        let identifier: String = UUID().uuidString
         
         public init(marker: UIView?,
                     intro: Any?,
