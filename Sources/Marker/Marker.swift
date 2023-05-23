@@ -177,13 +177,16 @@ public class Marker: UIView {
     // MARK: Show next
     @objc public func showNext(triggerByUser: Bool) {
         // show next or dimiss
-        animateMaps[current.identifier] = true
-        if current.dimFrame == .zero {
-            dimmingView.alpha = 0
-        }
         
-        current.completion?(self, triggerByUser)
-        current.completion = nil // release
+        // fix crash when trigger showNext in `Marker.Info(completion:)` (crashes caused by dead loops)
+        if animateMaps[current.identifier] == false {
+            animateMaps[current.identifier] = true
+            if current.dimFrame == .zero {
+                dimmingView.alpha = 0
+            }
+            current.completion?(self, triggerByUser)
+            current.completion = nil // release
+        }
         guard let next = nexts.first else {
             // dimiss
             dismiss(triggerByUser: triggerByUser)
