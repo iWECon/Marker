@@ -35,7 +35,7 @@ extension Marker {
         var completion: CompletionBlock?
         
         var identifier: String {
-            "\(marker?.frame ?? .zero)-\(String(describing: intro))-\(dimFrame)-\(timeout)"
+            UUID().uuidString
         }
         
         public init(marker: UIView?,
